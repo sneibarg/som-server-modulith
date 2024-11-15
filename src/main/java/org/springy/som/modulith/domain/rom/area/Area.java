@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Document("Areas")
-public class RomArea {
+public class Area {
     private String author;
     private String name;
     private String suggestedLevelRange;

@@ -4,8 +4,8 @@ package org.springy.som.modulith.service.rom;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springy.som.modulith.domain.rom.area.RomArea;
-import org.springy.som.modulith.repository.RomAreaRepository;
+import org.springy.som.modulith.domain.rom.area.Area;
+import org.springy.som.modulith.repository.rom.AreaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,36 +14,36 @@ import java.util.Optional;
 @RequestMapping("/api/v1/areas")
 public class AreaService {
 
-    private final RomAreaRepository romAreaRepository;
+    private final AreaRepository areaRepository;
 
-    public AreaService(RomAreaRepository romAreaRepository) {
-        this.romAreaRepository = romAreaRepository;
+    public AreaService(AreaRepository areaRepository) {
+        this.areaRepository = areaRepository;
     }
 
     @GetMapping
-    public List<RomArea> getAllAreas() {
-        return romAreaRepository.findAll();
+    public List<Area> getAllAreas() {
+        return areaRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RomArea> getAreaById(@PathVariable("id") String id) {
-        Optional<RomArea> area = romAreaRepository.findById(id);
+    public ResponseEntity<Area> getAreaById(@PathVariable("id") String id) {
+        Optional<Area> area = areaRepository.findById(id);
         return area.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<RomArea> createArea(@RequestBody RomArea romArea) {
-        RomArea savedRomArea = romAreaRepository.save(romArea);
-        return new ResponseEntity<>(savedRomArea, HttpStatus.CREATED);
+    public ResponseEntity<Area> createArea(@RequestBody Area area) {
+        Area savedArea = areaRepository.save(area);
+        return new ResponseEntity<>(savedArea, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RomArea> updateArea(@PathVariable("id") String id, @RequestBody RomArea romArea) {
-        Optional<RomArea> areaData = romAreaRepository.findById(id);
+    public ResponseEntity<Area> updateArea(@PathVariable("id") String id, @RequestBody Area area) {
+        Optional<Area> areaData = areaRepository.findById(id);
 
         if (areaData.isPresent()) {
-            return new ResponseEntity<>(romAreaRepository.save(romArea), HttpStatus.OK);
+            return new ResponseEntity<>(areaRepository.save(area), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -52,7 +52,7 @@ public class AreaService {
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteArea(@PathVariable("id") String id) {
         try {
-            romAreaRepository.deleteById(id);
+            areaRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -63,9 +63,9 @@ public class AreaService {
     @ResponseBody
     public String deleteAll() {
         StringBuilder response = new StringBuilder();
-        long itemCount = romAreaRepository.count();
-        response.append("Deleted a total of ").append(itemCount).append(" RomArea objects.");
-        romAreaRepository.deleteAll();
+        long itemCount = areaRepository.count();
+        response.append("Deleted a total of ").append(itemCount).append(" Area objects.");
+        areaRepository.deleteAll();
         return response.toString();
     }
 }

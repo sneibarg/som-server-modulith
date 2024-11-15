@@ -4,7 +4,7 @@ package org.springy.som.modulith.service.rom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springy.som.modulith.domain.rom.reset.Reset;
-import org.springy.som.modulith.repository.ResetRepository;
+import org.springy.som.modulith.repository.rom.ResetRepository;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package org.springy.som.modulith.service.rom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springy.som.modulith.domain.rom.mobile.Mobile;
-import org.springy.som.modulith.repository.MobileRepository;
+import org.springy.som.modulith.repository.rom.MobileRepository;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.springy.som.modulith.repository;
+package org.springy.som.modulith.repository.rom;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

@@ -4,4 +4,4 @@
                 "org.springy.som.modulith.domain.rom.mobile"
         }
 )
-package org.springy.som.modulith.domain.rom.area;
+package org.springy.som.modulith.domain.rom.item;

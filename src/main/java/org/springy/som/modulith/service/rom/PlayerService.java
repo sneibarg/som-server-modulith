@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springy.som.modulith.domain.rom.character.PlayerCharacter;
 import org.springy.som.modulith.domain.rom.player.PlayerAccount;
-import org.springy.som.modulith.repository.CharacterRepository;
-import org.springy.som.modulith.repository.PlayerAccountRepository;
+import org.springy.som.modulith.repository.rom.CharacterRepository;
+import org.springy.som.modulith.repository.rom.PlayerAccountRepository;
 import org.springy.som.modulith.util.PlayerAccountUtil;
 
 import java.io.BufferedWriter;

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Document("Rooms")
-public class RomRoom {
+public class Room {
     private String areaId;
     private String vnum;
     private String name;
