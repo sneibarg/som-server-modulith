@@ -22,7 +22,7 @@ public class MobileService {
         return mobileRepository.save(mobile);
     }
 
-    @GetMapping(path = "/api/v1/mobiles/all")
+    @GetMapping(path = "/api/v1/mobiles")
     @ResponseBody
     public List<Mobile> getMobiles() {
         return mobileRepository.findAll();

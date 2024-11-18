@@ -20,10 +20,10 @@ public class Mobile {
     private String sex;
     private String startPos;
     private String defaultPos;
+    private String hitroll;
+    private String damage;
 
     private int level;
-    private int hitroll;
-    private int damage;
     private int gold;
 
     @Id
