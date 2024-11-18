@@ -16,14 +16,15 @@ public class Mobile {
     private String actFlags;
     private String affectFlags;
     private String alignment;
-    private String level;
-    private String hitroll;
-    private String damage;
     private String race;
     private String sex;
-    private String gold;
     private String startPos;
     private String defaultPos;
+
+    private int level;
+    private int hitroll;
+    private int damage;
+    private int gold;
 
     @Id
     private String id;

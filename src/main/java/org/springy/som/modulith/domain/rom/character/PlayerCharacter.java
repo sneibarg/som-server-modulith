@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -16,7 +15,6 @@ public class PlayerCharacter {
     private String description;
     private String race;
     private String characterClass;
-    private String areaId;
     private String roomId;
     private String role;
     private String guild;
@@ -27,7 +25,6 @@ public class PlayerCharacter {
     private List<String> inventory;
     private List<String> statuses;
     private List<String> skills;
-    private HashMap<String, Object> loot;
 
     @Id
     private String id;

@@ -11,12 +11,12 @@ import java.util.List;
 public class Shop {
     private String areaId;
     private String vnum;
-    private String profit_buy;
-    private String profit_sell;
-    private String open_hour;
-    private String close_hour;
-    private String owner_name;
-    private List<String> trade_items;
+    private String profitBuy;
+    private String profitSell;
+    private String openHour;
+    private String closeHour;
+    private String ownerName;
+    private List<String> tradeItems;
 
 
     @Id
