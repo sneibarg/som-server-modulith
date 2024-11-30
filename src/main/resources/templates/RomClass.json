@@ -1,0 +1,62 @@
+[
+  {
+    "name": "mage",
+    "whoName": "Mag",
+    "primaryAttribute": "INT",
+    "startingWeapon": "",
+    "baseGroup": "",
+    "defaultGroup": "",
+    "skillAdept": 75,
+    "thac0_00": 20,
+    "thac0_32": 6,
+    "hpMin": 6,
+    "hpMax": 8,
+    "fMana": true,
+    "guild": []
+  },
+  {
+    "name": "cleric",
+    "whoName": "Cle",
+    "primaryAttribute": "WIS",
+    "startingWeapon": "",
+    "baseGroup": "",
+    "defaultGroup": "",
+    "skillAdept": 75,
+    "thac0_00": 20,
+    "thac0_32": 2,
+    "hpMin": 7,
+    "hpMax": 10,
+    "fMana": true,
+    "guild": []
+  },
+  {
+    "name": "thief",
+    "whoName": "Thi",
+    "primaryAttribute": "DEX",
+    "startingWeapon": "",
+    "baseGroup": "",
+    "defaultGroup": "",
+    "skillAdept": 75,
+    "thac0_00": 20,
+    "thac0_32": -4,
+    "hpMin": 8,
+    "hpMax": 13,
+    "fMana": false,
+    "guild": []
+  },
+  {
+    "name": "warrior",
+    "whoName": "War",
+    "primaryAttribute": "STR",
+    "startingWeapon": "",
+    "baseGroup": "",
+    "defaultGroup": "",
+    "skillAdept": 75,
+    "thac0_00": 20,
+    "thac0_32": -10,
+    "hpMin": 11,
+    "hpMax": 15,
+    "fMana": false,
+    "guild": []
+  }
+]
