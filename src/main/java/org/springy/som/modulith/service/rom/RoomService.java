@@ -19,9 +19,22 @@ public class RoomService {
     }
 
     @GetMapping(path = "/api/v1/rooms")
-    @ResponseBody
-    public List<Room> getRooms() {
-        return roomRepository.findAll();
+    public @ResponseBody List<Room> getRooms(@RequestParam(required = false) String areaId) {
+        if (areaId != null && !areaId.isEmpty()) {
+            log.info("Area ID {}", areaId);
+            return roomRepository.findAllByAreaId(areaId);
+        } else {
+            return roomRepository.findAll();
+        }
+    }
+
+    @DeleteMapping(path = "/api/v1/rooms")
+    public @ResponseBody String deleteAll() {
+        StringBuilder response = new StringBuilder();
+        long itemCount = roomRepository.count();
+        response.append("Deleted a total of ").append(itemCount).append(" Room objects.");
+        roomRepository.deleteAll();
+        return response.toString();
     }
 
     @GetMapping(path = "/api/v1/room")
@@ -29,19 +42,15 @@ public class RoomService {
         return roomRepository.findRoomByVnum(vnum);
     }
 
+    @GetMapping(path = "/api/v1/room/{id}")
+    public Room getRoomByName(@PathVariable String areaId, @RequestParam String roomName) {
+        log.info("Room {} with areaId {}", roomName, areaId);
+        return roomRepository.findRoomByNameAndAreaId(roomName, areaId);
+    }
+
     @PostMapping(path = "/api/v1/room")
     public ResponseEntity<Room> createRoom(@RequestBody Room room) {
         Room savedRoom = roomRepository.save(room);
         return new ResponseEntity<>(savedRoom, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping(path = "/api/v1/rooms")
-    @ResponseBody
-    public String deleteAll() {
-        StringBuilder response = new StringBuilder();
-        long itemCount = roomRepository.count();
-        response.append("Deleted a total of ").append(itemCount).append(" Room objects.");
-        roomRepository.deleteAll();
-        return response.toString();
     }
 }

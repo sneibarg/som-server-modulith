@@ -1,0 +1,12 @@
+{
+  "_id": {
+    "$oid": "62d2ff6699c3578abe7941c9"
+  },
+  "firstName": "Scott",
+  "lastName": "Neibarger",
+  "accountName": "sneibarg",
+  "emailAddress": "scott.neibarger@gmail.com",
+  "password": "changeit",
+  "playerCharacterList": [
+  ]
+}

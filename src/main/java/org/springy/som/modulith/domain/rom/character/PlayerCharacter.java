@@ -4,8 +4,6 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 @Data
 @Document("Characters")
 public class PlayerCharacter {
@@ -16,15 +14,11 @@ public class PlayerCharacter {
     private String race;
     private String characterClass;
     private String roomId;
-    private String role;
+    private String areaId;
     private String guild;
+    private Boolean cloaked;
+    private int health;
     private int level;
-    private int currentHealth;
-    private int maxHealth;
-    private boolean cloaked;
-    private List<String> inventory;
-    private List<String> statuses;
-    private List<String> skills;
 
     @Id
     private String id;
