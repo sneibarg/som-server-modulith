@@ -1,6 +1,7 @@
 package org.springy.som.modulith.domain.rom.clazz;
 
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 /*
     {
      "mage", "Mag", STAT_INT, OBJ_VNUM_SCHOOL_DAGGER,
@@ -24,6 +25,7 @@ import lombok.Data;
  */
 
 @Data
+@Document("RomClasses")
 public class RomClass {
     private String name;
     private String whoName;

@@ -1,6 +1,7 @@
 package org.springy.som.modulith.domain.rom.race;
 
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ import java.util.List;
  */
 
 @Data
+@Document("RomRaces")
 public class RomRace {
     private String name;
     private String size;
