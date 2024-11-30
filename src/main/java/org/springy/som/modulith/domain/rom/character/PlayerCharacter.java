@@ -16,6 +16,7 @@ public class PlayerCharacter {
     private String roomId;
     private String areaId;
     private String guild;
+    private String role;
     private Boolean cloaked;
     private int health;
     private int level;

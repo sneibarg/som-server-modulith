@@ -1,9 +1,6 @@
 [{
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa4e"
-  },
   "name": "disconnect",
-  "shortcuts": "discon, quit",
+  "shortcuts": "disco, disconn, quit",
   "role": "player",
   "lambda": [
     "lambda c: c.writer.write(b\"See you next time.\\r\\n\")",
@@ -17,9 +14,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa4f"
-  },
   "name": "say",
   "shortcuts": "s, sa, '",
   "role": "player",
@@ -33,9 +27,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa50"
-  },
   "name": "tell",
   "shortcuts": "tel",
   "role": "player",
@@ -50,14 +41,11 @@
   "usage": "lambda c, msg: c.writer.write(b\"Invalid target.\") if m.invalid_target(msg)"
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa51"
-  },
   "name": "who",
   "shortcuts": "wh",
   "role": "player",
   "lambda": [
-    "lambda p, ps, c: p.print_visible(ps.visible(c))"
+    "lambda p, ps: p.print_visible(ps.visible(p))"
   ],
   "message": "",
   "function": [],
@@ -65,9 +53,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa52"
-  },
   "name": "inventory",
   "shortcuts": "inv, inven, invent",
   "role": "player",
@@ -80,9 +65,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa53"
-  },
   "name": "inventory",
   "shortcuts": "inv, inven, invent",
   "role": "player",
@@ -95,9 +77,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa54"
-  },
   "name": "examine",
   "shortcuts": "exam, exami, examin",
   "role": "player",
@@ -111,9 +90,6 @@
   "usage": "lambda m: m.writer.write(b\"You must specify a valid item in your inventory.\\r\\n\")"
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa55"
-  },
   "name": "west",
   "shortcuts": "w, we, wes",
   "role": "player",
@@ -126,9 +102,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa56"
-  },
   "name": "east",
   "shortcuts": "e, ea, eas",
   "role": "player",
@@ -143,11 +116,8 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa57"
-  },
   "name": "north",
-  "shortcuts": "n, nor, nort",
+  "shortcuts": "n, no, nor, nort",
   "role": "player",
   "lambda": [
     "lambda c, zs:zs.move_mobile(c, \"north\")"
@@ -158,9 +128,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa58"
-  },
   "name": "south",
   "shortcuts": "s, so, sou, sout",
   "role": "player",
@@ -173,14 +140,11 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa59"
-  },
   "name": "look",
   "shortcuts": "lo, loo",
   "role": "player",
   "lambda": [
-    "lambda zs, c: zs.print_description(c.writer, c.room_id)"
+    "lambda c, zs, r: zs.print_description(c.writer, r)"
   ],
   "message": "",
   "function": [],
@@ -188,9 +152,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa5a"
-  },
   "name": "up",
   "shortcuts": "u",
   "role": "player",
@@ -203,9 +164,6 @@
   "skillId": ""
 },
 {
-  "_id": {
-    "$oid": "673bf1dbb49d7223c66faa5b"
-  },
   "name": "down",
   "shortcuts": "d",
   "role": "player",
