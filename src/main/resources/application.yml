@@ -1,0 +1,21 @@
+server:
+  port: 9080
+spring:
+  application:
+    name: som-server-modulith
+  cloud:
+    config:
+      import-check:
+        enabled: false
+  data:
+    mongodb:
+      database: SOMDB
+      uri: mongodb://dragon:27017
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://dragon:8180/realms/Springs%20of%20MUD"
+som:
+  web-security:
+    enabled: true

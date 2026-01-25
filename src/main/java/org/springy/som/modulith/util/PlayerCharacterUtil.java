@@ -2,7 +2,7 @@ package org.springy.som.modulith.util;
 
 import org.bson.BsonDocument;
 import org.bson.json.JsonObject;
-import org.springy.som.modulith.domain.rom.character.PlayerCharacter;
+import org.springy.som.modulith.domain.character.PlayerCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
