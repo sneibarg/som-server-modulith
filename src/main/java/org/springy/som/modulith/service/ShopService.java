@@ -17,6 +17,14 @@ public class ShopService {
         return shopRepository.findAll();
     }
 
+    public List<Shop> getShopByName(String shopName) {
+        return shopRepository.findShopsByName(shopName);
+    }
+
+    public List<Shop> getShopByCategory(String category) {
+        return shopRepository.findShopsByCategory(category);
+    }
+
     public Shop getShopById(String shopId) {
         return shopRepository.findShopById(shopId);
     }

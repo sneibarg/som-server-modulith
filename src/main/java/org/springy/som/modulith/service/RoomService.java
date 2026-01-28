@@ -25,7 +25,7 @@ public class RoomService {
     }
 
     public Room getRoomById(@RequestParam String id) {
-        return roomRepository.findById(id).orElse(null);
+        return roomRepository.findRoomById(id);
     }
 
     public Room getRoomByVnum(@RequestParam String vnum) {

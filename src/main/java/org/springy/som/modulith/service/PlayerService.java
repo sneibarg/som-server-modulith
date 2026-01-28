@@ -27,7 +27,7 @@ public class PlayerService {
     }
 
     public void addToPlayerCharacterListByAccountName(String accountName, String playerCharacterId) {
-        playerAccountRepository.findAndPopPlayerCharacterListByAccountName(accountName, playerCharacterId);
+        playerAccountRepository.findAndAddToPlayerCharacterListByAccountName(accountName, playerCharacterId);
     }
 
     public void removePlayerCharacterListByAccountName(String accountName, String playerCharacterId) {

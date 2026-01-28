@@ -1,5 +1,6 @@
 package org.springy.som.modulith.domain.area;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,6 +11,7 @@ import java.util.List;
 @Document("Areas")
 public class Area {
     private String author;
+    @NotBlank(message = "name must not be blank")
     private String name;
     private String suggestedLevelRange;
     private List<String> rooms;

@@ -19,7 +19,7 @@ public class RaceService {
     }
 
     public RomRace getRomRaceById(String id) {
-        return raceRepository.findById(id).orElse(null);
+        return raceRepository.findRomRaceById(id);
     }
 
 }

@@ -21,7 +21,7 @@ public class SpecialService {
     }
 
     public Special getSpecialById(String id) {
-        return specialRepository.findById(id).orElse(null);
+        return specialRepository.findSpecialById(id);
     }
 
     public Special saveSpecial(Special special) {

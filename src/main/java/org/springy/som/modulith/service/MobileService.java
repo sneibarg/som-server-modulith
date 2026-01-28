@@ -17,7 +17,7 @@ public class MobileService {
     }
 
     public Mobile getMobileById(String id) {
-        return mobileRepository.findById(id).orElse(null);
+        return mobileRepository.findMobileById(id);
     }
 
     public Mobile saveMobile(Mobile mobile) {
