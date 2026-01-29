@@ -1,6 +1,5 @@
 server:
   port: 9080
-
 spring:
   application:
     name: som-server-modulith
@@ -17,21 +16,19 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: "http://dragon:8180/realms/Springs%20of%20MUD"
-
 resilience4j:
   circuitbreaker:
     instances:
-      mongoAreas:
+      somAPI:
         slidingWindowType: COUNT_BASED
         slidingWindowSize: 20
         minimumNumberOfCalls: 10
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 5
-
   retry:
     instances:
-      mongoAreas:
+      somAPI:
         maxAttempts: 3
         waitDuration: 200ms
         exponentialBackoffMultiplier: 2
@@ -41,13 +38,13 @@ resilience4j:
         ignoreExceptions:
           - org.springy.som.modulith.exception.area.InvalidAreaException
           - org.springy.som.modulith.exception.area.AreaNotFoundException
-
+          - org.springy.som.modulith.exception.character.InvalidPlayerCharacterException
+          - org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException
   bulkhead:
     instances:
-      mongoAreas:
+      somAPI:
         maxConcurrentCalls: 50
         maxWaitDuration: 0
-
 som:
   web-security:
     enabled: false

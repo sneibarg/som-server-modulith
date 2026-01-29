@@ -1,5 +1,6 @@
 package org.springy.som.modulith.domain.character;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("Characters")
 public class PlayerCharacter {
     private String accountId;
+    @NotBlank(message = "name must not be blank")
     private String name;
     private String title;
     private String description;

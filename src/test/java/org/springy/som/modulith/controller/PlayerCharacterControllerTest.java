@@ -5,28 +5,27 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springy.som.modulith.domain.area.Area;
-import org.springy.som.modulith.exception.area.AreaApiExceptionHandler;
-import org.springy.som.modulith.repository.AreaRepository;
-import org.springy.som.modulith.service.AreaService;
-import org.springy.som.modulith.exception.area.AreaNotFoundException;
-import org.springy.som.modulith.exception.area.AreaPersistenceException;
-import org.springy.som.modulith.exception.area.InvalidAreaException;
+import org.springy.som.modulith.domain.character.PlayerCharacter;
+import org.springy.som.modulith.exception.character.InvalidPlayerCharacterException;
+import org.springy.som.modulith.exception.character.PlayerCharacterApiExceptionHandler;
+import org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springy.som.modulith.exception.character.PlayerCharacterPersistenceException;
+import org.springy.som.modulith.service.CharacterService;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AreaController.class)
-@Import(AreaApiExceptionHandler.class)
+@WebMvcTest(CharacterController.class)
+@Import(PlayerCharacterApiExceptionHandler.class)
 @WithMockUser
-class AreaControllerTest {
+class PlayerCharacterControllerTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -34,45 +33,38 @@ class AreaControllerTest {
     ObjectMapper objectMapper;
 
     @MockitoBean
-    AreaService areaService;
-
-    @MockitoBean
-    AreaRepository areaRepository;
-
-    @Mock
-    Area area;
+    CharacterService characterService;
 
     @Test
-    void getAllAreas_ok() throws Exception {
-        when(areaService.getAllAreas()).thenReturn(java.util.List.of());
+    void getAllPlayerCharacters_ok() throws Exception {
+        when(characterService.getAllPlayerCharacters()).thenReturn(java.util.List.of());
 
-        mockMvc.perform(get("/api/v1/areas"))
+        mockMvc.perform(get("/api/v1/characters"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-        verify(areaService).getAllAreas();
+        verify(characterService).getAllPlayerCharacters();
     }
 
     @Test
-    void getAreaById_notFound_becomes404ProblemDetail() throws Exception {
-        when(areaService.getAreaById("A1")).thenThrow(new AreaNotFoundException("A1"));
+    void getPlayerCharacterById_notFound_becomes404ProblemDetail() throws Exception {
+        when(characterService.getPlayerCharacterById("A1")).thenThrow(new PlayerCharacterNotFoundException("A1"));
 
-        mockMvc.perform(get("/api/v1/areas/A1"))
+        mockMvc.perform(get("/api/v1/characters/A1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(areaService).getAreaById("A1");
+        verify(characterService).getPlayerCharacterById("A1");
     }
 
     @Test
-    void getAreaById_blankId_becomes400ProblemDetail() throws Exception {
-        when(areaService.getAreaById(anyString())).thenThrow(new InvalidAreaException("Area id must be provided"));
-        when(areaRepository.findAreaByAreaId(anyString())).thenReturn(area);
+    void getPlayerCharacterById_blankId_becomes400ProblemDetail() throws Exception {
+        when(characterService.getPlayerCharacterById(anyString())).thenThrow(new InvalidPlayerCharacterException("Player Character id must be provided"));
 
-        mockMvc.perform(get("/api/v1/areas/{id}", "  ")
+        mockMvc.perform(get("/api/v1/characters/{id}", "  ")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -80,44 +72,44 @@ class AreaControllerTest {
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(areaService).getAreaById("  ");
+        verify(characterService).getPlayerCharacterById("  ");
     }
 
 
     @Test
-    void getAllAreas_persistenceDown_becomes503ProblemDetail() throws Exception {
-        when(areaService.getAllAreas()).thenThrow(new AreaPersistenceException("Failed to load areas"));
+    void getAllPlayerCharacters_persistenceDown_becomes503ProblemDetail() throws Exception {
+        when(characterService.getAllPlayerCharacters()).thenThrow(new PlayerCharacterPersistenceException("Failed to load player characters"));
 
-        mockMvc.perform(get("/api/v1/areas"))
+        mockMvc.perform(get("/api/v1/characters"))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(503));
 
-        verify(areaService).getAllAreas();
+        verify(characterService).getAllPlayerCharacters();
     }
 
     @Test
-    void deleteArea_ok_returns204() throws Exception {
-        doNothing().when(areaService).deleteAreaById("A1");
+    void deletePlayerCharacter_ok_returns204() throws Exception {
+        doNothing().when(characterService).deletePlayerCharacterById("A1");
 
-        mockMvc.perform(delete("/api/v1/areas/A1").with(csrf()))
+        mockMvc.perform(delete("/api/v1/characters/A1").with(csrf()))
                 .andExpect(status().isNoContent());
 
-        verify(areaService).deleteAreaById("A1");
+        verify(characterService).deletePlayerCharacterById("A1");
     }
 
     @Test
-    void createArea_returns201() throws Exception {
-        Area input = new Area();
+    void createPlayerCharacter_returns201() throws Exception {
+        PlayerCharacter input = new PlayerCharacter();
         input.setName("Midgaard");
 
-        Area saved = new Area();
+        PlayerCharacter saved = new PlayerCharacter();
         saved.setId("A1");
         saved.setName("Midgaard");
 
-        when(areaService.saveArea(any(Area.class))).thenReturn(saved);
+        when(characterService.savePlayerCharacter(any(PlayerCharacter.class))).thenReturn(saved);
 
-        mockMvc.perform(post("/api/v1/areas")
+        mockMvc.perform(post("/api/v1/characters")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -127,22 +119,22 @@ class AreaControllerTest {
                 .andExpect(jsonPath("$.id").value("A1"))
                 .andExpect(jsonPath("$.name").value("Midgaard"));
 
-        verify(areaService).saveArea(any(Area.class));
+        verify(characterService).savePlayerCharacter(any(PlayerCharacter.class));
     }
 
     @Test
-    void updateArea_ok_returns200AndBody() throws Exception {
-        Area input = new Area();
+    void updatePlayerCharacter_ok_returns200AndBody() throws Exception {
+        PlayerCharacter input = new PlayerCharacter();
         input.setId("A1");
         input.setName("Midgaard");
 
-        Area saved = new Area();
+        PlayerCharacter saved = new PlayerCharacter();
         saved.setId("A1");
         saved.setName("Midgaard (updated)");
 
-        when(areaService.saveAreaForId(eq("A1"), eq(input))).thenReturn(saved);
+        when(characterService.savePlayerCharacterForId(eq("A1"), eq(input))).thenReturn(saved);
 
-        mockMvc.perform(put("/api/v1/areas/{id}", "A1")
+        mockMvc.perform(put("/api/v1/characters/{id}", "A1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -152,17 +144,17 @@ class AreaControllerTest {
                 .andExpect(jsonPath("$.id").value("A1"))
                 .andExpect(jsonPath("$.name").value("Midgaard (updated)"));
 
-        verify(areaService).saveAreaForId(eq("A1"), eq(input));
-        verifyNoMoreInteractions(areaService);
+        verify(characterService).savePlayerCharacterForId(eq("A1"), eq(input));
+        verifyNoMoreInteractions(characterService);
     }
 
     @Test
-    void updateArea_blankName_returns400ProblemDetail_asJson() throws Exception {
-        Area input = new Area();
+    void updatePlayerCharacter_blankName_returns400ProblemDetail_asJson() throws Exception {
+        PlayerCharacter input = new PlayerCharacter();
         input.setId("A1");
         input.setName("");
 
-        mockMvc.perform(put("/api/v1/areas/{id}", "A1")
+        mockMvc.perform(put("/api/v1/characters/{id}", "A1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -176,9 +168,9 @@ class AreaControllerTest {
 
     @Test
     void deleteAll_returns200AndDeletedCount() throws Exception {
-        when(areaService.deleteAllAreas()).thenReturn(7L);
+        when(characterService.deleteAllPlayerCharacters()).thenReturn(7L);
 
-        mockMvc.perform(delete("/api/v1/areas")
+        mockMvc.perform(delete("/api/v1/characters")
                         .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -188,9 +180,9 @@ class AreaControllerTest {
 
     @Test
     void deleteAll_whenNothingDeleted_returns200AndZero() throws Exception {
-        when(areaService.deleteAllAreas()).thenReturn(0L);
+        when(characterService.deleteAllPlayerCharacters()).thenReturn(0L);
 
-        mockMvc.perform(delete("/api/v1/areas")
+        mockMvc.perform(delete("/api/v1/characters")
                         .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

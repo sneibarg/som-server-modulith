@@ -24,21 +24,21 @@ public class AreaService {
         this.areaRepository = areaRepository;
     }
 
-    @CircuitBreaker(name = "mongoAreas", fallbackMethod = "getAllAreasFallback")
-    @Retry(name = "mongoAreas")
-    @Bulkhead(name = "mongoAreas")
+    @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllAreasFallback")
+    @Retry(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public List<Area> getAllAreas() {
         try {
             return areaRepository.findAll();
         } catch (DataAccessException ex) {
             log.warn("DB failure in getAllAreas", ex);
-            throw new AreaPersistenceException("Failed to load areas", ex);
+            throw new AreaPersistenceException("Failed to load areas "+ex);
         }
     }
 
-    @CircuitBreaker(name = "mongoAreas", fallbackMethod = "getAreaByIdFallback")
-    @Retry(name = "mongoAreas")
-    @Bulkhead(name = "mongoAreas")
+    @CircuitBreaker(name = "somAPI", fallbackMethod = "getAreaByIdFallback")
+    @Retry(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public Area getAreaById(String id) {
         requireId(id);
 
@@ -52,12 +52,12 @@ public class AreaService {
             throw ex;
         } catch (DataAccessException ex) {
             log.warn("DB failure in getAreaById id={}", id, ex);
-            throw new AreaPersistenceException("Failed to load area: " + id, ex);
+            throw new AreaPersistenceException("Failed to load area: " + id + " "+ex);
         }
     }
 
-    @CircuitBreaker(name = "mongoAreas")
-    @Bulkhead(name = "mongoAreas")
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public Area createArea(Area area) {
         requireArea(area);
 
@@ -66,20 +66,20 @@ public class AreaService {
             return areaRepository.save(area);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createArea areaId={}", safeId(area), ex);
-            throw new AreaPersistenceException("Failed to create area", ex);
+            throw new AreaPersistenceException("Failed to create area"+ex);
         }
     }
 
-    @CircuitBreaker(name = "mongoAreas")
-    @Bulkhead(name = "mongoAreas")
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public Area saveArea(Area area) {
         requireArea(area);
 
         return areaRepository.save(area);
     }
 
-    @CircuitBreaker(name = "mongoAreas")
-    @Bulkhead(name = "mongoAreas")
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public Area saveAreaForId(String id, Area area) {
         requireId(id);
         requireArea(area);
@@ -87,8 +87,8 @@ public class AreaService {
         return areaRepository.save(getAreaById(id));
     }
 
-    @CircuitBreaker(name = "mongoAreas")
-    @Bulkhead(name = "mongoAreas")
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public void deleteAreaById(String id) {
         requireId(id);
 
@@ -101,12 +101,12 @@ public class AreaService {
             throw ex;
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAreaById id={}", id, ex);
-            throw new AreaPersistenceException("Failed to delete area: " + id, ex);
+            throw new AreaPersistenceException("Failed to delete area: " + id+" "+ex);
         }
     }
 
-    @CircuitBreaker(name = "mongoAreas")
-    @Bulkhead(name = "mongoAreas")
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public long deleteAllAreas() {
         try {
             long itemCount = areaRepository.count();
@@ -114,7 +114,7 @@ public class AreaService {
             return itemCount;
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllAreas", ex);
-            throw new AreaPersistenceException("Failed to delete all areas", ex);
+            throw new AreaPersistenceException("Failed to delete all areas "+ ex);
         }
     }
 
@@ -147,6 +147,6 @@ public class AreaService {
 
     private Area getAreaByIdFallback(String id, Throwable t) {
         log.warn("Fallback getAreaById id={} due to {}", id, t.toString());
-        throw new AreaPersistenceException("Area lookup temporarily unavailable: " + id, t);
+        throw new AreaPersistenceException("Area lookup temporarily unavailable: " + id+" "+t);
     }
 }

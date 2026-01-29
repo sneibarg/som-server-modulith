@@ -1,7 +1,13 @@
 package org.springy.som.modulith.exception.area;
 
-public class AreaNotFoundException extends RuntimeException {
-    public AreaNotFoundException(String areaId) {
-        super("Area not found: " + areaId);
+import org.springframework.http.HttpStatus;
+import org.springy.som.modulith.exception.ApiError;
+import org.springy.som.modulith.exception.NotFoundApiException;
+
+@ApiError(status = HttpStatus.NOT_FOUND, title = "Area not found", code = "AREA_NOT_FOUND")
+public class AreaNotFoundException extends NotFoundApiException {
+    public AreaNotFoundException(String message) {
+        super(message);
     }
 }
+

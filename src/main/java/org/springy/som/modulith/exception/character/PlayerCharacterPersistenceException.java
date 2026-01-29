@@ -1,12 +1,12 @@
-package org.springy.som.modulith.exception.area;
+package org.springy.som.modulith.exception.character;
 
 import org.springframework.http.HttpStatus;
 import org.springy.som.modulith.exception.ApiError;
 import org.springy.som.modulith.exception.ServiceUnavailableApiException;
 
 @ApiError(status = HttpStatus.SERVICE_UNAVAILABLE, title = "Persistence service unavailable", code = "SERVICE_UNAVAILABLE")
-public final class AreaPersistenceException extends ServiceUnavailableApiException {
-    public AreaPersistenceException(String message) {
-        super(message);
+public final class PlayerCharacterPersistenceException extends ServiceUnavailableApiException {
+    public PlayerCharacterPersistenceException(String message) {
+        super("Service unavailable "+message);
     }
 }
