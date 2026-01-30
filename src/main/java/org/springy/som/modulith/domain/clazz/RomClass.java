@@ -1,6 +1,8 @@
 package org.springy.som.modulith.domain.clazz;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 /*
     {
@@ -27,6 +29,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document("RomClasses")
 public class RomClass {
+    @NotBlank(message = "name must not be blank")
     private String name;
     private String whoName;
     private String primaryAttribute;
@@ -39,4 +42,7 @@ public class RomClass {
     private int hpMin;
     private int hpMax;
     private boolean fMana;
+
+    @Id
+    private String id;
 }

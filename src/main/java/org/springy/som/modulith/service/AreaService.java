@@ -72,14 +72,6 @@ public class AreaService {
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public Area saveArea(Area area) {
-        requireArea(area);
-
-        return areaRepository.save(area);
-    }
-
-    @CircuitBreaker(name = "somAPI")
-    @Bulkhead(name = "somAPI")
     public Area saveAreaForId(String id, Area area) {
         requireId(id);
         requireArea(area);

@@ -40,6 +40,8 @@ resilience4j:
           - org.springy.som.modulith.exception.area.AreaNotFoundException
           - org.springy.som.modulith.exception.character.InvalidPlayerCharacterException
           - org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException
+          - org.springy.som.modulith.exception.clazz.InvalidRomClassException
+          - org.springy.som.modulith.exception.clazz.RomClassNotFoundException
   bulkhead:
     instances:
       somAPI:

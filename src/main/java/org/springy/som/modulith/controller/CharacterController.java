@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springy.som.modulith.domain.character.PlayerCharacter;
 import org.springy.som.modulith.service.CharacterService;
+import org.springy.som.modulith.service.DeleteAllResponse;
 
 import java.net.URI;
 import java.util.List;
@@ -30,8 +31,8 @@ public class CharacterController {
 
     @GetMapping
     @ResponseBody
-    public List<PlayerCharacter> getPlayerCharacters() {
-        return characterService.getAllPlayerCharacters();
+    public ResponseEntity<List<PlayerCharacter>> getPlayerCharacters() {
+        return ResponseEntity.ok(characterService.getAllPlayerCharacters());
     }
 
     @GetMapping(path = "/account/{accountId}")
@@ -68,7 +69,7 @@ public class CharacterController {
     }
 
     @DeleteMapping
-    public ResponseEntity<AreaController.DeleteAllResponse> deleteAll() {
-        return ResponseEntity.ok(new AreaController.DeleteAllResponse(characterService.deleteAllPlayerCharacters()));
+    public ResponseEntity<DeleteAllResponse> deleteAll() {
+        return ResponseEntity.ok(new DeleteAllResponse(characterService.deleteAllPlayerCharacters()));
     }
 }

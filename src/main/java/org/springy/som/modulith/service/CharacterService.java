@@ -9,9 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.character.PlayerCharacter;
-import org.springy.som.modulith.exception.area.AreaNotFoundException;
-import org.springy.som.modulith.exception.area.AreaPersistenceException;
-import org.springy.som.modulith.exception.area.InvalidAreaException;
 import org.springy.som.modulith.exception.character.InvalidPlayerCharacterException;
 import org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException;
 import org.springy.som.modulith.exception.character.PlayerCharacterPersistenceException;
@@ -92,7 +89,7 @@ public class CharacterService {
 
         try {
             if (!characterRepository.existsById(id)) {
-                throw new AreaNotFoundException(id);
+                throw new PlayerCharacterNotFoundException(id);
             }
             characterRepository.deleteById(id);
         } catch (PlayerCharacterNotFoundException ex) {
@@ -131,7 +128,7 @@ public class CharacterService {
 
     private static void requirePlayerCharacter(PlayerCharacter playerCharacter) {
         if (playerCharacter == null) {
-            throw new InvalidAreaException("PlayerCharacter must be provided");
+            throw new InvalidPlayerCharacterException("PlayerCharacter must be provided");
         }
 
         requireId(playerCharacter.getId());
@@ -152,11 +149,11 @@ public class CharacterService {
 
     private PlayerCharacter getPlayerCharacterByIdFallback(String id, Throwable t) {
         log.warn("Fallback getPlayerCharacterById id={} due to {}", id, t.toString());
-        throw new AreaPersistenceException("PlayerCharacter lookup temporarily unavailable: " + id + " " + t);
+        throw new PlayerCharacterPersistenceException("PlayerCharacter lookup temporarily unavailable: " + id + " " + t);
     }
 
     private PlayerCharacter getPlayerCharactersByAccountIdFallback(String accountId, Throwable t) {
         log.warn("Fallback getPlayerCharactersByAccountId due to {}", t.toString());
-        throw new AreaPersistenceException("PlayerCharacter lookup temporarily unavailable: " + accountId + " " + t);
+        throw new PlayerCharacterPersistenceException("PlayerCharacter lookup temporarily unavailable: " + accountId + " " + t);
     }
 }

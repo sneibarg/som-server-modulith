@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springy.som.modulith.domain.area.Area;
 import org.springy.som.modulith.service.AreaService;
 import org.springframework.http.ResponseEntity;
+import org.springy.som.modulith.service.DeleteAllResponse;
 
 
 import java.net.URI;
@@ -38,7 +39,7 @@ public class AreaController {
 
     @PostMapping
     public ResponseEntity<Area> createArea(@Valid @RequestBody Area area) {
-        Area saved = areaService.saveArea(area);
+        Area saved = areaService.createArea(area);
         return ResponseEntity
                 .created(URI.create("/api/v1/areas/" + saved.getId()))
                 .body(saved);
@@ -60,6 +61,4 @@ public class AreaController {
     public ResponseEntity<DeleteAllResponse> deleteAll() {
         return ResponseEntity.ok(new DeleteAllResponse(areaService.deleteAllAreas()));
     }
-
-    public record DeleteAllResponse(long deletedCount) {}
 }

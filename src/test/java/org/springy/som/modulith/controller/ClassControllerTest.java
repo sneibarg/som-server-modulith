@@ -2,31 +2,29 @@ package org.springy.som.modulith.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springy.som.modulith.domain.area.Area;
-import org.springy.som.modulith.exception.area.AreaApiExceptionHandler;
-import org.springy.som.modulith.repository.AreaRepository;
-import org.springy.som.modulith.service.AreaService;
-import org.springy.som.modulith.exception.area.AreaNotFoundException;
-import org.springy.som.modulith.exception.area.AreaPersistenceException;
-import org.springy.som.modulith.exception.area.InvalidAreaException;
+import org.springy.som.modulith.domain.clazz.RomClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springy.som.modulith.exception.clazz.InvalidRomClassException;
+import org.springy.som.modulith.exception.clazz.RomClassApiExceptionHandler;
+import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
+import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
+import org.springy.som.modulith.service.ClassService;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AreaController.class)
-@Import(AreaApiExceptionHandler.class)
+@WebMvcTest(ClassController.class)
+@Import(RomClassApiExceptionHandler.class)
 @WithMockUser
-class AreaControllerTest {
+class ClassControllerTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -34,45 +32,38 @@ class AreaControllerTest {
     ObjectMapper objectMapper;
 
     @MockitoBean
-    AreaService areaService;
-
-    @MockitoBean
-    AreaRepository areaRepository;
-
-    @Mock
-    Area area;
+    ClassService classService;
 
     @Test
-    void getAllAreas_ok() throws Exception {
-        when(areaService.getAllAreas()).thenReturn(java.util.List.of());
+    void getAllRomClasses_ok() throws Exception {
+        when(classService.getAllClasses()).thenReturn(java.util.List.of());
 
-        mockMvc.perform(get("/api/v1/areas"))
+        mockMvc.perform(get("/api/v1/classes"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-        verify(areaService).getAllAreas();
+        verify(classService).getAllClasses();
     }
 
     @Test
-    void getAreaById_notFound_becomes404ProblemDetail() throws Exception {
-        when(areaService.getAreaById("A1")).thenThrow(new AreaNotFoundException("A1"));
+    void getRomClassById_notFound_becomes404ProblemDetail() throws Exception {
+        when(classService.getRomClassById("A1")).thenThrow(new RomClassNotFoundException("A1"));
 
-        mockMvc.perform(get("/api/v1/areas/A1"))
+        mockMvc.perform(get("/api/v1/classes/A1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(areaService).getAreaById("A1");
+        verify(classService).getRomClassById("A1");
     }
 
     @Test
-    void getAreaById_blankId_becomes400ProblemDetail() throws Exception {
-        when(areaService.getAreaById(anyString())).thenThrow(new InvalidAreaException("Area id must be provided"));
-        when(areaRepository.findAreaByAreaId(anyString())).thenReturn(area);
+    void getRomClassById_blankId_becomes400ProblemDetail() throws Exception {
+        when(classService.getRomClassById(anyString())).thenThrow(new InvalidRomClassException("ROM class id must be provided"));
 
-        mockMvc.perform(get("/api/v1/areas/{id}", "  ")
+        mockMvc.perform(get("/api/v1/classes/{id}", "  ")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -80,44 +71,44 @@ class AreaControllerTest {
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(areaService).getAreaById("  ");
+        verify(classService).getRomClassById("  ");
     }
 
 
     @Test
-    void getAllAreas_persistenceDown_becomes503ProblemDetail() throws Exception {
-        when(areaService.getAllAreas()).thenThrow(new AreaPersistenceException("Failed to load areas"));
+    void getAllRomClasses_persistenceDown_becomes503ProblemDetail() throws Exception {
+        when(classService.getAllClasses()).thenThrow(new RomClassPersistenceException("Failed to load ROM classes"));
 
-        mockMvc.perform(get("/api/v1/areas"))
+        mockMvc.perform(get("/api/v1/classes"))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(503));
 
-        verify(areaService).getAllAreas();
+        verify(classService).getAllClasses();
     }
 
     @Test
-    void deleteArea_ok_returns204() throws Exception {
-        doNothing().when(areaService).deleteAreaById("A1");
+    void deleteRomClass_ok_returns204() throws Exception {
+        doNothing().when(classService).deleteRomClassById("A1");
 
-        mockMvc.perform(delete("/api/v1/areas/A1").with(csrf()))
+        mockMvc.perform(delete("/api/v1/classes/A1").with(csrf()))
                 .andExpect(status().isNoContent());
 
-        verify(areaService).deleteAreaById("A1");
+        verify(classService).deleteRomClassById("A1");
     }
 
     @Test
-    void createArea_returns201() throws Exception {
-        Area input = new Area();
+    void createRomClass_returns201() throws Exception {
+        RomClass input = new RomClass();
         input.setName("Midgaard");
 
-        Area saved = new Area();
+        RomClass saved = new RomClass();
         saved.setId("A1");
         saved.setName("Midgaard");
 
-        when(areaService.createArea(any(Area.class))).thenReturn(saved);
+        when(classService.createRomClass(any(RomClass.class))).thenReturn(saved);
 
-        mockMvc.perform(post("/api/v1/areas")
+        mockMvc.perform(post("/api/v1/classes")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -127,22 +118,22 @@ class AreaControllerTest {
                 .andExpect(jsonPath("$.id").value("A1"))
                 .andExpect(jsonPath("$.name").value("Midgaard"));
 
-        verify(areaService).createArea(any(Area.class));
+        verify(classService).createRomClass(any(RomClass.class));
     }
 
     @Test
-    void updateArea_ok_returns200AndBody() throws Exception {
-        Area input = new Area();
+    void updateRomClass_ok_returns200AndBody() throws Exception {
+        RomClass input = new RomClass();
         input.setId("A1");
         input.setName("Midgaard");
 
-        Area saved = new Area();
+        RomClass saved = new RomClass();
         saved.setId("A1");
         saved.setName("Midgaard (updated)");
 
-        when(areaService.saveAreaForId(eq("A1"), eq(input))).thenReturn(saved);
+        when(classService.saveRomClassForId(eq("A1"), eq(input))).thenReturn(saved);
 
-        mockMvc.perform(put("/api/v1/areas/{id}", "A1")
+        mockMvc.perform(put("/api/v1/classes/{id}", "A1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -152,17 +143,17 @@ class AreaControllerTest {
                 .andExpect(jsonPath("$.id").value("A1"))
                 .andExpect(jsonPath("$.name").value("Midgaard (updated)"));
 
-        verify(areaService).saveAreaForId(eq("A1"), eq(input));
-        verifyNoMoreInteractions(areaService);
+        verify(classService).saveRomClassForId(eq("A1"), eq(input));
+        verifyNoMoreInteractions(classService);
     }
 
     @Test
-    void updateArea_blankName_returns400ProblemDetail_asJson() throws Exception {
-        Area input = new Area();
+    void updateRomClass_blankName_returns400ProblemDetail_asJson() throws Exception {
+        RomClass input = new RomClass();
         input.setId("A1");
         input.setName("");
 
-        mockMvc.perform(put("/api/v1/areas/{id}", "A1")
+        mockMvc.perform(put("/api/v1/classes/{id}", "A1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -176,9 +167,9 @@ class AreaControllerTest {
 
     @Test
     void deleteAll_returns200AndDeletedCount() throws Exception {
-        when(areaService.deleteAllAreas()).thenReturn(7L);
+        when(classService.deleteAllRomClasses()).thenReturn(7L);
 
-        mockMvc.perform(delete("/api/v1/areas")
+        mockMvc.perform(delete("/api/v1/classes")
                         .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -188,9 +179,9 @@ class AreaControllerTest {
 
     @Test
     void deleteAll_whenNothingDeleted_returns200AndZero() throws Exception {
-        when(areaService.deleteAllAreas()).thenReturn(0L);
+        when(classService.deleteAllRomClasses()).thenReturn(0L);
 
-        mockMvc.perform(delete("/api/v1/areas")
+        mockMvc.perform(delete("/api/v1/classes")
                         .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
