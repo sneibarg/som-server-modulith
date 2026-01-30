@@ -1,11 +1,13 @@
 package org.springy.som.modulith.domain.item;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document("Wearable")
 public class Wearable {
+    @NotBlank(message = "character ID must not be blank")
     private String characterId;
     private String light;
     private String neck1;

@@ -1,5 +1,6 @@
 package org.springy.som.modulith.domain.mobile;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -7,8 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document("Mobiles")
 public class Mobile {
+    @NotBlank(message = "area ID must not be blank")
     private String areaId;
     private String vnum;
+    @NotBlank(message = "name must not be blank")
     private String name;
     private String shortDescription;
     private String longDescription;

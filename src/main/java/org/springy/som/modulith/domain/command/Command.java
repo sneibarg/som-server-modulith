@@ -1,5 +1,6 @@
 package org.springy.som.modulith.domain.command;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,6 +10,7 @@ import java.util.List;
 @Data
 @Document("Commands")
 public class Command {
+    @NotBlank(message = "name must not be blank")
     private String name;
     private String message;
     private String role;

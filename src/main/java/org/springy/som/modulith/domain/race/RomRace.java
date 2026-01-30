@@ -1,5 +1,6 @@
 package org.springy.som.modulith.domain.race;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -36,6 +37,7 @@ import java.util.List;
 @Data
 @Document("RomRaces")
 public class RomRace {
+    @NotBlank(message = "name must not be blank")
     private String name;
     private String size;
     private List<String> skills;

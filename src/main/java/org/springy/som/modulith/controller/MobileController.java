@@ -1,19 +1,24 @@
 package org.springy.som.modulith.controller;
 
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springy.som.modulith.service.DeleteAllResponse;
 import org.springy.som.modulith.service.MobileService;
 import org.springy.som.modulith.domain.mobile.Mobile;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/api/v1/mobiles", produces = "application/json")
 public class MobileController {
     private final MobileService mobileService;
 
@@ -21,56 +26,38 @@ public class MobileController {
         this.mobileService = mobileService;
     }
 
-    @PostMapping("/api/v1/mobile")
-    @ResponseBody
-    public Mobile createMobile(@RequestBody Mobile mobile) {
-        return mobileService.saveMobile(mobile);
+    @GetMapping
+    public ResponseEntity<List<Mobile>> getMobiles() {
+        return ResponseEntity.ok(mobileService.getAllMobiles());
     }
 
-    @GetMapping(path = "/api/v1/mobiles")
-    @ResponseBody
-    public List<Mobile> getMobiles() {
-        return mobileService.getAllMobiles();
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Mobile> getMobileById(@Valid @PathVariable String id) {
+        return ResponseEntity.ok(mobileService.getMobileById(id));
     }
 
-    @GetMapping(path = "/api/v1/mobiles/race")
-    @ResponseBody
-    public List<Mobile> getMobilesByRace(@RequestParam String raceId) {
-        return mobileService.getMobilesByRace(raceId);
+    @PostMapping
+    public ResponseEntity<Mobile> createMobile(@Valid @RequestBody Mobile mobile) {
+        Mobile saved = mobileService.createMobile(mobile);
+        return ResponseEntity
+                .created(URI.create("/api/v1/characters/" + saved.getId()))
+                .body(saved);
     }
 
-    @GetMapping(path = "/api/v1/mobiles/class")
-    @ResponseBody
-    public List<Mobile> getMobilesByClass(@RequestParam String classId) {
-        return mobileService.getMobilesByClass(classId);
+    @PutMapping("/{id}")
+    public ResponseEntity<Mobile> updateMobile(@PathVariable String id, @Valid @RequestBody Mobile mobile) {
+        Mobile updated = mobileService.saveMobileForId(id, mobile);
+        return ResponseEntity.ok(updated);
     }
 
-    @GetMapping(path = "/api/v1/mobiles/range")
-    @ResponseBody
-    public List<Mobile> getMobilesByLevelRange(@RequestParam String min, @RequestParam String max) {
-        return mobileService.getMobilesByLevelRange(min, max);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMobileById(@PathVariable String id) {
+        mobileService.deleteMobileById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(path = "/api/v1/mobile")
-    @ResponseBody
-    public Mobile getMobileById(@RequestParam String mobileId) {
-        return mobileService.getMobileById(mobileId);
-    }
-
-    @PutMapping(path = "/api/v1/mobile")
-    @ResponseBody
-    public Mobile updateMobile(@RequestParam Mobile mobile) {
-        return mobileService.saveMobile(mobile);
-    }
-
-    @DeleteMapping(path = "/api/v1/mobiles")
-    @ResponseBody
-    public String deleteAll() {
-        StringBuilder response = new StringBuilder();
-        response.append("Deleted a total of ")
-                .append(mobileService.deleteAllMobiles())
-                .append(" Mobile objects.");
-
-        return response.toString();
+    @DeleteMapping
+    public ResponseEntity<DeleteAllResponse> deleteAll() {
+        return ResponseEntity.ok(new DeleteAllResponse(mobileService.deleteAllMobiles()));
     }
 }
