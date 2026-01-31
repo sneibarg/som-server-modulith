@@ -59,7 +59,7 @@ public class RaceService {
             // if (raceRepository.existsById(romRace.getRomRaceId())) throw new RomRaceConflictException(...)
             return raceRepository.save(romRace);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createRomRace areaId={}", safeId(romRace, RomRace::getId), ex);
+            log.warn("DB failure in createRomRace romRaceId={}", safeId(romRace, RomRace::getId), ex);
             throw new RomRacePersistenceException("Failed to create ROM race"+ex);
         }
     }

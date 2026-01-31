@@ -60,7 +60,7 @@ public class MobileService {
             // if (mobileRepository.existsById(mobile.getMobileId())) throw new MobileConflictException(...)
             return mobileRepository.save(mobile);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createCommand areaId={}", safeId(mobile, Mobile::getId), ex);
+            log.warn("DB failure in createMobile mobileId={}", safeId(mobile, Mobile::getId), ex);
             throw new MobilePersistenceException("Failed to create command"+ex);
         }
     }

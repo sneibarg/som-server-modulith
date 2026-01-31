@@ -60,7 +60,7 @@ public class CommandService {
             // if (commandRepository.existsById(command.getId())) throw new CommandConflictException(...)
             return commandRepository.save(command);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createCommand areaId={}", safeId(command, Command::getId), ex);
+            log.warn("DB failure in createCommand commandId={}", safeId(command, Command::getId), ex);
             throw new RomClassPersistenceException("Failed to create command"+ex);
         }
     }

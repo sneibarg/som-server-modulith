@@ -61,7 +61,7 @@ public class PlayerService {
             // if (playerAccountRepository.existsById(mobile.getPlayerAccountId())) throw new PlayerAccountConflictException(...)
             return playerAccountRepository.save(playerAccount);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createPlayerAccount areaId={}", safeId(playerAccount, PlayerAccount::getId), ex);
+            log.warn("DB failure in createPlayerAccount playerAccountId={}", safeId(playerAccount, PlayerAccount::getId), ex);
             throw new PlayerPersistenceException("Failed to create player account"+ex);
         }
     }

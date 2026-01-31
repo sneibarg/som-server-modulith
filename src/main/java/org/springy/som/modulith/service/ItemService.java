@@ -58,7 +58,7 @@ public class ItemService {
             // if (itemRepository.existsById(item.getId())) throw new ItemConflictException(...)
             return itemRepository.save(item);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createCommand areaId={}", safeId(item, Item::getId), ex);
+            log.warn("DB failure in createItem itemId={}", safeId(item, Item::getId), ex);
             throw new ItemPersistenceException("Failed to create item"+ex);
         }
     }

@@ -59,7 +59,7 @@ public class SpecialService {
             // if (specialRepository.existsById(special.getId())) throw new SpecialConflictException(...)
             return specialRepository.save(special);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createSpecial areaId={}", safeId(special, Special::getId), ex);
+            log.warn("DB failure in createSpecial specialId={}", safeId(special, Special::getId), ex);
             throw new SpecialPersistenceException("Failed to create ROM special"+ex);
         }
     }

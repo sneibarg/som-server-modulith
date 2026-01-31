@@ -58,7 +58,7 @@ public class ShopService {
             // if (shopRepository.existsById(shop.getId())) throw new ShopConflictException(...)
             return shopRepository.save(shop);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createShop areaId={}", safeId(shop, Shop::getId), ex);
+            log.warn("DB failure in createShop shopId={}", safeId(shop, Shop::getId), ex);
             throw new ShopPersistenceException("Failed to create ROM shop"+ex);
         }
     }
