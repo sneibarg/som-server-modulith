@@ -34,7 +34,7 @@ public class PlayerController {
         return ResponseEntity.ok(playerService.getAllPlayerAccounts());
     }
 
-    @GetMapping(path = "/name")
+    @GetMapping(path = "/name/{name}")
     public ResponseEntity<PlayerAccount> getPlayerAccountByName(@RequestParam String name) {
         return ResponseEntity.ok(playerService.getPlayerAccountByName(name));
     }
