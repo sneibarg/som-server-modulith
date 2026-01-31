@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 class ResetServiceTest {
     private final String resetIdMissing = "ROM reset id must be provided";
     private final String resetMissing = "ROM reset must be provided";
+    private final String dbDown = "Service unavailable Failed to delete all ROM resets org.springframework.dao.DataAccessResourceFailureException: db down";
 
     @Mock
     private ResetRepository repo;
@@ -225,7 +226,7 @@ class ResetServiceTest {
 
         assertThatThrownBy(() -> service.deleteAllResets())
                 .isInstanceOf(ResetPersistenceException.class)
-                .hasMessageContaining("Failed to delete all ROM race");
+                .hasMessageContaining(dbDown);
 
         verify(repo).count();
         verifyNoMoreInteractions(repo);
@@ -244,8 +245,8 @@ class ResetServiceTest {
     }
 
     @Test
-    void getResetsByIdFallback_throwsResetPersistenceException() throws Exception {
-        var m = ResetService.class.getDeclaredMethod("getResetsByIdFallback", String.class, Throwable.class);
+    void getResetByIdFallback_throwsResetPersistenceException() throws Exception {
+        var m = ResetService.class.getDeclaredMethod("getResetByIdFallback", String.class, Throwable.class);
         m.setAccessible(true);
 
         assertThatThrownBy(() -> {

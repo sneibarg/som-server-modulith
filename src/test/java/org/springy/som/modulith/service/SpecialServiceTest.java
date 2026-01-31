@@ -231,8 +231,8 @@ class SpecialServiceTest {
     }
 
     @Test
-    void getAllSpecialFallback_returnsEmptyList() throws Exception {
-        var m = SpecialService.class.getDeclaredMethod("getAllSpecialFallback", Throwable.class);
+    void getAllSpecialsFallback_returnsEmptyList() throws Exception {
+        var m = SpecialService.class.getDeclaredMethod("getAllSpecialsFallback", Throwable.class);
         m.setAccessible(true);
 
         @SuppressWarnings("unchecked")
@@ -243,8 +243,8 @@ class SpecialServiceTest {
     }
 
     @Test
-    void getSpecialsByIdFallback_throwsSpecialPersistenceException() throws Exception {
-        var m = SpecialService.class.getDeclaredMethod("getSpecialsByIdFallback", String.class, Throwable.class);
+    void getSpecialByIdFallback_throwsSpecialPersistenceException() throws Exception {
+        var m = SpecialService.class.getDeclaredMethod("getSpecialByIdFallback", String.class, Throwable.class);
         m.setAccessible(true);
 
         assertThatThrownBy(() -> {

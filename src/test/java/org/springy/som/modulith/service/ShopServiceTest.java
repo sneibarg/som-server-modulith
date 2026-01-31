@@ -231,8 +231,8 @@ class ShopServiceTest {
     }
 
     @Test
-    void getAllShopFallback_returnsEmptyList() throws Exception {
-        var m = ShopService.class.getDeclaredMethod("getAllShopFallback", Throwable.class);
+    void getAllShopsFallback_returnsEmptyList() throws Exception {
+        var m = ShopService.class.getDeclaredMethod("getAllShopsFallback", Throwable.class);
         m.setAccessible(true);
 
         @SuppressWarnings("unchecked")
@@ -243,8 +243,8 @@ class ShopServiceTest {
     }
 
     @Test
-    void getRoomsByIdFallback_throwsShopPersistenceException() throws Exception {
-        var m = ShopService.class.getDeclaredMethod("getRoomsByIdFallback", String.class, Throwable.class);
+    void getShopByIdFallback_throwsShopPersistenceException() throws Exception {
+        var m = ShopService.class.getDeclaredMethod("getShopByIdFallback", String.class, Throwable.class);
         m.setAccessible(true);
 
         assertThatThrownBy(() -> {

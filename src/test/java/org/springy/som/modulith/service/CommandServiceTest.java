@@ -265,8 +265,8 @@ class CommandServiceTest {
     }
 
     @Test
-    void getRomClassByIdFallback_throwsCommandPersistenceException() throws Exception {
-        Method m = CommandService.class.getDeclaredMethod("getRomClassByIdFallback", String.class, Throwable.class);
+    void getCommandByIdFallback_throwsCommandPersistenceException() throws Exception {
+        Method m = CommandService.class.getDeclaredMethod("getCommandByIdFallback", String.class, Throwable.class);
         m.setAccessible(true);
 
         Throwable t = new RuntimeException("boom");

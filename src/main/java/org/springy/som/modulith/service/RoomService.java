@@ -60,7 +60,7 @@ public class RoomService {
             return roomRepository.save(room);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createRoom roomId={}", safeId(room, Room::getId), ex);
-            throw new RoomPersistenceException("Failed to create ROM room"+ex);
+            throw new RoomPersistenceException("Failed to create ROM room: "+ex);
         }
     }
 

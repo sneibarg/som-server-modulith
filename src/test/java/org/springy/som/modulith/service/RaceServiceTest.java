@@ -244,8 +244,8 @@ class RaceServiceTest {
     }
 
     @Test
-    void getRomRacesByIdFallback_throwsMobilePersistenceException() throws Exception {
-        var m = RaceService.class.getDeclaredMethod("getRomRacesByIdFallback", String.class, Throwable.class);
+    void getRomRaceByIdFallback_throwsMobilePersistenceException() throws Exception {
+        var m = RaceService.class.getDeclaredMethod("getRomRaceByIdFallback", String.class, Throwable.class);
         m.setAccessible(true);
 
         assertThatThrownBy(() -> {

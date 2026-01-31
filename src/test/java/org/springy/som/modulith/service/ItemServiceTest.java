@@ -244,7 +244,7 @@ class ItemServiceTest {
 
     @Test
     void getRomClassByIdFallback_throwsItemPersistenceException() throws Exception {
-        var m = ItemService.class.getDeclaredMethod("getRomClassByIdFallback", String.class, Throwable.class);
+        var m = ItemService.class.getDeclaredMethod("getItemByIdFallback", String.class, Throwable.class);
         m.setAccessible(true);
 
         assertThatThrownBy(() -> {

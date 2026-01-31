@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 class RoomServiceTest {
     private final String roomIdMissing = "ROM room id must be provided";
     private final String roomMissing = "ROM room must be provided";
+    private final String dbDown = "Service unavailable Failed to create ROM room: org.springframework.dao.DataAccessResourceFailureException: db down";
 
     @Mock
     private RoomRepository repo;
@@ -106,7 +107,7 @@ class RoomServiceTest {
 
         assertThatThrownBy(() -> service.createRoom(room))
                 .isInstanceOf(RoomPersistenceException.class)
-                .hasMessageContaining("Failed to create ROM race");
+                .hasMessageContaining(dbDown);
 
         verify(repo).save(room);
         verifyNoMoreInteractions(repo);
@@ -120,7 +121,7 @@ class RoomServiceTest {
 
         assertThatThrownBy(() -> service.createRoom(room))
                 .isInstanceOf(RoomPersistenceException.class)
-                .hasMessageContaining("Failed to create ROM race");
+                .hasMessageContaining(dbDown);
 
         verify(repo).save(room);
         verifyNoMoreInteractions(repo);
@@ -231,8 +232,8 @@ class RoomServiceTest {
     }
 
     @Test
-    void getAllRoomFallback_returnsEmptyList() throws Exception {
-        var m = RoomService.class.getDeclaredMethod("getAllRoomFallback", Throwable.class);
+    void getAllRoomsFallback_returnsEmptyList() throws Exception {
+        var m = RoomService.class.getDeclaredMethod("getAllRoomsFallback", Throwable.class);
         m.setAccessible(true);
 
         @SuppressWarnings("unchecked")
@@ -243,8 +244,8 @@ class RoomServiceTest {
     }
 
     @Test
-    void getRoomsByIdFallback_throwsRoomPersistenceException() throws Exception {
-        var m = RoomService.class.getDeclaredMethod("getRoomsByIdFallback", String.class, Throwable.class);
+    void getRoomByIdFallback_throwsRoomPersistenceException() throws Exception {
+        var m = RoomService.class.getDeclaredMethod("getRoomByIdFallback", String.class, Throwable.class);
         m.setAccessible(true);
 
         assertThatThrownBy(() -> {
