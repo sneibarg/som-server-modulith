@@ -110,7 +110,7 @@ public class PlayerService {
     }
 
     private PlayerAccount getPlayerAccountByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllPlayerAccountsById id={} due to {}", id, t.toString());
+        log.warn("Fallback getPlayerAccountById id={} due to {}", id, t.toString());
         throw new PlayerPersistenceException("PlayerAccount lookup temporarily unavailable: " + id+" "+t);
     }
 }

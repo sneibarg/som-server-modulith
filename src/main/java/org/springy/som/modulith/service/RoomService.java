@@ -56,11 +56,11 @@ public class RoomService {
         requireEntityWithId(room, Room::getId, roomMissing(), roomIdMissing());
 
         try {
-            // if (roomRepository.existsById(reset.getRoomById())) throw new ResetConflictException(...)
+            // if (roomRepository.existsById(room.getId())) throw new RoomConflictException(...)
             return roomRepository.save(room);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createRoom areaId={}", safeId(room, Room::getId), ex);
-            throw new RoomPersistenceException("Failed to create ROM race"+ex);
+            log.warn("DB failure in createRoom roomId={}", safeId(room, Room::getId), ex);
+            throw new RoomPersistenceException("Failed to create ROM room"+ex);
         }
     }
 
@@ -107,8 +107,8 @@ public class RoomService {
         return List.of();
     }
 
-    private Room getRoomsByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllRoomsById id={} due to {}", id, t.toString());
+    private Room getRoomByIdFallback(String id, Throwable t) {
+        log.warn("Fallback getRoomById id={} due to {}", id, t.toString());
         throw new RoomPersistenceException("ROM room lookup temporarily unavailable: " + id+" "+t);
     }
 }

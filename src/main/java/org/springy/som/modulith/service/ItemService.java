@@ -106,8 +106,8 @@ public class ItemService {
         return List.of();
     }
 
-    private Item getRomClassByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllItemsById id={} due to {}", id, t.toString());
+    private Item getItemByIdFallback(String id, Throwable t) {
+        log.warn("Fallback getItemById id={} due to {}", id, t.toString());
         throw new ItemPersistenceException("Item lookup temporarily unavailable: " + id+" "+t);
     }
 }

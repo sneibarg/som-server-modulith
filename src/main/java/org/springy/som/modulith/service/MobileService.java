@@ -109,7 +109,7 @@ public class MobileService {
     }
 
     private Command getMobileByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllMobilesById id={} due to {}", id, t.toString());
+        log.warn("Fallback getMobileById id={} due to {}", id, t.toString());
         throw new MobilePersistenceException("Mobile lookup temporarily unavailable: " + id+" "+t);
     }
 }

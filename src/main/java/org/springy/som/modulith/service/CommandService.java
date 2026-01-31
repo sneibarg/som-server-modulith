@@ -109,7 +109,7 @@ public class CommandService {
     }
 
     private Command getCommandByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllCommandsById id={} due to {}", id, t.toString());
+        log.warn("Fallback getCommandById id={} due to {}", id, t.toString());
         throw new CommandPersistenceException("Command lookup temporarily unavailable: " + id+" "+t);
     }
 }

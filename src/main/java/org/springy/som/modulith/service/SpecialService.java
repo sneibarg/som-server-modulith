@@ -56,7 +56,7 @@ public class SpecialService {
         requireEntityWithId(special, Special::getId, specialMissing(), specialIdMissing());
 
         try {
-            // if (specialRepository.existsById(special.getSpecialById())) throw new SpecialConflictException(...)
+            // if (specialRepository.existsById(special.getId())) throw new SpecialConflictException(...)
             return specialRepository.save(special);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createSpecial areaId={}", safeId(special, Special::getId), ex);
@@ -107,8 +107,8 @@ public class SpecialService {
         return List.of();
     }
 
-    private Special getSpecialsByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllSpecialById id={} due to {}", id, t.toString());
+    private Special getSpecialByIdFallback(String id, Throwable t) {
+        log.warn("Fallback getSpecialById id={} due to {}", id, t.toString());
         throw new SpecialPersistenceException("ROM special lookup temporarily unavailable: " + id+" "+t);
     }
 }

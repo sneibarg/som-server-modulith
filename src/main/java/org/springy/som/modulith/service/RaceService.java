@@ -107,8 +107,8 @@ public class RaceService {
         return List.of();
     }
 
-    private RomRace getRomRacesByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllRomRacesById id={} due to {}", id, t.toString());
+    private RomRace getRomRaceByIdFallback(String id, Throwable t) {
+        log.warn("Fallback getRomRaceById id={} due to {}", id, t.toString());
         throw new RomRacePersistenceException("ROM race lookup temporarily unavailable: " + id+" "+t);
     }
 }

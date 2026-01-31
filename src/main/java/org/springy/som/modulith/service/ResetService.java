@@ -57,7 +57,7 @@ public class ResetService {
         requireEntityWithId(reset, Reset::getId, resetMissing(), resetIdMissing());
 
         try {
-            // if (resetRepository.existsById(reset.getResetById())) throw new ResetConflictException(...)
+            // if (resetRepository.existsById(reset.getId())) throw new ResetConflictException(...)
             return resetRepository.save(reset);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createReset resetId={}", safeId(reset, Reset::getId), ex);
@@ -98,8 +98,8 @@ public class ResetService {
             resetRepository.deleteAll();
             return itemCount;
         } catch (DataAccessException ex) {
-            log.warn("DB failure in deleteAllMobiles", ex);
-            throw new ResetPersistenceException("Failed to delete all ROM race "+ ex);
+            log.warn("DB failure in deleteAllResets", ex);
+            throw new ResetPersistenceException("Failed to delete all ROM resets "+ ex);
         }
     }
 
@@ -108,8 +108,8 @@ public class ResetService {
         return List.of();
     }
 
-    private Reset getResetsByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllResetsById id={} due to {}", id, t.toString());
+    private Reset getResetByIdFallback(String id, Throwable t) {
+        log.warn("Fallback getResetById id={} due to {}", id, t.toString());
         throw new ResetPersistenceException("ROM reset lookup temporarily unavailable: " + id+" "+t);
     }
 }

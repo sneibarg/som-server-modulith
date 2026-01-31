@@ -101,13 +101,13 @@ public class ShopService {
         }
     }
 
-    private List<Shop> getAllShopFallback(Throwable t) {
+    private List<Shop> getAllShopsFallback(Throwable t) {
         log.warn("Fallback getAllShops due to {}", t.toString());
         return List.of();
     }
 
-    private Shop getRoomsByIdFallback(String id, Throwable t) {
-        log.warn("Fallback getAllShopsById id={} due to {}", id, t.toString());
+    private Shop getShopByIdFallback(String id, Throwable t) {
+        log.warn("Fallback getShopById id={} due to {}", id, t.toString());
         throw new ShopPersistenceException("ROM shop lookup temporarily unavailable: " + id+" "+t);
     }
 }
