@@ -20,9 +20,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RoomServiceTest {
+    private final String roomIdMissing = "ROM room id must be provided";
+    private final String roomMissing = "ROM room must be provided";
 
-    @Mock RoomRepository repo;
-
+    @Mock
+    private RoomRepository repo;
     private RoomService service;
 
     @BeforeEach
@@ -67,7 +69,7 @@ class RoomServiceTest {
     void createRoom_null_becomesInvalidRoomException() {
         assertThatThrownBy(() -> service.createRoom(null))
                 .isInstanceOf(InvalidRoomException.class)
-                .hasMessageContaining("ROM room must be provided");
+                .hasMessageContaining(roomMissing);
 
         verifyNoInteractions(repo);
     }
@@ -79,7 +81,7 @@ class RoomServiceTest {
 
         assertThatThrownBy(() -> service.createRoom(room))
                 .isInstanceOf(InvalidRoomException.class)
-                .hasMessageContaining("ROM room id must be provided");
+                .hasMessageContaining(roomIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -130,7 +132,7 @@ class RoomServiceTest {
 
         assertThatThrownBy(() -> service.saveRoomForId(" ", room))
                 .isInstanceOf(InvalidRoomException.class)
-                .hasMessageContaining("ROM room id must be provided");
+                .hasMessageContaining(roomIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -139,7 +141,7 @@ class RoomServiceTest {
     void saveRoomForId_nullRoom_becomesInvalidRoomException() {
         assertThatThrownBy(() -> service.saveRoomForId("R1", null))
                 .isInstanceOf(InvalidRoomException.class)
-                .hasMessageContaining("ROM room must be provided");
+                .hasMessageContaining(roomMissing);
 
         verifyNoInteractions(repo);
     }
@@ -164,7 +166,7 @@ class RoomServiceTest {
     void deleteRoomById_blankId_becomesInvalidRoomException() {
         assertThatThrownBy(() -> service.deleteRoomById(""))
                 .isInstanceOf(InvalidRoomException.class)
-                .hasMessageContaining("ROM room id must be provided");
+                .hasMessageContaining(roomIdMissing);
 
         verifyNoInteractions(repo);
     }

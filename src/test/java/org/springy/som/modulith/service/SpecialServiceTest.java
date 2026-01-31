@@ -20,9 +20,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SpecialServiceTest {
+    private final String specialIdMissing = "ROM special id must be provided";
+    private final String specialMissing = "ROM special must be provided";
 
-    @Mock SpecialRepository repo;
-
+    @Mock
+    private SpecialRepository repo;
     private SpecialService service;
 
     @BeforeEach
@@ -67,7 +69,7 @@ class SpecialServiceTest {
     void createSpecial_null_becomesInvalidSpecialException() {
         assertThatThrownBy(() -> service.createSpecial(null))
                 .isInstanceOf(InvalidSpecialException.class)
-                .hasMessageContaining("ROM special must be provided");
+                .hasMessageContaining(specialMissing);
 
         verifyNoInteractions(repo);
     }
@@ -79,7 +81,7 @@ class SpecialServiceTest {
 
         assertThatThrownBy(() -> service.createSpecial(special))
                 .isInstanceOf(InvalidSpecialException.class)
-                .hasMessageContaining("ROM special id must be provided");
+                .hasMessageContaining(specialIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -130,7 +132,7 @@ class SpecialServiceTest {
 
         assertThatThrownBy(() -> service.saveSpecialForId(" ", special))
                 .isInstanceOf(InvalidSpecialException.class)
-                .hasMessageContaining("ROM special id must be provided");
+                .hasMessageContaining(specialIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -139,7 +141,7 @@ class SpecialServiceTest {
     void saveSpecialForId_nullSpecial_becomesInvalidSpecialException() {
         assertThatThrownBy(() -> service.saveSpecialForId("S1", null))
                 .isInstanceOf(InvalidSpecialException.class)
-                .hasMessageContaining("ROM special must be provided");
+                .hasMessageContaining(specialMissing);
 
         verifyNoInteractions(repo);
     }
@@ -164,7 +166,7 @@ class SpecialServiceTest {
     void deleteSpecialById_blankId_becomesInvalidSpecialException() {
         assertThatThrownBy(() -> service.deleteSpecialById(""))
                 .isInstanceOf(InvalidSpecialException.class)
-                .hasMessageContaining("ROM special id must be provided");
+                .hasMessageContaining(specialIdMissing);
 
         verifyNoInteractions(repo);
     }

@@ -21,9 +21,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RaceServiceTest {
+    private final String raceIdMissing = "ROM race id must be provided";
+    private final String raceMissing = "ROM race must be provided";
 
-    @Mock RaceRepository repo;
-
+    @Mock
+    private RaceRepository repo;
     private RaceService service;
 
     @BeforeEach
@@ -68,7 +70,7 @@ class RaceServiceTest {
     void createRomRace_null_becomesInvalidRomRaceException() {
         assertThatThrownBy(() -> service.createRomRace(null))
                 .isInstanceOf(InvalidRomRaceException.class)
-                .hasMessageContaining("ROM race must be provided");
+                .hasMessageContaining(raceMissing);
 
         verifyNoInteractions(repo);
     }
@@ -80,7 +82,7 @@ class RaceServiceTest {
 
         assertThatThrownBy(() -> service.createRomRace(race))
                 .isInstanceOf(InvalidRomRaceException.class)
-                .hasMessageContaining("ROM race id must be provided");
+                .hasMessageContaining(raceIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -131,7 +133,7 @@ class RaceServiceTest {
 
         assertThatThrownBy(() -> service.saveRomRaceForId(" ", race))
                 .isInstanceOf(InvalidRomRaceException.class)
-                .hasMessageContaining("ROM race id must be provided");
+                .hasMessageContaining(raceIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -140,7 +142,7 @@ class RaceServiceTest {
     void saveRomRaceForId_nullRace_becomesInvalidRomRaceException() {
         assertThatThrownBy(() -> service.saveRomRaceForId("R1", null))
                 .isInstanceOf(InvalidRomRaceException.class)
-                .hasMessageContaining("ROM race must be provided");
+                .hasMessageContaining(raceMissing);
 
         verifyNoInteractions(repo);
     }
@@ -165,7 +167,7 @@ class RaceServiceTest {
     void deleteRomRaceById_blankId_becomesInvalidRomRaceException() {
         assertThatThrownBy(() -> service.deleteRomRaceById(""))
                 .isInstanceOf(InvalidRomRaceException.class)
-                .hasMessageContaining("ROM race id must be provided");
+                .hasMessageContaining(raceIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -198,7 +200,7 @@ class RaceServiceTest {
         doThrow(new DataAccessResourceFailureException("db down")).when(repo).deleteById("R1");
 
         assertThatThrownBy(() -> service.deleteRomRaceById("R1"))
-                .isInstanceOf(MobilePersistenceException.class)
+                .isInstanceOf(RomRacePersistenceException.class)
                 .hasMessageContaining("Failed to delete ROM race: R1");
 
         verify(repo).existsById("R1");
@@ -252,7 +254,7 @@ class RaceServiceTest {
             } catch (java.lang.reflect.InvocationTargetException e) {
                 throw e.getCause();
             }
-        }).isInstanceOf(MobilePersistenceException.class)
+        }).isInstanceOf(RomRacePersistenceException.class)
                 .hasMessageContaining("temporarily unavailable: R1");
 
         verifyNoInteractions(repo);

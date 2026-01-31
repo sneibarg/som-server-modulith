@@ -12,7 +12,6 @@ import org.springy.som.modulith.exception.area.InvalidAreaException;
 import org.springy.som.modulith.repository.AreaRepository;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springy.som.modulith.util.DomainGuards;
 import org.springy.som.modulith.util.ServiceGuards;
 
 import java.util.List;
@@ -22,6 +21,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AreaServiceTest {
+    private final String areaIdMissing = "Area id must be provided";
+    private final String areaMissing = "Area must be provided";
 
     @Mock
     private AreaRepository areaRepository;
@@ -69,7 +70,7 @@ class AreaServiceTest {
     void getAreaById_blankId_becomesInvalidAreaException() {
         assertThatThrownBy(() -> areaService.getAreaById(" "))
                 .isInstanceOf(InvalidAreaException.class)
-                .hasMessageContaining("Area id must be provided");
+                .hasMessageContaining(areaIdMissing);
 
         verifyNoInteractions(areaRepository);
     }
@@ -106,7 +107,7 @@ class AreaServiceTest {
     void createArea_null_becomesInvalidAreaException() {
         assertThatThrownBy(() -> areaService.createArea(null))
                 .isInstanceOf(InvalidAreaException.class)
-                .hasMessageContaining("Area must be provided");
+                .hasMessageContaining(areaMissing);
 
         verifyNoInteractions(areaRepository);
     }
@@ -118,7 +119,7 @@ class AreaServiceTest {
 
         assertThatThrownBy(() -> areaService.createArea(a))
                 .isInstanceOf(InvalidAreaException.class)
-                .hasMessageContaining("Area id must be provided");
+                .hasMessageContaining(areaIdMissing);
 
         verifyNoInteractions(areaRepository);
     }
@@ -146,18 +147,13 @@ class AreaServiceTest {
         assertThat(result).isNull();
     }
 
-
-    // -------------------------
-    // saveAreaForId
-    // -------------------------
-
     @Test
     void saveAreaForId_blankId_becomesInvalidAreaException() {
         Area input = area("A1", "Midgaard");
 
         assertThatThrownBy(() -> areaService.saveAreaForId(" ", input))
                 .isInstanceOf(InvalidAreaException.class)
-                .hasMessageContaining("Area id must be provided");
+                .hasMessageContaining(areaIdMissing);
 
         verifyNoInteractions(areaRepository);
     }
@@ -166,7 +162,7 @@ class AreaServiceTest {
     void saveAreaForId_nullArea_becomesInvalidAreaException() {
         assertThatThrownBy(() -> areaService.saveAreaForId("A1", null))
                 .isInstanceOf(InvalidAreaException.class)
-                .hasMessageContaining("Area must be provided");
+                .hasMessageContaining(areaMissing);
 
         verifyNoInteractions(areaRepository);
     }
@@ -198,7 +194,7 @@ class AreaServiceTest {
     void deleteAreaById_blankId_becomesInvalidAreaException() {
         assertThatThrownBy(() -> areaService.deleteAreaById(""))
                 .isInstanceOf(InvalidAreaException.class)
-                .hasMessageContaining("Area id must be provided");
+                .hasMessageContaining(areaIdMissing);
 
         verifyNoInteractions(areaRepository);
     }

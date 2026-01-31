@@ -20,7 +20,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommandServiceTest {
-
+    private final String commandIdMissing = "ROM command id must be provided";
+    private final String commandMissing = "ROM command must be provided";
     private CommandRepository repo;
     private CommandService service;
 
@@ -70,7 +71,7 @@ class CommandServiceTest {
     void createCommand_nullCommand_throwsInvalid() {
         assertThatThrownBy(() -> service.createCommand(null))
                 .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining("Command must be provided");
+                .hasMessageContaining(commandMissing);
 
         verifyNoInteractions(repo);
     }
@@ -82,7 +83,7 @@ class CommandServiceTest {
 
         assertThatThrownBy(() -> service.createCommand(c))
                 .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining("Command id must be provided");
+                .hasMessageContaining(commandIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -137,7 +138,7 @@ class CommandServiceTest {
 
         assertThatThrownBy(() -> service.saveCommandForId("  ", c))
                 .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining("Command id must be provided");
+                .hasMessageContaining(commandIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -146,7 +147,7 @@ class CommandServiceTest {
     void saveCommandForId_nullCommand_throwsInvalid() {
         assertThatThrownBy(() -> service.saveCommandForId("C1", null))
                 .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining("Command must be provided");
+                .hasMessageContaining(commandMissing);
 
         verifyNoInteractions(repo);
     }
@@ -158,7 +159,7 @@ class CommandServiceTest {
 
         assertThatThrownBy(() -> service.saveCommandForId("C1", c))
                 .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining("Command id must be provided");
+                .hasMessageContaining(commandIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -186,7 +187,7 @@ class CommandServiceTest {
     void deleteCommandById_blankId_throwsInvalid() {
         assertThatThrownBy(() -> service.deleteCommandById(" "))
                 .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining("Command id must be provided");
+                .hasMessageContaining(commandIdMissing);
 
         verifyNoInteractions(repo);
     }

@@ -2,12 +2,14 @@ package org.springy.som.modulith.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springy.som.modulith.domain.area.Area;
 import org.springy.som.modulith.domain.clazz.RomClass;
 import org.springy.som.modulith.exception.clazz.InvalidRomClassException;
 import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
 import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
 import org.springy.som.modulith.repository.ClassRepository;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springy.som.modulith.util.ServiceGuards;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -102,14 +104,11 @@ class ClassServiceTest {
     }
 
     @Test
-    void safeId_whenGetIdThrows_returnsNull_reflection() throws Exception {
-        RomClass bad = mock(RomClass.class);
-        when(bad.getId()).thenThrow(new RuntimeException("boom"));
+    void safeId_whenGetIdThrows_returnsNull_reflection() {
+        RomClass badClass = mock(RomClass.class);
+        when(badClass.getId()).thenThrow(new RuntimeException("boom"));
 
-        Method m = ClassService.class.getDeclaredMethod("safeId", RomClass.class);
-        m.setAccessible(true);
-
-        String result = (String) m.invoke(null, bad);
+        String result = ServiceGuards.safeId(badClass, RomClass::getId);
 
         assertThat(result).isNull();
     }

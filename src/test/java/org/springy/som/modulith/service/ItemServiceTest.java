@@ -20,6 +20,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ItemServiceTest {
+    private final String romItemMissing = "ROM item must be provided";
+    private final String romItemIdMissing = "ROM item id must be provided";
 
     @Mock ItemRepository repo;
 
@@ -67,7 +69,7 @@ class ItemServiceTest {
     void createItem_null_becomesInvalidItemException() {
         assertThatThrownBy(() -> service.createItem(null))
                 .isInstanceOf(InvalidItemException.class)
-                .hasMessageContaining("Command must be provided");
+                .hasMessageContaining(romItemMissing);
 
         verifyNoInteractions(repo);
     }
@@ -79,7 +81,7 @@ class ItemServiceTest {
 
         assertThatThrownBy(() -> service.createItem(item))
                 .isInstanceOf(InvalidItemException.class)
-                .hasMessageContaining("Command id must be provided");
+                .hasMessageContaining(romItemIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -130,7 +132,7 @@ class ItemServiceTest {
 
         assertThatThrownBy(() -> service.saveItemForId(" ", item))
                 .isInstanceOf(InvalidItemException.class)
-                .hasMessageContaining("Command id must be provided");
+                .hasMessageContaining(romItemIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -139,7 +141,7 @@ class ItemServiceTest {
     void saveItemForId_nullItem_becomesInvalidItemException() {
         assertThatThrownBy(() -> service.saveItemForId("I1", null))
                 .isInstanceOf(InvalidItemException.class)
-                .hasMessageContaining("Command must be provided");
+                .hasMessageContaining(romItemMissing);
 
         verifyNoInteractions(repo);
     }
@@ -164,7 +166,7 @@ class ItemServiceTest {
     void deleteItemById_blankId_becomesInvalidItemException() {
         assertThatThrownBy(() -> service.deleteItemById(""))
                 .isInstanceOf(InvalidItemException.class)
-                .hasMessageContaining("Command id must be provided");
+                .hasMessageContaining(romItemIdMissing);
 
         verifyNoInteractions(repo);
     }

@@ -21,9 +21,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ResetServiceTest {
+    private final String resetIdMissing = "ROM reset id must be provided";
+    private final String resetMissing = "ROM reset must be provided";
 
-    @Mock ResetRepository repo;
-
+    @Mock
+    private ResetRepository repo;
     private ResetService service;
 
     @BeforeEach
@@ -68,7 +70,7 @@ class ResetServiceTest {
     void createReset_null_becomesInvalidResetException() {
         assertThatThrownBy(() -> service.createReset(null))
                 .isInstanceOf(InvalidResetException.class)
-                .hasMessageContaining("ROM reset must be provided");
+                .hasMessageContaining(resetMissing);
 
         verifyNoInteractions(repo);
     }
@@ -80,7 +82,7 @@ class ResetServiceTest {
 
         assertThatThrownBy(() -> service.createReset(reset))
                 .isInstanceOf(InvalidResetException.class)
-                .hasMessageContaining("ROM reset id must be provided");
+                .hasMessageContaining(resetIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -104,7 +106,7 @@ class ResetServiceTest {
         when(repo.save(reset)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createReset(reset))
-                .isInstanceOf(RomRacePersistenceException.class)
+                .isInstanceOf(ResetPersistenceException.class)
                 .hasMessageContaining("Failed to create ROM race");
 
         verify(repo).save(reset);
@@ -118,7 +120,7 @@ class ResetServiceTest {
         when(repo.save(reset)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createReset(reset))
-                .isInstanceOf(RomRacePersistenceException.class)
+                .isInstanceOf(ResetPersistenceException.class)
                 .hasMessageContaining("Failed to create ROM race");
 
         verify(repo).save(reset);
@@ -131,7 +133,7 @@ class ResetServiceTest {
 
         assertThatThrownBy(() -> service.saveResetForId(" ", reset))
                 .isInstanceOf(InvalidResetException.class)
-                .hasMessageContaining("ROM reset id must be provided");
+                .hasMessageContaining(resetIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -140,7 +142,7 @@ class ResetServiceTest {
     void saveResetForId_nullReset_becomesInvalidResetException() {
         assertThatThrownBy(() -> service.saveResetForId("RS1", null))
                 .isInstanceOf(InvalidResetException.class)
-                .hasMessageContaining("ROM reset must be provided");
+                .hasMessageContaining(resetMissing);
 
         verifyNoInteractions(repo);
     }
@@ -165,7 +167,7 @@ class ResetServiceTest {
     void deleteResetById_blankId_becomesInvalidResetException() {
         assertThatThrownBy(() -> service.deleteResetById(""))
                 .isInstanceOf(InvalidResetException.class)
-                .hasMessageContaining("ROM reset id must be provided");
+                .hasMessageContaining(resetIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -222,7 +224,7 @@ class ResetServiceTest {
         when(repo.count()).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.deleteAllResets())
-                .isInstanceOf(RomRacePersistenceException.class)
+                .isInstanceOf(ResetPersistenceException.class)
                 .hasMessageContaining("Failed to delete all ROM race");
 
         verify(repo).count();

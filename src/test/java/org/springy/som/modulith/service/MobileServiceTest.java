@@ -21,9 +21,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MobileServiceTest {
+    private final String mobileIdMissing = "ROM mobile id must be provided";
+    private final String mobileMissing = "ROM mobile must be provided";
 
-    @Mock MobileRepository repo;
-
+    @Mock
+    private MobileRepository repo;
     private MobileService service;
 
     @BeforeEach
@@ -68,7 +70,7 @@ class MobileServiceTest {
     void createMobile_null_becomesInvalidMobileException() {
         assertThatThrownBy(() -> service.createMobile(null))
                 .isInstanceOf(InvalidMobileException.class)
-                .hasMessageContaining("Mobile must be provided");
+                .hasMessageContaining(mobileMissing);
 
         verifyNoInteractions(repo);
     }
@@ -80,7 +82,7 @@ class MobileServiceTest {
 
         assertThatThrownBy(() -> service.createMobile(mobile))
                 .isInstanceOf(InvalidMobileException.class)
-                .hasMessageContaining("Mobile id must be provided");
+                .hasMessageContaining(mobileIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -131,7 +133,7 @@ class MobileServiceTest {
 
         assertThatThrownBy(() -> service.saveMobileForId(" ", mobile))
                 .isInstanceOf(InvalidMobileException.class)
-                .hasMessageContaining("Mobile id must be provided");
+                .hasMessageContaining(mobileIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -140,7 +142,7 @@ class MobileServiceTest {
     void saveMobileForId_nullMobile_becomesInvalidMobileException() {
         assertThatThrownBy(() -> service.saveMobileForId("M1", null))
                 .isInstanceOf(InvalidMobileException.class)
-                .hasMessageContaining("Mobile must be provided");
+                .hasMessageContaining(mobileMissing);
 
         verifyNoInteractions(repo);
     }
@@ -165,7 +167,7 @@ class MobileServiceTest {
     void deleteMobileById_blankId_becomesInvalidMobileException() {
         assertThatThrownBy(() -> service.deleteMobileById(""))
                 .isInstanceOf(InvalidMobileException.class)
-                .hasMessageContaining("Mobile id must be provided");
+                .hasMessageContaining(mobileIdMissing);
 
         verifyNoInteractions(repo);
     }

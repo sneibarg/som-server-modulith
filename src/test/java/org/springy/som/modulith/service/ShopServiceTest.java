@@ -20,9 +20,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ShopServiceTest {
+    private final String shopIdMissing = "ROM shop id must be provided";
+    private final String shopMissing = "ROM shop must be provided";
 
-    @Mock ShopRepository repo;
-
+    @Mock
+    private ShopRepository repo;
     private ShopService service;
 
     @BeforeEach
@@ -67,7 +69,7 @@ class ShopServiceTest {
     void createShop_null_becomesInvalidShopException() {
         assertThatThrownBy(() -> service.createShop(null))
                 .isInstanceOf(InvalidShopException.class)
-                .hasMessageContaining("ROM shop must be provided");
+                .hasMessageContaining(shopMissing);
 
         verifyNoInteractions(repo);
     }
@@ -79,7 +81,7 @@ class ShopServiceTest {
 
         assertThatThrownBy(() -> service.createShop(shop))
                 .isInstanceOf(InvalidShopException.class)
-                .hasMessageContaining("ROM shop id must be provided");
+                .hasMessageContaining(shopIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -130,7 +132,7 @@ class ShopServiceTest {
 
         assertThatThrownBy(() -> service.saveShopForId(" ", shop))
                 .isInstanceOf(InvalidShopException.class)
-                .hasMessageContaining("ROM shop id must be provided");
+                .hasMessageContaining(shopIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -139,7 +141,7 @@ class ShopServiceTest {
     void saveShopForId_nullShop_becomesInvalidShopException() {
         assertThatThrownBy(() -> service.saveShopForId("S1", null))
                 .isInstanceOf(InvalidShopException.class)
-                .hasMessageContaining("ROM shop must be provided");
+                .hasMessageContaining(shopMissing);
 
         verifyNoInteractions(repo);
     }
@@ -164,7 +166,7 @@ class ShopServiceTest {
     void deleteShopById_blankId_becomesInvalidShopException() {
         assertThatThrownBy(() -> service.deleteShopById(""))
                 .isInstanceOf(InvalidShopException.class)
-                .hasMessageContaining("ROM shop id must be provided");
+                .hasMessageContaining(shopIdMissing);
 
         verifyNoInteractions(repo);
     }

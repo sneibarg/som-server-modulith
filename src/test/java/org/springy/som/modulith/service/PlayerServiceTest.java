@@ -21,9 +21,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerServiceTest {
-
-    @Mock PlayerAccountRepository repo;
-
+    private final String playerAccountIdMissing = "ROM account id must be provided";
+    private final String playerAccountMissing = "ROM account must be provided";
+    @Mock
+    private PlayerAccountRepository repo;
     private PlayerService service;
 
     @BeforeEach
@@ -68,7 +69,7 @@ class PlayerServiceTest {
     void createPlayerAccount_null_becomesInvalidPlayerException() {
         assertThatThrownBy(() -> service.createPlayerAccount(null))
                 .isInstanceOf(InvalidPlayerException.class)
-                .hasMessageContaining("Mobile must be provided");
+                .hasMessageContaining(playerAccountMissing);
 
         verifyNoInteractions(repo);
     }
@@ -80,7 +81,7 @@ class PlayerServiceTest {
 
         assertThatThrownBy(() -> service.createPlayerAccount(account))
                 .isInstanceOf(InvalidPlayerException.class)
-                .hasMessageContaining("Mobile id must be provided");
+                .hasMessageContaining(playerAccountIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -131,7 +132,7 @@ class PlayerServiceTest {
 
         assertThatThrownBy(() -> service.savePlayerAccountForId(" ", account))
                 .isInstanceOf(InvalidPlayerException.class)
-                .hasMessageContaining("Mobile id must be provided");
+                .hasMessageContaining(playerAccountIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -140,7 +141,7 @@ class PlayerServiceTest {
     void savePlayerAccountForId_nullAccount_becomesInvalidPlayerException() {
         assertThatThrownBy(() -> service.savePlayerAccountForId("P1", null))
                 .isInstanceOf(InvalidPlayerException.class)
-                .hasMessageContaining("Mobile must be provided");
+                .hasMessageContaining(playerAccountMissing);
 
         verifyNoInteractions(repo);
     }
@@ -165,7 +166,7 @@ class PlayerServiceTest {
     void deletePlayerAccountById_blankId_becomesInvalidPlayerException() {
         assertThatThrownBy(() -> service.deletePlayerAccountById(""))
                 .isInstanceOf(InvalidPlayerException.class)
-                .hasMessageContaining("Mobile id must be provided");
+                .hasMessageContaining(playerAccountIdMissing);
 
         verifyNoInteractions(repo);
     }
@@ -199,7 +200,7 @@ class PlayerServiceTest {
 
         assertThatThrownBy(() -> service.deletePlayerAccountById("P1"))
                 .isInstanceOf(PlayerPersistenceException.class)
-                .hasMessageContaining("Failed to delete command: P1");
+                .hasMessageContaining("Service unavailable Failed to delete player account: P1 org.springframework.dao.DataAccessResourceFailureException: db down");
 
         verify(repo).existsById("P1");
         verify(repo).deleteById("P1");
@@ -223,7 +224,7 @@ class PlayerServiceTest {
 
         assertThatThrownBy(() -> service.deleteAllPlayerAccounts())
                 .isInstanceOf(PlayerPersistenceException.class)
-                .hasMessageContaining("Failed to delete all commands");
+                .hasMessageContaining("Service unavailable Failed to delete all player accounts org.springframework.dao.DataAccessResourceFailureException: db down");
 
         verify(repo).count();
         verifyNoMoreInteractions(repo);

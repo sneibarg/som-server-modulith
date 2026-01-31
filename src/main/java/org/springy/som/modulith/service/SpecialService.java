@@ -16,7 +16,6 @@ import org.springy.som.modulith.repository.SpecialRepository;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.DomainGuards.shopIdMissing;
 import static org.springy.som.modulith.util.DomainGuards.specialIdMissing;
 import static org.springy.som.modulith.util.DomainGuards.specialMissing;
 import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
@@ -60,7 +59,7 @@ public class SpecialService {
             // if (specialRepository.existsById(special.getSpecialById())) throw new SpecialConflictException(...)
             return specialRepository.save(special);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createShop areaId={}", safeId(special, Special::getId), ex);
+            log.warn("DB failure in createSpecial areaId={}", safeId(special, Special::getId), ex);
             throw new SpecialPersistenceException("Failed to create ROM special"+ex);
         }
     }
@@ -68,7 +67,7 @@ public class SpecialService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Special saveSpecialForId(String id, Special special) {
-        requireText(id, shopIdMissing());
+        requireText(id, specialIdMissing());
         requireEntityWithId(special, Special::getId, specialMissing(), specialIdMissing());
 
         return specialRepository.save(getSpecialById(id));
@@ -77,7 +76,7 @@ public class SpecialService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteSpecialById(String id) {
-        requireText(id, shopIdMissing());
+        requireText(id, specialIdMissing());
 
         try {
             if (!specialRepository.existsById(id)) {
@@ -85,7 +84,7 @@ public class SpecialService {
             }
             specialRepository.deleteById(id);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in deleteShopById id={}", id, ex);
+            log.warn("DB failure in deleteSpecialById id={}", id, ex);
             throw new SpecialPersistenceException("Failed to delete ROM specials: " + id+" "+ex);
         }
     }
