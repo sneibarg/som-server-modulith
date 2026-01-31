@@ -34,10 +34,6 @@ class AreaServiceTest {
         areaService = new AreaService(areaRepository);
     }
 
-    // -------------------------
-    // getAllAreas
-    // -------------------------
-
     @Test
     void getAllAreas_ok_returnsList() {
         List<Area> expected = List.of(area("A1", "Midgaard"), area("A2", "Ofcol"));
@@ -61,10 +57,6 @@ class AreaServiceTest {
         verify(areaRepository).findAll();
         verifyNoMoreInteractions(areaRepository);
     }
-
-    // -------------------------
-    // getAreaById
-    // -------------------------
 
     @Test
     void getAreaById_blankId_becomesInvalidAreaException() {
@@ -98,10 +90,6 @@ class AreaServiceTest {
         verify(areaRepository).findAreaByAreaId("A1");
         verifyNoMoreInteractions(areaRepository);
     }
-
-    // -------------------------
-    // createArea
-    // -------------------------
 
     @Test
     void createArea_null_becomesInvalidAreaException() {
@@ -169,8 +157,6 @@ class AreaServiceTest {
 
     @Test
     void saveAreaForId_ok_savesFetchedArea_notProvidedArea() {
-        // NOTE: current service implementation ignores the provided `area`
-        // and saves getAreaById(id). This test locks in that behavior.
         Area provided = area("A1", "Provided Name");
         Area existing = area("A1", "Existing Name");
 
@@ -185,10 +171,6 @@ class AreaServiceTest {
         verify(areaRepository).save(existing);
         verifyNoMoreInteractions(areaRepository);
     }
-
-    // -------------------------
-    // deleteAreaById
-    // -------------------------
 
     @Test
     void deleteAreaById_blankId_becomesInvalidAreaException() {
@@ -225,10 +207,6 @@ class AreaServiceTest {
         verifyNoMoreInteractions(areaRepository);
     }
 
-    // -------------------------
-    // deleteAllAreas
-    // -------------------------
-
     @Test
     void deleteAllAreas_ok_returnsCountThenDeletesAll() {
         when(areaRepository.count()).thenReturn(42L);
@@ -253,10 +231,6 @@ class AreaServiceTest {
         verifyNoMoreInteractions(areaRepository);
     }
 
-    // -------------------------
-    // Fallbacks (private) - invoke via reflection for 100% coverage
-    // -------------------------
-
     @Test
     void getAllAreasFallback_returnsEmptyList() {
         @SuppressWarnings("unchecked")
@@ -279,10 +253,6 @@ class AreaServiceTest {
         )).isInstanceOf(AreaPersistenceException.class)
                 .hasMessageContaining("Area lookup temporarily unavailable: A1");
     }
-
-    // -------------------------
-    // helpers
-    // -------------------------
 
     private static Area area(String id, String name) {
         Area a = new Area();

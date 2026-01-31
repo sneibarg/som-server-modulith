@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.domain.area.Area;
 import org.springy.som.modulith.domain.character.PlayerCharacter;
 import org.springy.som.modulith.exception.character.InvalidPlayerCharacterException;
 import org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException;
