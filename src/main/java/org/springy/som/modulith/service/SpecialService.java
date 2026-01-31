@@ -1,8 +1,19 @@
 package org.springy.som.modulith.service;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.special.Special;
+import org.springy.som.modulith.exception.special.InvalidSpecialException;
+import org.springy.som.modulith.exception.special.SpecialNotFoundException;
+import org.springy.som.modulith.exception.special.SpecialPersistenceException;
 import org.springy.som.modulith.repository.SpecialRepository;
 
 import java.util.List;
@@ -16,21 +27,106 @@ public class SpecialService {
         this.specialRepository = specialRepository;
     }
 
+    @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllSpecialsFallback")
+    @Retry(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public List<Special> getAllSpecials() {
         return specialRepository.findAll();
     }
 
-    public Special getSpecialById(String id) {
-        return specialRepository.findSpecialById(id);
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public Special getSpecialByName(@RequestParam String name) {
+        return specialRepository.findSpecialById(name);
     }
 
-    public Special saveSpecial(Special special) {
-        return specialRepository.save(special);
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public Special getSpecialById(@RequestParam String itemId) {
+        return specialRepository.findSpecialById(itemId);
     }
 
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public Special createSpecial(@Valid @RequestBody Special special) {
+        requireSpecial(special);
+
+        try {
+            // if (specialRepository.existsById(special.getSpecialById())) throw new SpecialConflictException(...)
+            return specialRepository.save(special);
+        } catch (DataAccessException ex) {
+            log.warn("DB failure in createShop areaId={}", safeId(special), ex);
+            throw new SpecialPersistenceException("Failed to create ROM special"+ex);
+        }
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public Special saveSpecialForId(String id, Special special) {
+        requireId(id);
+        requireSpecial(special);
+
+        return specialRepository.save(getSpecialById(id));
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public void deleteSpecialById(String id) {
+        requireId(id);
+
+        try {
+            if (!specialRepository.existsById(id)) {
+                throw new SpecialNotFoundException(id);
+            }
+            specialRepository.deleteById(id);
+        } catch (DataAccessException ex) {
+            log.warn("DB failure in deleteShopById id={}", id, ex);
+            throw new SpecialPersistenceException("Failed to delete ROM specials: " + id+" "+ex);
+        }
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public long deleteAllSpecials() {
-        long specialCount = specialRepository.count();
-        specialRepository.deleteAll();
-        return specialCount;
+        try {
+            long itemCount = specialRepository.count();
+            specialRepository.deleteAll();
+            return itemCount;
+        } catch (DataAccessException ex) {
+            log.warn("DB failure in deleteAllSpecials", ex);
+            throw new SpecialPersistenceException("Failed to delete all ROM specials "+ ex);
+        }
+    }
+
+    private static void requireId(String id) {
+        if (!StringUtils.hasText(id)) {
+            throw new InvalidSpecialException("ROM special id must be provided");
+        }
+    }
+
+    private static void requireSpecial(Special special) {
+        if (special == null) {
+            throw new InvalidSpecialException("ROM special must be provided");
+        }
+
+        requireId(special.getId());
+    }
+
+    private static String safeId(Special special) {
+        try {
+            return special.getId();
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private List<Special> getAllSpecialFallback(Throwable t) {
+        log.warn("Fallback getAllSpecials due to {}", t.toString());
+        return List.of();
+    }
+
+    private Special getSpecialsByIdFallback(String id, Throwable t) {
+        log.warn("Fallback getAllSpecialById id={} due to {}", id, t.toString());
+        throw new SpecialPersistenceException("ROM special lookup temporarily unavailable: " + id+" "+t);
     }
 }

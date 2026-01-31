@@ -1,9 +1,22 @@
 package org.springy.som.modulith.service;
 
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springy.som.modulith.domain.race.RomRace;
 import org.springy.som.modulith.domain.reset.Reset;
+import org.springy.som.modulith.exception.race.RomRacePersistenceException;
+import org.springy.som.modulith.exception.reset.InvalidResetException;
+import org.springy.som.modulith.exception.reset.ResetNotFoundException;
+import org.springy.som.modulith.exception.reset.ResetPersistenceException;
 import org.springy.som.modulith.repository.ResetRepository;
 
 import java.util.List;
@@ -17,21 +30,106 @@ public class ResetService {
         this.resetRepository = resetRepository;
     }
 
+    @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllResetsFallback")
+    @Retry(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public List<Reset> getAllResets() {
         return resetRepository.findAll();
     }
 
-    public Reset getResetById(String id) {
-        return resetRepository.findResetById(id);
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public Reset getResetByName(@RequestParam String name) {
+        return resetRepository.findResetById(name);
     }
 
-    public Reset saveReset(Reset reset) {
-        return resetRepository.save(reset);
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public Reset getResetById(@RequestParam String itemId) {
+        return resetRepository.findResetById(itemId);
     }
 
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public Reset createReset(@Valid @RequestBody Reset reset) {
+        requireReset(reset);
+
+        try {
+            // if (resetRepository.existsById(reset.getResetById())) throw new ResetConflictException(...)
+            return resetRepository.save(reset);
+        } catch (DataAccessException ex) {
+            log.warn("DB failure in createRomRace areaId={}", safeId(reset), ex);
+            throw new RomRacePersistenceException("Failed to create ROM race"+ex);
+        }
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public Reset saveResetForId(String id, Reset reset) {
+        requireId(id);
+        requireReset(reset);
+
+        return resetRepository.save(getResetById(id));
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public void deleteResetById(String id) {
+        requireId(id);
+
+        try {
+            if (!resetRepository.existsById(id)) {
+                throw new ResetNotFoundException(id);
+            }
+            resetRepository.deleteById(id);
+        } catch (DataAccessException ex) {
+            log.warn("DB failure in deleteRomRaceById id={}", id, ex);
+            throw new ResetPersistenceException("Failed to delete ROM reset: " + id+" "+ex);
+        }
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public long deleteAllResets() {
-        long resetCount = resetRepository.count();
-        resetRepository.deleteAll();
-        return resetCount;
+        try {
+            long itemCount = resetRepository.count();
+            resetRepository.deleteAll();
+            return itemCount;
+        } catch (DataAccessException ex) {
+            log.warn("DB failure in deleteAllMobiles", ex);
+            throw new RomRacePersistenceException("Failed to delete all ROM race "+ ex);
+        }
+    }
+
+    private static void requireId(String id) {
+        if (!StringUtils.hasText(id)) {
+            throw new InvalidResetException("ROM reset id must be provided");
+        }
+    }
+
+    private static void requireReset(Reset reset) {
+        if (reset == null) {
+            throw new InvalidResetException("ROM reset must be provided");
+        }
+
+        requireId(reset.getId());
+    }
+
+    private static String safeId(Reset reset) {
+        try {
+            return reset.getId();
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private List<Reset> getAllResetsFallback(Throwable t) {
+        log.warn("Fallback getAllResets due to {}", t.toString());
+        return List.of();
+    }
+
+    private RomRace getResetsByIdFallback(String id, Throwable t) {
+        log.warn("Fallback getAllRomRacesById id={} due to {}", id, t.toString());
+        throw new ResetPersistenceException("ROM reset lookup temporarily unavailable: " + id+" "+t);
     }
 }

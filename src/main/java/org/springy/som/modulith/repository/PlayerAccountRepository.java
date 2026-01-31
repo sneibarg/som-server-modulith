@@ -7,7 +7,10 @@ import org.springy.som.modulith.domain.player.PlayerAccount;
 
 public interface PlayerAccountRepository extends MongoRepository<PlayerAccount, String> {
     @Query("{accountName: '?0'}")
-    PlayerAccount findPlayerByAccountName(String accountName);
+    PlayerAccount findPlayerAccountByName(String accountName);
+
+    @Query("{id: '?0'}")
+    PlayerAccount findPlayerAccountById(String id);
 
     @Update("{ '$addToSet' : { 'playerCharacterList' : ?1 } }")
     void findAndAddToPlayerCharacterListByAccountName(String accountName, String playerCharacterList);

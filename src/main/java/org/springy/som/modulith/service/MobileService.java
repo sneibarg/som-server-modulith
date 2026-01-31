@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @Service
 public class MobileService {
-    private MobileRepository mobileRepository;
+    private final MobileRepository mobileRepository;
 
     public MobileService(MobileRepository mobileRepository) {
         this.mobileRepository = mobileRepository;
