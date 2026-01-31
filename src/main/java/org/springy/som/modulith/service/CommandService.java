@@ -32,7 +32,7 @@ public class CommandService {
         this.commandRepository = commandRepository;
     }
 
-    @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllRomClassesFallback")
+    @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllCommandsFallback")
     @Retry(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public List<Command> getAllCommands() {
@@ -108,7 +108,7 @@ public class CommandService {
         return List.of();
     }
 
-    private Command getRomClassByIdFallback(String id, Throwable t) {
+    private Command getCommandByIdFallback(String id, Throwable t) {
         log.warn("Fallback getAllCommandsById id={} due to {}", id, t.toString());
         throw new CommandPersistenceException("Command lookup temporarily unavailable: " + id+" "+t);
     }

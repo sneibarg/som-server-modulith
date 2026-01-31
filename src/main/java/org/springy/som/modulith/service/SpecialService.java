@@ -102,7 +102,7 @@ public class SpecialService {
         }
     }
 
-    private List<Special> getAllSpecialFallback(Throwable t) {
+    private List<Special> getAllSpecialsFallback(Throwable t) {
         log.warn("Fallback getAllSpecials due to {}", t.toString());
         return List.of();
     }

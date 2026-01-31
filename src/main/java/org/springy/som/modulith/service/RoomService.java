@@ -102,7 +102,7 @@ public class RoomService {
         }
     }
 
-    private List<Room> getAllRoomFallback(Throwable t) {
+    private List<Room> getAllRoomsFallback(Throwable t) {
         log.warn("Fallback getAllRooms due to {}", t.toString());
         return List.of();
     }
