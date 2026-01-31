@@ -7,17 +7,21 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.command.Command;
 import org.springy.som.modulith.domain.mobile.Mobile;
-import org.springy.som.modulith.exception.mobile.InvalidMobileException;
 import org.springy.som.modulith.exception.mobile.MobileNotFoundException;
 import org.springy.som.modulith.exception.mobile.MobilePersistenceException;
 import org.springy.som.modulith.repository.MobileRepository;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.mobileIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.mobileMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
@@ -50,13 +54,13 @@ public class MobileService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Mobile createMobile(@Valid @RequestBody Mobile mobile) {
-        requireMobile(mobile);
+        requireEntityWithId(mobile, Mobile::getId, mobileMissing(), mobileIdMissing());
 
         try {
             // if (mobileRepository.existsById(mobile.getMobileId())) throw new MobileConflictException(...)
             return mobileRepository.save(mobile);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createCommand areaId={}", safeId(mobile), ex);
+            log.warn("DB failure in createCommand areaId={}", safeId(mobile, Mobile::getId), ex);
             throw new MobilePersistenceException("Failed to create command"+ex);
         }
     }
@@ -64,8 +68,8 @@ public class MobileService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Mobile saveMobileForId(String id, Mobile mobile) {
-        requireId(id);
-        requireMobile(mobile);
+        requireText(id, mobileIdMissing());
+        requireEntityWithId(mobile, Mobile::getId, mobileMissing(), mobileIdMissing());
 
         return mobileRepository.save(getMobileById(id));
     }
@@ -73,7 +77,7 @@ public class MobileService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteMobileById(String id) {
-        requireId(id);
+        requireText(id, mobileIdMissing());
 
         try {
             if (!mobileRepository.existsById(id)) {
@@ -96,28 +100,6 @@ public class MobileService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllMobiles", ex);
             throw new MobilePersistenceException("Failed to delete all commands "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidMobileException("Mobile id must be provided");
-        }
-    }
-
-    private static void requireMobile(Mobile mobile) {
-        if (mobile == null) {
-            throw new InvalidMobileException("Mobile must be provided");
-        }
-
-        requireId(mobile.getId());
-    }
-
-    private static String safeId(Mobile mobile) {
-        try {
-            return mobile.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 

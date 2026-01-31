@@ -7,16 +7,20 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.item.Item;
-import org.springy.som.modulith.exception.item.InvalidItemException;
 import org.springy.som.modulith.exception.item.ItemNotFoundException;
 import org.springy.som.modulith.exception.item.ItemPersistenceException;
 import org.springy.som.modulith.repository.ItemRepository;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.itemIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.itemMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
@@ -48,13 +52,13 @@ public class ItemService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Item createItem(@Valid @RequestBody Item item) {
-        requireItem(item);
+        requireEntityWithId(item, Item::getId, itemMissing(), itemIdMissing());
 
         try {
-            // if (itemRepository.existsById(item.getItemId())) throw new ItemConflictException(...)
+            // if (itemRepository.existsById(item.getId())) throw new ItemConflictException(...)
             return itemRepository.save(item);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createCommand areaId={}", safeId(item), ex);
+            log.warn("DB failure in createCommand areaId={}", safeId(item, Item::getId), ex);
             throw new ItemPersistenceException("Failed to create item"+ex);
         }
     }
@@ -62,8 +66,8 @@ public class ItemService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Item saveItemForId(String id, Item item) {
-        requireId(id);
-        requireItem(item);
+        requireText(id, itemIdMissing());
+        requireEntityWithId(item, Item::getId, itemMissing(), itemIdMissing());
 
         return itemRepository.save(getItemById(id));
     }
@@ -71,7 +75,7 @@ public class ItemService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteItemById(String id) {
-        requireId(id);
+        requireText(id, itemIdMissing());
 
         try {
             if (!itemRepository.existsById(id)) {
@@ -94,28 +98,6 @@ public class ItemService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllCommands", ex);
             throw new ItemPersistenceException("Failed to delete all commands "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidItemException("Command id must be provided");
-        }
-    }
-
-    private static void requireItem(Item item) {
-        if (item == null) {
-            throw new InvalidItemException("Command must be provided");
-        }
-
-        requireId(item.getId());
-    }
-
-    private static String safeId(Item item) {
-        try {
-            return item.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 

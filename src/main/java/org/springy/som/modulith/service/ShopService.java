@@ -7,15 +7,19 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.shop.Shop;
-import org.springy.som.modulith.exception.shop.InvalidShopException;
 import org.springy.som.modulith.exception.shop.ShopNotFoundException;
 import org.springy.som.modulith.exception.shop.ShopPersistenceException;
 import org.springy.som.modulith.repository.ShopRepository;
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.shopIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.shopMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Service
 @Slf4j
@@ -48,13 +52,13 @@ public class ShopService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Shop createShop(@Valid @RequestBody Shop shop) {
-        requireShop(shop);
+        requireEntityWithId(shop, Shop::getId, shopMissing(), shopIdMissing());
 
         try {
-            // if (shopRepository.existsById(shop.getShopById())) throw new ShopConflictException(...)
+            // if (shopRepository.existsById(shop.getId())) throw new ShopConflictException(...)
             return shopRepository.save(shop);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createShop areaId={}", safeId(shop), ex);
+            log.warn("DB failure in createShop areaId={}", safeId(shop, Shop::getId), ex);
             throw new ShopPersistenceException("Failed to create ROM shop"+ex);
         }
     }
@@ -62,8 +66,8 @@ public class ShopService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Shop saveShopForId(String id, Shop shop) {
-        requireId(id);
-        requireShop(shop);
+        requireText(id, shopIdMissing());
+        requireEntityWithId(shop, Shop::getId, shopMissing(), shopIdMissing());
 
         return shopRepository.save(getShopById(id));
     }
@@ -71,7 +75,7 @@ public class ShopService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteShopById(String id) {
-        requireId(id);
+        requireText(id, shopIdMissing());
 
         try {
             if (!shopRepository.existsById(id)) {
@@ -94,28 +98,6 @@ public class ShopService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllShops", ex);
             throw new ShopPersistenceException("Failed to delete all ROM rooms "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidShopException("ROM shop id must be provided");
-        }
-    }
-
-    private static void requireShop(Shop shop) {
-        if (shop == null) {
-            throw new InvalidShopException("ROM shop must be provided");
-        }
-
-        requireId(shop.getId());
-    }
-
-    private static String safeId(Shop shop) {
-        try {
-            return shop.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 

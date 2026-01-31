@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springy.som.modulith.domain.area.Area;
 import org.springy.som.modulith.domain.character.PlayerCharacter;
 import org.springy.som.modulith.exception.character.InvalidPlayerCharacterException;
 import org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException;
 import org.springy.som.modulith.exception.character.PlayerCharacterPersistenceException;
 import org.springy.som.modulith.repository.CharacterRepository;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springy.som.modulith.util.ServiceGuards;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -67,14 +69,12 @@ class CharacterServiceTest {
     }
 
     @Test
-    void getPlayerCharactersByAccountId_blankAccountId_currentlyDoesNotValidate() {
-        when(repo.findAllByAccountId("")).thenReturn(List.of());
+    void getPlayerCharactersByAccountId_blankAccountId_becomesInvalidPlayerCharacterException() {
+        assertThatThrownBy(() -> service.getPlayerCharactersByAccountId(""))
+                .isInstanceOf(InvalidPlayerCharacterException.class)
+                .hasMessageContaining("PlayerCharacter id must be provided");
 
-        List<PlayerCharacter> actual = service.getPlayerCharactersByAccountId("");
-
-        assertThat(actual).isEmpty();
-        verify(repo).findAllByAccountId("");
-        verifyNoMoreInteractions(repo);
+        verifyNoInteractions(repo);
     }
 
     @Test
@@ -273,14 +273,11 @@ class CharacterServiceTest {
     }
 
     @Test
-    void safeId_whenGetIdThrows_returnsNull_reflection() throws Exception {
-        PlayerCharacter bad = mock(PlayerCharacter.class);
-        when(bad.getId()).thenThrow(new RuntimeException("boom"));
+    void safeId_whenGetIdThrows_returnsNull_reflection() {
+        PlayerCharacter badPc = mock(PlayerCharacter.class);
+        when(badPc.getId()).thenThrow(new RuntimeException("boom"));
 
-        Method m = CharacterService.class.getDeclaredMethod("safeId", PlayerCharacter.class);
-        m.setAccessible(true);
-
-        String result = (String) m.invoke(null, bad);
+        String result = ServiceGuards.safeId(badPc, PlayerCharacter::getId);
 
         assertThat(result).isNull();
     }

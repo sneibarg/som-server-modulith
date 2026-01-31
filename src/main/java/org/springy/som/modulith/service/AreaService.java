@@ -7,13 +7,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springy.som.modulith.domain.area.Area;
 import org.springy.som.modulith.exception.area.AreaNotFoundException;
 import org.springy.som.modulith.exception.area.AreaPersistenceException;
-import org.springy.som.modulith.exception.area.InvalidAreaException;
 import org.springy.som.modulith.repository.AreaRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+
+import org.springy.som.modulith.util.DomainGuards;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
@@ -40,7 +44,7 @@ public class AreaService {
     @Retry(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Area getAreaById(String id) {
-        requireId(id);
+        requireText(id, DomainGuards.areaIdMissing());
 
         try {
             Area area = areaRepository.findAreaByAreaId(id);
@@ -59,13 +63,13 @@ public class AreaService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Area createArea(Area area) {
-        requireArea(area);
+        requireEntityWithId(area, Area::getId, DomainGuards.areaMissing(), DomainGuards.areaIdMissing());
 
         try {
             // if (areaRepository.existsById(area.getAreaId())) throw new AreaConflictException(...)
             return areaRepository.save(area);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createArea areaId={}", safeId(area), ex);
+            log.warn("DB failure in createArea areaId={}", safeId(area, Area::getId), ex);
             throw new AreaPersistenceException("Failed to create area"+ex);
         }
     }
@@ -73,8 +77,8 @@ public class AreaService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Area saveAreaForId(String id, Area area) {
-        requireId(id);
-        requireArea(area);
+        requireText(id, DomainGuards.areaIdMissing());
+        requireEntityWithId(area, Area::getId, DomainGuards.areaMissing(), DomainGuards.areaIdMissing());
 
         return areaRepository.save(getAreaById(id));
     }
@@ -82,15 +86,13 @@ public class AreaService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteAreaById(String id) {
-        requireId(id);
+        requireText(id, DomainGuards.areaIdMissing());
 
         try {
             if (!areaRepository.existsById(id)) {
                 throw new AreaNotFoundException(id);
             }
             areaRepository.deleteById(id);
-        } catch (AreaNotFoundException ex) {
-            throw ex;
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAreaById id={}", id, ex);
             throw new AreaPersistenceException("Failed to delete area: " + id+" "+ex);
@@ -107,28 +109,6 @@ public class AreaService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllAreas", ex);
             throw new AreaPersistenceException("Failed to delete all areas "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidAreaException("Area id must be provided");
-        }
-    }
-
-    private static void requireArea(Area area) {
-        if (area == null) {
-            throw new InvalidAreaException("Area must be provided");
-        }
-
-        requireId(area.getId());
-    }
-
-    private static String safeId(Area area) {
-        try {
-            return area.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 

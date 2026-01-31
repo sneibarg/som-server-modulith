@@ -6,15 +6,18 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.character.PlayerCharacter;
-import org.springy.som.modulith.exception.character.InvalidPlayerCharacterException;
 import org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException;
 import org.springy.som.modulith.exception.character.PlayerCharacterPersistenceException;
 import org.springy.som.modulith.repository.CharacterRepository;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.playerCharacterIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.playerCharacterMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
 
 @Service
 @Slf4j
@@ -38,19 +41,30 @@ public class CharacterService {
 
     }
 
-    @CircuitBreaker(name = "somAPI", fallbackMethod = "getPlayerCharactersByAccountIdFallback")
+    @CircuitBreaker(name = "somAPI", fallbackMethod = "getPlayerCharacterByIdFallback")
     @Retry(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public List<PlayerCharacter> getPlayerCharactersByAccountId(@RequestParam String accountId) {
-        requireAccountId(accountId);
-        return characterRepository.findAllByAccountId(accountId);
+    public List<PlayerCharacter> getPlayerCharactersByAccountId(@RequestParam String id) {
+        requireText(id, playerCharacterIdMissing());
+
+        try {
+            List<PlayerCharacter> playerCharacter = characterRepository.findAllByAccountId(id);
+            if (playerCharacter == null) {
+                throw new PlayerCharacterNotFoundException(id);
+            }
+            return playerCharacter;
+        } catch (DataAccessException ex) {
+            log.warn("DB failure in getPlayerCharacterById", ex);
+            throw new PlayerCharacterPersistenceException("Failed to load player character "+ex);
+        }
     }
 
     @CircuitBreaker(name = "somAPI", fallbackMethod = "getPlayerCharacterByIdFallback")
     @Retry(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public PlayerCharacter getPlayerCharacterById(@RequestParam String id) {
-        requireId(id);
+        requireText(id, playerCharacterIdMissing());
+
         try {
             PlayerCharacter playerCharacter = characterRepository.findPlayerCharacterByCharacterId(id);
             if (playerCharacter == null) {
@@ -68,7 +82,8 @@ public class CharacterService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public PlayerCharacter savePlayerCharacter(PlayerCharacter playerCharacter) {
-        requirePlayerCharacter(playerCharacter);
+        requireEntityWithId(playerCharacter,
+                PlayerCharacter::getId, playerCharacterMissing(), playerCharacterIdMissing());
 
         return characterRepository.save(playerCharacter);
     }
@@ -76,8 +91,9 @@ public class CharacterService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public PlayerCharacter savePlayerCharacterForId(String id, PlayerCharacter playerCharacter) {
-        requireId(id);
-        requirePlayerCharacter(playerCharacter);
+        requireText(id, playerCharacterIdMissing());
+        requireEntityWithId(playerCharacter,
+                PlayerCharacter::getId, playerCharacterMissing(), playerCharacterIdMissing());
 
         return characterRepository.save(getPlayerCharacterById(id));
     }
@@ -85,15 +101,13 @@ public class CharacterService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deletePlayerCharacterById(String id) {
-        requireId(id);
+        requireText(id, playerCharacterIdMissing());
 
         try {
             if (!characterRepository.existsById(id)) {
                 throw new PlayerCharacterNotFoundException(id);
             }
             characterRepository.deleteById(id);
-        } catch (PlayerCharacterNotFoundException ex) {
-            throw ex;
         } catch (DataAccessException ex) {
             log.warn("DB failure in deletePlayerCharacterById id={}", id, ex);
             throw new PlayerCharacterPersistenceException("Failed to delete player character: " + id + " " + ex);
@@ -110,35 +124,6 @@ public class CharacterService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllAreas", ex);
             throw new PlayerCharacterPersistenceException("Failed to delete all player characters "+ ex);
-        }
-    }
-
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidPlayerCharacterException("PlayerCharacter id must be provided");
-        }
-    }
-
-    private static void requireAccountId(String accountId) {
-        if (!StringUtils.hasText(accountId)) {
-
-        }
-    }
-
-    private static void requirePlayerCharacter(PlayerCharacter playerCharacter) {
-        if (playerCharacter == null) {
-            throw new InvalidPlayerCharacterException("PlayerCharacter must be provided");
-        }
-
-        requireId(playerCharacter.getId());
-    }
-
-    private static String safeId(PlayerCharacter playerCharacter) {
-        try {
-            return playerCharacter.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 

@@ -7,17 +7,21 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.command.Command;
 import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
 import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
 import org.springy.som.modulith.exception.command.CommandPersistenceException;
-import org.springy.som.modulith.exception.command.InvalidCommandException;
 import org.springy.som.modulith.repository.CommandRepository;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.commandIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.commandMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
@@ -50,13 +54,13 @@ public class CommandService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Command createCommand(@Valid @RequestBody Command command) {
-        requireCommand(command);
+        requireEntityWithId(command, Command::getId, commandMissing(), commandIdMissing());
 
         try {
-            // if (areaRepository.existsById(area.getAreaId())) throw new AreaConflictException(...)
+            // if (commandRepository.existsById(command.getId())) throw new CommandConflictException(...)
             return commandRepository.save(command);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createCommand areaId={}", safeId(command), ex);
+            log.warn("DB failure in createCommand areaId={}", safeId(command, Command::getId), ex);
             throw new RomClassPersistenceException("Failed to create command"+ex);
         }
     }
@@ -64,8 +68,8 @@ public class CommandService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Command saveCommandForId(String id, Command command) {
-        requireId(id);
-        requireCommand(command);
+        requireText(id, commandIdMissing());
+        requireEntityWithId(command, Command::getId, commandMissing(), commandIdMissing());
 
         return commandRepository.save(getCommandById(id));
     }
@@ -73,7 +77,7 @@ public class CommandService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteCommandById(String id) {
-        requireId(id);
+        requireText(id, commandIdMissing());
 
         try {
             if (!commandRepository.existsById(id)) {
@@ -96,28 +100,6 @@ public class CommandService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllCommands", ex);
             throw new CommandPersistenceException("Failed to delete all commands "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidCommandException("Command id must be provided");
-        }
-    }
-
-    private static void requireCommand(Command command) {
-        if (command == null) {
-            throw new InvalidCommandException("Command must be provided");
-        }
-
-        requireId(command.getId());
-    }
-
-    private static String safeId(Command command) {
-        try {
-            return command.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 

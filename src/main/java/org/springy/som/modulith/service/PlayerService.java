@@ -9,17 +9,20 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springy.som.modulith.domain.command.Command;
 import org.springy.som.modulith.domain.player.PlayerAccount;
-import org.springy.som.modulith.exception.player.InvalidPlayerException;
 import org.springy.som.modulith.exception.player.PlayerNotFoundException;
 import org.springy.som.modulith.exception.player.PlayerPersistenceException;
 import org.springy.som.modulith.repository.PlayerAccountRepository;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.playerAccountIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.playerAccountMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
@@ -52,13 +55,13 @@ public class PlayerService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public PlayerAccount createPlayerAccount(@Valid @RequestBody PlayerAccount playerAccount) {
-        requirePlayerAccount(playerAccount);
+        requireEntityWithId(playerAccount, PlayerAccount::getId, playerAccountMissing(), playerAccountIdMissing());
 
         try {
             // if (playerAccountRepository.existsById(mobile.getPlayerAccountId())) throw new PlayerAccountConflictException(...)
             return playerAccountRepository.save(playerAccount);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createPlayerAccount areaId={}", safeId(playerAccount), ex);
+            log.warn("DB failure in createPlayerAccount areaId={}", safeId(playerAccount, PlayerAccount::getId), ex);
             throw new PlayerPersistenceException("Failed to create player account"+ex);
         }
     }
@@ -66,8 +69,8 @@ public class PlayerService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public PlayerAccount savePlayerAccountForId(String id, PlayerAccount playerAccount) {
-        requireId(id);
-        requirePlayerAccount(playerAccount);
+        requireText(id, playerAccountIdMissing());
+        requireEntityWithId(playerAccount, PlayerAccount::getId, playerAccountMissing(), playerAccountIdMissing());
 
         return playerAccountRepository.save(getPlayerAccountById(id));
     }
@@ -75,7 +78,7 @@ public class PlayerService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deletePlayerAccountById(String id) {
-        requireId(id);
+        requireText(id, playerAccountIdMissing());
 
         try {
             if (!playerAccountRepository.existsById(id)) {
@@ -83,8 +86,8 @@ public class PlayerService {
             }
             playerAccountRepository.deleteById(id);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in deleteMobileById id={}", id, ex);
-            throw new PlayerPersistenceException("Failed to delete command: " + id+" "+ex);
+            log.warn("DB failure in deletePlayerAccountById id={}", id, ex);
+            throw new PlayerPersistenceException("Failed to delete player account: " + id+" "+ex);
         }
     }
 
@@ -96,30 +99,8 @@ public class PlayerService {
             playerAccountRepository.deleteAll();
             return itemCount;
         } catch (DataAccessException ex) {
-            log.warn("DB failure in deleteAllMobiles", ex);
-            throw new PlayerPersistenceException("Failed to delete all commands "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidPlayerException("Mobile id must be provided");
-        }
-    }
-
-    private static void requirePlayerAccount(PlayerAccount playerAccount) {
-        if (playerAccount == null) {
-            throw new InvalidPlayerException("Mobile must be provided");
-        }
-
-        requireId(playerAccount.getId());
-    }
-
-    private static String safeId(PlayerAccount playerAccount) {
-        try {
-            return playerAccount.getId();
-        } catch (Exception ignored) {
-            return null;
+            log.warn("DB failure in deleteAllPlayerAccounts", ex);
+            throw new PlayerPersistenceException("Failed to delete all player accounts "+ ex);
         }
     }
 
@@ -128,8 +109,8 @@ public class PlayerService {
         return List.of();
     }
 
-    private Command getPlayerAccountByIdFallback(String id, Throwable t) {
+    private PlayerAccount getPlayerAccountByIdFallback(String id, Throwable t) {
         log.warn("Fallback getAllPlayerAccountsById id={} due to {}", id, t.toString());
-        throw new PlayerPersistenceException("Mobile lookup temporarily unavailable: " + id+" "+t);
+        throw new PlayerPersistenceException("PlayerAccount lookup temporarily unavailable: " + id+" "+t);
     }
 }

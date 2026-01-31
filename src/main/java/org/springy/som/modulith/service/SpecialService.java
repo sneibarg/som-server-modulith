@@ -7,16 +7,21 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.special.Special;
-import org.springy.som.modulith.exception.special.InvalidSpecialException;
 import org.springy.som.modulith.exception.special.SpecialNotFoundException;
 import org.springy.som.modulith.exception.special.SpecialPersistenceException;
 import org.springy.som.modulith.repository.SpecialRepository;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.shopIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.specialIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.specialMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
@@ -49,13 +54,13 @@ public class SpecialService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Special createSpecial(@Valid @RequestBody Special special) {
-        requireSpecial(special);
+        requireEntityWithId(special, Special::getId, specialMissing(), specialIdMissing());
 
         try {
             // if (specialRepository.existsById(special.getSpecialById())) throw new SpecialConflictException(...)
             return specialRepository.save(special);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createShop areaId={}", safeId(special), ex);
+            log.warn("DB failure in createShop areaId={}", safeId(special, Special::getId), ex);
             throw new SpecialPersistenceException("Failed to create ROM special"+ex);
         }
     }
@@ -63,8 +68,8 @@ public class SpecialService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Special saveSpecialForId(String id, Special special) {
-        requireId(id);
-        requireSpecial(special);
+        requireText(id, shopIdMissing());
+        requireEntityWithId(special, Special::getId, specialMissing(), specialIdMissing());
 
         return specialRepository.save(getSpecialById(id));
     }
@@ -72,7 +77,7 @@ public class SpecialService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteSpecialById(String id) {
-        requireId(id);
+        requireText(id, shopIdMissing());
 
         try {
             if (!specialRepository.existsById(id)) {
@@ -95,28 +100,6 @@ public class SpecialService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllSpecials", ex);
             throw new SpecialPersistenceException("Failed to delete all ROM specials "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidSpecialException("ROM special id must be provided");
-        }
-    }
-
-    private static void requireSpecial(Special special) {
-        if (special == null) {
-            throw new InvalidSpecialException("ROM special must be provided");
-        }
-
-        requireId(special.getId());
-    }
-
-    private static String safeId(Special special) {
-        try {
-            return special.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 

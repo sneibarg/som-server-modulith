@@ -12,6 +12,8 @@ import org.springy.som.modulith.exception.area.InvalidAreaException;
 import org.springy.som.modulith.repository.AreaRepository;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springy.som.modulith.util.DomainGuards;
+import org.springy.som.modulith.util.ServiceGuards;
 
 import java.util.List;
 
@@ -139,7 +141,7 @@ class AreaServiceTest {
         Area badArea = mock(Area.class);
         when(badArea.getId()).thenThrow(new RuntimeException("boom"));
 
-        String result = (String) ReflectionTestUtils.invokeMethod(AreaService.class, "safeId", badArea);
+        String result = ServiceGuards.safeId(badArea, Area::getId);
 
         assertThat(result).isNull();
     }

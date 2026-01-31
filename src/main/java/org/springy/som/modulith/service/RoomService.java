@@ -7,16 +7,20 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.room.Room;
-import org.springy.som.modulith.exception.room.InvalidRoomException;
 import org.springy.som.modulith.exception.room.RoomNotFoundException;
 import org.springy.som.modulith.exception.room.RoomPersistenceException;
 import org.springy.som.modulith.repository.RoomRepository;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.roomIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.roomMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
@@ -49,13 +53,13 @@ public class RoomService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Room createRoom(@Valid @RequestBody Room room) {
-        requireRoom(room);
+        requireEntityWithId(room, Room::getId, roomMissing(), roomIdMissing());
 
         try {
             // if (roomRepository.existsById(reset.getRoomById())) throw new ResetConflictException(...)
             return roomRepository.save(room);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createRoom areaId={}", safeId(room), ex);
+            log.warn("DB failure in createRoom areaId={}", safeId(room, Room::getId), ex);
             throw new RoomPersistenceException("Failed to create ROM race"+ex);
         }
     }
@@ -63,8 +67,8 @@ public class RoomService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public Room saveRoomForId(String id, Room room) {
-        requireId(id);
-        requireRoom(room);
+        requireText(id, roomIdMissing());
+        requireEntityWithId(room, Room::getId, roomMissing(), roomIdMissing());
 
         return roomRepository.save(getRoomById(id));
     }
@@ -72,7 +76,7 @@ public class RoomService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteRoomById(String id) {
-        requireId(id);
+        requireText(id, roomIdMissing());
 
         try {
             if (!roomRepository.existsById(id)) {
@@ -95,28 +99,6 @@ public class RoomService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllRooms", ex);
             throw new RoomPersistenceException("Failed to delete all ROM rooms "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidRoomException("ROM room id must be provided");
-        }
-    }
-
-    private static void requireRoom(Room room) {
-        if (room == null) {
-            throw new InvalidRoomException("ROM room must be provided");
-        }
-
-        requireId(room.getId());
-    }
-
-    private static String safeId(Room room) {
-        try {
-            return room.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 

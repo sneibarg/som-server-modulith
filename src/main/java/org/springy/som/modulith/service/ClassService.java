@@ -7,17 +7,22 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.area.Area;
 import org.springy.som.modulith.domain.clazz.RomClass;
 import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
 import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
-import org.springy.som.modulith.exception.clazz.InvalidRomClassException;
 import org.springy.som.modulith.repository.ClassRepository;
+import org.springy.som.modulith.util.DomainGuards;
+import org.springy.som.modulith.util.ServiceGuards;
 
 import java.util.List;
+
+import static org.springy.som.modulith.util.DomainGuards.romClassIdMissing;
+import static org.springy.som.modulith.util.DomainGuards.romClassMissing;
+import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.util.ServiceGuards.requireText;
 
 @Service
 @Slf4j
@@ -45,13 +50,13 @@ public class ClassService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public RomClass createRomClass(@Valid @RequestBody RomClass romClass) {
-        requireRomClass(romClass);
+        requireEntityWithId(romClass, RomClass::getId, romClassMissing(), romClassIdMissing());
 
         try {
             // if (areaRepository.existsById(area.getAreaId())) throw new AreaConflictException(...)
             return classRepository.save(romClass);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createArea areaId={}", safeId(romClass), ex);
+            log.warn("DB failure in createRomClass romClassId={}", ServiceGuards.safeId(romClass, RomClass::getId), ex);
             throw new RomClassPersistenceException("Failed to create area"+ex);
         }
     }
@@ -59,8 +64,8 @@ public class ClassService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public RomClass saveRomClassForId(String id, RomClass romClass) {
-        requireId(id);
-        requireRomClass(romClass);
+        requireText(id, romClassIdMissing());
+        requireEntityWithId(romClass, RomClass::getId, romClassMissing(), romClassIdMissing());
 
         return classRepository.save(getRomClassById(id));
     }
@@ -68,7 +73,7 @@ public class ClassService {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public void deleteRomClassById(String id) {
-        requireId(id);
+        requireText(id, romClassIdMissing());
 
         try {
             if (!classRepository.existsById(id)) {
@@ -91,28 +96,6 @@ public class ClassService {
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllAreas", ex);
             throw new RomClassPersistenceException("Failed to delete all areas "+ ex);
-        }
-    }
-
-    private static void requireId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new InvalidRomClassException("RomClass id must be provided");
-        }
-    }
-
-    private static void requireRomClass(RomClass romClass) {
-        if (romClass == null) {
-            throw new InvalidRomClassException("RomClass must be provided");
-        }
-
-        requireId(romClass.getId());
-    }
-
-    private static String safeId(RomClass romClass) {
-        try {
-            return romClass.getId();
-        } catch (Exception ignored) {
-            return null;
         }
     }
 
