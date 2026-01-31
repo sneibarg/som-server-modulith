@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springy.som.modulith.service.DeleteAllResponse;
 import org.springy.som.modulith.service.PlayerService;
@@ -31,6 +32,11 @@ public class PlayerController {
     @GetMapping
     public ResponseEntity<List<PlayerAccount>> getPlayerAccounts() {
         return ResponseEntity.ok(playerService.getAllPlayerAccounts());
+    }
+
+    @GetMapping(path = "/name")
+    public ResponseEntity<PlayerAccount> getPlayerAccountByName(@RequestParam String name) {
+        return ResponseEntity.ok(playerService.getPlayerAccountByName(name));
     }
 
     @GetMapping(path = "/{id}")
