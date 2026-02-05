@@ -9,10 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springy.som.modulith.exception.shop.InvalidShopException;
-import org.springy.som.modulith.exception.shop.ShopApiExceptionHandler;
-import org.springy.som.modulith.exception.shop.ShopNotFoundException;
-import org.springy.som.modulith.exception.shop.ShopPersistenceException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;

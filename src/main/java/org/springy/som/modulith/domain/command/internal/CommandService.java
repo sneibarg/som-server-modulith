@@ -9,9 +9,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
-import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
-import org.springy.som.modulith.exception.command.CommandPersistenceException;
+import org.springy.som.modulith.domain.clazz.internal.RomClassNotFoundException;
+import org.springy.som.modulith.domain.clazz.internal.RomClassPersistenceException;
 
 import java.util.List;
 

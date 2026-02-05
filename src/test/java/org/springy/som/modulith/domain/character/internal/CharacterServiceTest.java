@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.exception.character.InvalidPlayerCharacterException;
-import org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException;
-import org.springy.som.modulith.exception.character.PlayerCharacterPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springy.som.modulith.util.ServiceGuards;
 

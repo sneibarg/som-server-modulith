@@ -1,17 +1,17 @@
 package org.springy.som.modulith.util;
 
-import org.springy.som.modulith.exception.area.InvalidAreaException;
-import org.springy.som.modulith.exception.character.InvalidPlayerCharacterException;
-import org.springy.som.modulith.exception.clazz.InvalidRomClassException;
-import org.springy.som.modulith.exception.command.InvalidCommandException;
-import org.springy.som.modulith.exception.item.InvalidItemException;
-import org.springy.som.modulith.exception.mobile.InvalidMobileException;
-import org.springy.som.modulith.exception.player.InvalidPlayerException;
-import org.springy.som.modulith.exception.race.InvalidRomRaceException;
-import org.springy.som.modulith.exception.reset.InvalidResetException;
-import org.springy.som.modulith.exception.room.InvalidRoomException;
-import org.springy.som.modulith.exception.shop.InvalidShopException;
-import org.springy.som.modulith.exception.special.InvalidSpecialException;
+import org.springy.som.modulith.domain.area.internal.InvalidAreaException;
+import org.springy.som.modulith.domain.character.internal.InvalidPlayerCharacterException;
+import org.springy.som.modulith.domain.clazz.internal.InvalidRomClassException;
+import org.springy.som.modulith.domain.command.internal.InvalidCommandException;
+import org.springy.som.modulith.domain.item.internal.InvalidItemException;
+import org.springy.som.modulith.domain.mobile.internal.InvalidMobileException;
+import org.springy.som.modulith.domain.player.internal.InvalidPlayerException;
+import org.springy.som.modulith.domain.race.internal.InvalidRomRaceException;
+import org.springy.som.modulith.domain.reset.internal.InvalidResetException;
+import org.springy.som.modulith.domain.room.internal.InvalidRoomException;
+import org.springy.som.modulith.domain.shop.internal.InvalidShopException;
+import org.springy.som.modulith.domain.special.internal.InvalidSpecialException;
 
 import java.util.function.Supplier;
 

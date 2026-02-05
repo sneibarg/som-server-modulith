@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.exception.mobile.InvalidMobileException;
-import org.springy.som.modulith.exception.mobile.MobileNotFoundException;
-import org.springy.som.modulith.exception.mobile.MobilePersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.util.List;

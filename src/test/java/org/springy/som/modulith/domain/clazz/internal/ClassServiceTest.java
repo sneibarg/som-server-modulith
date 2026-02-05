@@ -2,9 +2,6 @@ package org.springy.som.modulith.domain.clazz.internal;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springy.som.modulith.exception.clazz.InvalidRomClassException;
-import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
-import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springy.som.modulith.util.ServiceGuards;
 

@@ -9,10 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springy.som.modulith.exception.item.InvalidItemException;
-import org.springy.som.modulith.exception.item.ItemApiExceptionHandler;
-import org.springy.som.modulith.exception.item.ItemNotFoundException;
-import org.springy.som.modulith.exception.item.ItemPersistenceException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;

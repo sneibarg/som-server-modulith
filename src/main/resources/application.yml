@@ -36,12 +36,12 @@ resilience4j:
           - org.springframework.dao.TransientDataAccessException
           - org.springframework.dao.RecoverableDataAccessException
         ignoreExceptions:
-          - org.springy.som.modulith.exception.area.InvalidAreaException
-          - org.springy.som.modulith.exception.area.AreaNotFoundException
-          - org.springy.som.modulith.exception.character.InvalidPlayerCharacterException
-          - org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException
-          - org.springy.som.modulith.exception.clazz.InvalidRomClassException
-          - org.springy.som.modulith.exception.clazz.RomClassNotFoundException
+          - org.springy.som.modulith.domain.area.internal.InvalidAreaException
+          - org.springy.som.modulith.domain.area.internal.AreaNotFoundException
+          - org.springy.som.modulith.domain.character.internal.InvalidPlayerCharacterException
+          - org.springy.som.modulith.domain.character.internal.PlayerCharacterNotFoundException
+          - org.springy.som.modulith.domain.clazz.internal.InvalidRomClassException
+          - org.springy.som.modulith.domain.clazz.internal.RomClassNotFoundException
   bulkhead:
     instances:
       somAPI:

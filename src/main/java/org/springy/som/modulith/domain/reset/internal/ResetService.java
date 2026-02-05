@@ -10,8 +10,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springy.som.modulith.exception.reset.ResetNotFoundException;
-import org.springy.som.modulith.exception.reset.ResetPersistenceException;
 
 import java.util.List;
 

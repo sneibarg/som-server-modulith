@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.exception.item.InvalidItemException;
-import org.springy.som.modulith.exception.item.ItemNotFoundException;
-import org.springy.som.modulith.exception.item.ItemPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.util.List;

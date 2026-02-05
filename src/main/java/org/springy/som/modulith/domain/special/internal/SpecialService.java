@@ -9,8 +9,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springy.som.modulith.exception.special.SpecialNotFoundException;
-import org.springy.som.modulith.exception.special.SpecialPersistenceException;
 
 import java.util.List;
 

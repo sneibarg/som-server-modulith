@@ -4,10 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
-import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
-import org.springy.som.modulith.exception.command.CommandPersistenceException;
-import org.springy.som.modulith.exception.command.InvalidCommandException;
+import org.springy.som.modulith.domain.clazz.internal.RomClassNotFoundException;
+import org.springy.som.modulith.domain.clazz.internal.RomClassPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.lang.reflect.Method;

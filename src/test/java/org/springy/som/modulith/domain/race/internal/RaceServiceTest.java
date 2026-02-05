@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.exception.race.InvalidRomRaceException;
-import org.springy.som.modulith.exception.race.RomRaceNotFoundException;
-import org.springy.som.modulith.exception.race.RomRacePersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.util.List;

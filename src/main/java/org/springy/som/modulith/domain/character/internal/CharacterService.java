@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springy.som.modulith.exception.character.PlayerCharacterNotFoundException;
-import org.springy.som.modulith.exception.character.PlayerCharacterPersistenceException;
 
 import java.util.List;
 

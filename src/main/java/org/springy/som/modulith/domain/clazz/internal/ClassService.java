@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.area.internal.AreaDocument;
-import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
-import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
 import org.springy.som.modulith.util.ServiceGuards;
 
 import java.util.List;

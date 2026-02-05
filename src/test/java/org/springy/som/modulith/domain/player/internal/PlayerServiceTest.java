@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.exception.player.InvalidPlayerException;
-import org.springy.som.modulith.exception.player.PlayerNotFoundException;
-import org.springy.som.modulith.exception.player.PlayerPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.util.List;

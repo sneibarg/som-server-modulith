@@ -9,10 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springy.som.modulith.exception.clazz.InvalidRomClassException;
-import org.springy.som.modulith.exception.clazz.RomClassApiExceptionHandler;
-import org.springy.som.modulith.exception.clazz.RomClassNotFoundException;
-import org.springy.som.modulith.exception.clazz.RomClassPersistenceException;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

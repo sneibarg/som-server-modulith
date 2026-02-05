@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.exception.room.InvalidRoomException;
-import org.springy.som.modulith.exception.room.RoomNotFoundException;
-import org.springy.som.modulith.exception.room.RoomPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.util.List;

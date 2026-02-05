@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.command.internal.CommandDocument;
-import org.springy.som.modulith.exception.mobile.MobileNotFoundException;
-import org.springy.som.modulith.exception.mobile.MobilePersistenceException;
 
 import java.util.List;
 

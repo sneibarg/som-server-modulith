@@ -1,5 +1,7 @@
 package org.springy.som.modulith.security;
 
+import org.springy.som.modulith.util.CryptoUtil;
+
 import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.security.PublicKey;

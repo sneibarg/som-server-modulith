@@ -9,10 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springy.som.modulith.exception.player.InvalidPlayerException;
-import org.springy.som.modulith.exception.player.PlayerApiExceptionHandler;
-import org.springy.som.modulith.exception.player.PlayerNotFoundException;
-import org.springy.som.modulith.exception.player.PlayerPersistenceException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;

@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.exception.special.InvalidSpecialException;
-import org.springy.som.modulith.exception.special.SpecialNotFoundException;
-import org.springy.som.modulith.exception.special.SpecialPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.util.List;

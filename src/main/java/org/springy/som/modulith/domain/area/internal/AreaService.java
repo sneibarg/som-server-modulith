@@ -4,8 +4,6 @@ import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
-import org.springy.som.modulith.exception.area.AreaNotFoundException;
-import org.springy.som.modulith.exception.area.AreaPersistenceException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 

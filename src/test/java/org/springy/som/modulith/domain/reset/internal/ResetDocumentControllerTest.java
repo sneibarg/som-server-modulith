@@ -9,10 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springy.som.modulith.exception.race.InvalidRomRaceException;
-import org.springy.som.modulith.exception.race.RomRaceNotFoundException;
-import org.springy.som.modulith.exception.race.RomRacePersistenceException;
-import org.springy.som.modulith.exception.reset.ResetApiExceptionHandler;
+import org.springy.som.modulith.domain.race.internal.InvalidRomRaceException;
+import org.springy.som.modulith.domain.race.internal.RomRaceNotFoundException;
+import org.springy.som.modulith.domain.race.internal.RomRacePersistenceException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
