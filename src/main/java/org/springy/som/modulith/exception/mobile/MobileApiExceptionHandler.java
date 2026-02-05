@@ -1,7 +1,7 @@
 package org.springy.som.modulith.exception.mobile;
 
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springy.som.modulith.controller.MobileController;
+import org.springy.som.modulith.domain.mobile.internal.MobileController;
 import org.springy.som.modulith.exception.BaseApiExceptionHandler;
 
 @RestControllerAdvice(assignableTypes = MobileController.class)

@@ -48,5 +48,22 @@ resilience4j:
         maxConcurrentCalls: 50
         maxWaitDuration: 0
 som:
+  som:
+    keycloak:
+      issuer-uri: "http://dragon:8180/realms/Springs%20of%20MUD"
+      refresh:
+        skew-seconds: 30
+        poll-ms: 5000
+        max-attempts: 8
+        backoff-ms: 250
+  crypto:
+    key:
+      alias: som-api
+      password: ${KEYSTORE_PASSWORD}
+    keystore:
+      location: "c:\\users\\scott\\som-api-keystore.p12"
+      password: ${KEYSTORE_PASSWORD}
   web-security:
+    api:
+      password: ENC(pFqx++R65V/olr4YB5TaNIw4OJ1rCGebFvuAmybL6KlCmk+QmJWgusgaOinlObUQvsCz/Yy3yDiaroRkEjZHA97Vx7ClzsepSCe8eF9zpwIoMfUX0uGdVw44YUEQzB1+xZ7GKaWnqeZGgeVrO9V6D//fVyS6L3MoIx8zSS4po0ApIvvRFvoRBs3lWFLGvpxdEV4Bz6ej4z/+PiFeO5vANR7Hi+aBOHkPIoMoWr4NX/0xst/pz1FQNtHD3JSkb0h4dEPe+BkxdfTVbG7KwoYb883CosKKlsT4BcA2qGq9FGfJGMW/ovX+Pd6J24KsqauSzXlD58EJJt1QALZDiERCOw==)
     enabled: false

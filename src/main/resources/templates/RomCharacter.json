@@ -2,7 +2,7 @@
   "accountId": "62d2ff6699c3578abe7941c9",
   "characterId": "ecf577c5-1490-4599-82fd-da4214eccae1",
   "areaId": "673bf21189e37bdf47cf11f1",
-  "roomId": "",
+  "roomId": "673bf211dd2b4ba89bbbeabd",
   "name": "Fizban",
   "title": "the Fabulous",
   "race": "Human",
@@ -27,5 +27,6 @@
   "piercing": 100,
   "bashing": 100,
   "slashing": 100,
-  "magic": 100
+  "magic": 100,
+  "inventory": []
 }

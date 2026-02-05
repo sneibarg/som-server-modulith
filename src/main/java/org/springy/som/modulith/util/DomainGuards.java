@@ -19,27 +19,27 @@ public final class DomainGuards {
     private DomainGuards() {}
 
     public static Supplier<InvalidAreaException> areaMissing() {
-        return () -> new InvalidAreaException("Area must be provided");
+        return () -> new InvalidAreaException("AreaDocument must be provided");
     }
 
     public static Supplier<InvalidAreaException> areaIdMissing() {
-        return () -> new InvalidAreaException("Area id must be provided");
+        return () -> new InvalidAreaException("AreaDocument id must be provided");
     }
 
     public static Supplier<InvalidPlayerCharacterException> playerCharacterMissing() {
-        return () -> new InvalidPlayerCharacterException("PlayerCharacter must be provided");
+        return () -> new InvalidPlayerCharacterException("CharacterDocument must be provided");
     }
 
     public static Supplier<InvalidPlayerCharacterException> playerCharacterIdMissing() {
-        return () -> new InvalidPlayerCharacterException("PlayerCharacter id must be provided");
+        return () -> new InvalidPlayerCharacterException("CharacterDocument id must be provided");
     }
 
     public static Supplier<InvalidRomClassException> romClassMissing() {
-        return () -> new InvalidRomClassException("RomClass must be provided");
+        return () -> new InvalidRomClassException("RomClassDocument must be provided");
     }
 
     public static Supplier<InvalidRomClassException> romClassIdMissing() {
-        return () -> new InvalidRomClassException("RomClass id must be provided");
+        return () -> new InvalidRomClassException("RomClassDocument id must be provided");
     }
 
     public static Supplier<InvalidCommandException> commandMissing() {
