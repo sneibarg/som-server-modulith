@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springy.som.modulith.domain.shop.api.ShopApi;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Service
 @Slf4j
-public class ShopService {
+public class ShopService implements ShopApi {
     private final ShopRepository shopRepository;
 
     public ShopService(ShopRepository shopRepository) {

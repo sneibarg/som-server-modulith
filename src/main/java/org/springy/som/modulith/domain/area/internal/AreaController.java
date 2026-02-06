@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
-import org.springy.som.modulith.domain.DeleteAllResponse;
+import org.springy.som.modulith.web.DeleteAllResponse;
 import org.springy.som.modulith.domain.area.api.AreaMapper;
 import org.springy.som.modulith.domain.area.api.AreaView;
 

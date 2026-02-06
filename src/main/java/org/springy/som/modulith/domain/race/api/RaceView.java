@@ -2,7 +2,7 @@ package org.springy.som.modulith.domain.race.api;
 
 import java.util.List;
 
-public record RomRaceView(
+public record RaceView(
         String id,
         String name,
         String size,

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.area.internal.AreaDocument;
+import org.springy.som.modulith.domain.clazz.api.ClassApi;
 import org.springy.som.modulith.util.ServiceGuards;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import static org.springy.som.modulith.util.ServiceGuards.requireText;
 
 @Service
 @Slf4j
-public class ClassService {
+public class ClassService implements ClassApi {
     private final ClassRepository classRepository;
 
     public ClassService(ClassRepository classRepository) {

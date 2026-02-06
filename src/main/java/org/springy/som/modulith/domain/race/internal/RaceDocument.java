@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Document("RomRaces")
-public class RomRaceDocument {
+public class RaceDocument {
     @NotBlank(message = "name must not be blank")
     private String name;
     private String size;

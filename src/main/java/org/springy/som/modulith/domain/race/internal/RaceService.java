@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springy.som.modulith.domain.race.api.RaceApi;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Service
 @Slf4j
-public class RaceService {
+public class RaceService implements RaceApi {
     private final RaceRepository raceRepository;
 
     public RaceService(RaceRepository raceRepository) {
@@ -30,81 +31,81 @@ public class RaceService {
     @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllRomRacesFallback")
     @Retry(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public List<RomRaceDocument> getAllRomRaces() {
+    public List<RaceDocument> getAllRaces() {
         return raceRepository.findAll();
     }
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public RomRaceDocument getRomRaceByName(@RequestParam String name) {
+    public RaceDocument getRaceByName(@RequestParam String name) {
         return raceRepository.findRomRaceById(name);
     }
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public RomRaceDocument getRomRaceById(@RequestParam String id) {
+    public RaceDocument getRaceById(@RequestParam String id) {
         return raceRepository.findRomRaceById(id);
     }
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public RomRaceDocument createRomRace(@Valid @RequestBody RomRaceDocument romRaceDocument) {
-        requireEntityWithId(romRaceDocument, RomRaceDocument::getId, romRaceMissing(), romRaceIdMissing());
+    public RaceDocument createRace(@Valid @RequestBody RaceDocument raceDocument) {
+        requireEntityWithId(raceDocument, RaceDocument::getId, romRaceMissing(), romRaceIdMissing());
 
         try {
-            // if (raceRepository.existsById(romRaceDocument.getRomRaceId())) throw new RomRaceConflictException(...)
-            return raceRepository.save(romRaceDocument);
+            // if (raceRepository.existsById(raceDocument.getRomRaceId())) throw new RomRaceConflictException(...)
+            return raceRepository.save(raceDocument);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createRomRace romRaceId={}", safeId(romRaceDocument, RomRaceDocument::getId), ex);
-            throw new RomRacePersistenceException("Failed to create ROM race"+ex);
+            log.warn("DB failure in createRomRace romRaceId={}", safeId(raceDocument, RaceDocument::getId), ex);
+            throw new RacePersistenceException("Failed to create ROM race"+ex);
         }
     }
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public RomRaceDocument saveRomRaceForId(String id, RomRaceDocument romRaceDocument) {
+    public RaceDocument saveRaceForId(String id, RaceDocument raceDocument) {
         requireText(id, romRaceIdMissing());
-        requireEntityWithId(romRaceDocument, RomRaceDocument::getId, romRaceMissing(), romRaceIdMissing());
+        requireEntityWithId(raceDocument, RaceDocument::getId, romRaceMissing(), romRaceIdMissing());
 
-        return raceRepository.save(getRomRaceById(id));
+        return raceRepository.save(getRaceById(id));
     }
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public void deleteRomRaceById(String id) {
+    public void deleteRaceById(String id) {
         requireText(id, romRaceIdMissing());
 
         try {
             if (!raceRepository.existsById(id)) {
-                throw new RomRaceNotFoundException(id);
+                throw new RaceNotFoundException(id);
             }
             raceRepository.deleteById(id);
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteRomRaceById id={}", id, ex);
-            throw new RomRacePersistenceException("Failed to delete ROM race: " + id+" "+ex);
+            throw new RacePersistenceException("Failed to delete ROM race: " + id+" "+ex);
         }
     }
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public long deleteAllRomRace() {
+    public long deleteAllRaces() {
         try {
             long itemCount = raceRepository.count();
             raceRepository.deleteAll();
             return itemCount;
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllMobiles", ex);
-            throw new RomRacePersistenceException("Failed to delete all ROM race "+ ex);
+            throw new RacePersistenceException("Failed to delete all ROM race "+ ex);
         }
     }
 
-    private List<RomRaceDocument> getAllRomRacesFallback(Throwable t) {
+    private List<RaceDocument> getAllRomRacesFallback(Throwable t) {
         log.warn("Fallback getAllRomRaces due to {}", t.toString());
         return List.of();
     }
 
-    private RomRaceDocument getRomRaceByIdFallback(String id, Throwable t) {
+    private RaceDocument getRomRaceByIdFallback(String id, Throwable t) {
         log.warn("Fallback getRomRaceById id={} due to {}", id, t.toString());
-        throw new RomRacePersistenceException("ROM race lookup temporarily unavailable: " + id+" "+t);
+        throw new RacePersistenceException("ROM race lookup temporarily unavailable: " + id+" "+t);
     }
 }

@@ -29,10 +29,10 @@ class RaceServiceTest {
 
     @Test
     void getAllRomRaces_ok() {
-        List<RomRaceDocument> races = List.of(mock(RomRaceDocument.class), mock(RomRaceDocument.class));
+        List<RaceDocument> races = List.of(mock(RaceDocument.class), mock(RaceDocument.class));
         when(repo.findAll()).thenReturn(races);
 
-        assertThat(service.getAllRomRaces()).isSameAs(races);
+        assertThat(service.getAllRaces()).isSameAs(races);
 
         verify(repo).findAll();
         verifyNoMoreInteractions(repo);
@@ -40,10 +40,10 @@ class RaceServiceTest {
 
     @Test
     void getRomRaceByName_delegates() {
-        RomRaceDocument race = mock(RomRaceDocument.class);
+        RaceDocument race = mock(RaceDocument.class);
         when(repo.findRomRaceById("human")).thenReturn(race);
 
-        assertThat(service.getRomRaceByName("human")).isSameAs(race);
+        assertThat(service.getRaceByName("human")).isSameAs(race);
 
         verify(repo).findRomRaceById("human");
         verifyNoMoreInteractions(repo);
@@ -51,10 +51,10 @@ class RaceServiceTest {
 
     @Test
     void getRomRaceById_delegates() {
-        RomRaceDocument race = mock(RomRaceDocument.class);
+        RaceDocument race = mock(RaceDocument.class);
         when(repo.findRomRaceById("R1")).thenReturn(race);
 
-        assertThat(service.getRomRaceById("R1")).isSameAs(race);
+        assertThat(service.getRaceById("R1")).isSameAs(race);
 
         verify(repo).findRomRaceById("R1");
         verifyNoMoreInteractions(repo);
@@ -62,7 +62,7 @@ class RaceServiceTest {
 
     @Test
     void createRomRace_null_becomesInvalidRomRaceException() {
-        assertThatThrownBy(() -> service.createRomRace(null))
+        assertThatThrownBy(() -> service.createRace(null))
                 .isInstanceOf(InvalidRomRaceException.class)
                 .hasMessageContaining(raceMissing);
 
@@ -71,10 +71,10 @@ class RaceServiceTest {
 
     @Test
     void createRomRace_blankId_becomesInvalidRomRaceException() {
-        RomRaceDocument race = mock(RomRaceDocument.class);
+        RaceDocument race = mock(RaceDocument.class);
         when(race.getId()).thenReturn("");
 
-        assertThatThrownBy(() -> service.createRomRace(race))
+        assertThatThrownBy(() -> service.createRace(race))
                 .isInstanceOf(InvalidRomRaceException.class)
                 .hasMessageContaining(raceIdMissing);
 
@@ -83,11 +83,11 @@ class RaceServiceTest {
 
     @Test
     void createRomRace_ok_saves() {
-        RomRaceDocument race = mock(RomRaceDocument.class);
+        RaceDocument race = mock(RaceDocument.class);
         when(race.getId()).thenReturn("R1");
         when(repo.save(race)).thenReturn(race);
 
-        assertThat(service.createRomRace(race)).isSameAs(race);
+        assertThat(service.createRace(race)).isSameAs(race);
 
         verify(repo).save(race);
         verifyNoMoreInteractions(repo);
@@ -95,12 +95,12 @@ class RaceServiceTest {
 
     @Test
     void createRomRace_dataAccess_becomesRomRacePersistenceException() {
-        RomRaceDocument race = mock(RomRaceDocument.class);
+        RaceDocument race = mock(RaceDocument.class);
         when(race.getId()).thenReturn("R1");
         when(repo.save(race)).thenThrow(new DataAccessResourceFailureException("db down"));
 
-        assertThatThrownBy(() -> service.createRomRace(race))
-                .isInstanceOf(RomRacePersistenceException.class)
+        assertThatThrownBy(() -> service.createRace(race))
+                .isInstanceOf(RacePersistenceException.class)
                 .hasMessageContaining("Failed to create ROM race");
 
         verify(repo).save(race);
@@ -109,12 +109,12 @@ class RaceServiceTest {
 
     @Test
     void createRomRace_dataAccess_safeIdExceptionPath_becomesRomRacePersistenceException() {
-        RomRaceDocument race = mock(RomRaceDocument.class);
+        RaceDocument race = mock(RaceDocument.class);
         when(race.getId()).thenReturn("R1").thenThrow(new RuntimeException("boom"));
         when(repo.save(race)).thenThrow(new DataAccessResourceFailureException("db down"));
 
-        assertThatThrownBy(() -> service.createRomRace(race))
-                .isInstanceOf(RomRacePersistenceException.class)
+        assertThatThrownBy(() -> service.createRace(race))
+                .isInstanceOf(RacePersistenceException.class)
                 .hasMessageContaining("Failed to create ROM race");
 
         verify(repo).save(race);
@@ -123,9 +123,9 @@ class RaceServiceTest {
 
     @Test
     void saveRomRaceForId_blankId_becomesInvalidRomRaceException() {
-        RomRaceDocument race = mock(RomRaceDocument.class);
+        RaceDocument race = mock(RaceDocument.class);
 
-        assertThatThrownBy(() -> service.saveRomRaceForId(" ", race))
+        assertThatThrownBy(() -> service.saveRaceForId(" ", race))
                 .isInstanceOf(InvalidRomRaceException.class)
                 .hasMessageContaining(raceIdMissing);
 
@@ -134,7 +134,7 @@ class RaceServiceTest {
 
     @Test
     void saveRomRaceForId_nullRace_becomesInvalidRomRaceException() {
-        assertThatThrownBy(() -> service.saveRomRaceForId("R1", null))
+        assertThatThrownBy(() -> service.saveRaceForId("R1", null))
                 .isInstanceOf(InvalidRomRaceException.class)
                 .hasMessageContaining(raceMissing);
 
@@ -143,14 +143,14 @@ class RaceServiceTest {
 
     @Test
     void saveRomRaceForId_ok_savesByLookup() {
-        RomRaceDocument input = mock(RomRaceDocument.class);
+        RaceDocument input = mock(RaceDocument.class);
         when(input.getId()).thenReturn("R1");
 
-        RomRaceDocument existing = mock(RomRaceDocument.class);
+        RaceDocument existing = mock(RaceDocument.class);
         when(repo.findRomRaceById("R1")).thenReturn(existing);
         when(repo.save(existing)).thenReturn(existing);
 
-        assertThat(service.saveRomRaceForId("R1", input)).isSameAs(existing);
+        assertThat(service.saveRaceForId("R1", input)).isSameAs(existing);
 
         verify(repo).findRomRaceById("R1");
         verify(repo).save(existing);
@@ -159,7 +159,7 @@ class RaceServiceTest {
 
     @Test
     void deleteRomRaceById_blankId_becomesInvalidRomRaceException() {
-        assertThatThrownBy(() -> service.deleteRomRaceById(""))
+        assertThatThrownBy(() -> service.deleteRaceById(""))
                 .isInstanceOf(InvalidRomRaceException.class)
                 .hasMessageContaining(raceIdMissing);
 
@@ -170,8 +170,8 @@ class RaceServiceTest {
     void deleteRomRaceById_notFound_becomesRomRaceNotFoundException() {
         when(repo.existsById("R1")).thenReturn(false);
 
-        assertThatThrownBy(() -> service.deleteRomRaceById("R1"))
-                .isInstanceOf(RomRaceNotFoundException.class);
+        assertThatThrownBy(() -> service.deleteRaceById("R1"))
+                .isInstanceOf(RaceNotFoundException.class);
 
         verify(repo).existsById("R1");
         verifyNoMoreInteractions(repo);
@@ -181,7 +181,7 @@ class RaceServiceTest {
     void deleteRomRaceById_ok_deletes() {
         when(repo.existsById("R1")).thenReturn(true);
 
-        service.deleteRomRaceById("R1");
+        service.deleteRaceById("R1");
 
         verify(repo).existsById("R1");
         verify(repo).deleteById("R1");
@@ -193,8 +193,8 @@ class RaceServiceTest {
         when(repo.existsById("R1")).thenReturn(true);
         doThrow(new DataAccessResourceFailureException("db down")).when(repo).deleteById("R1");
 
-        assertThatThrownBy(() -> service.deleteRomRaceById("R1"))
-                .isInstanceOf(RomRacePersistenceException.class)
+        assertThatThrownBy(() -> service.deleteRaceById("R1"))
+                .isInstanceOf(RacePersistenceException.class)
                 .hasMessageContaining("Failed to delete ROM race: R1");
 
         verify(repo).existsById("R1");
@@ -206,7 +206,7 @@ class RaceServiceTest {
     void deleteAllRomRace_ok_returnsCount() {
         when(repo.count()).thenReturn(4L);
 
-        assertThat(service.deleteAllRomRace()).isEqualTo(4L);
+        assertThat(service.deleteAllRaces()).isEqualTo(4L);
 
         verify(repo).count();
         verify(repo).deleteAll();
@@ -217,8 +217,8 @@ class RaceServiceTest {
     void deleteAllRomRace_dataAccess_becomesRomRacePersistenceException() {
         when(repo.count()).thenThrow(new DataAccessResourceFailureException("db down"));
 
-        assertThatThrownBy(() -> service.deleteAllRomRace())
-                .isInstanceOf(RomRacePersistenceException.class)
+        assertThatThrownBy(() -> service.deleteAllRaces())
+                .isInstanceOf(RacePersistenceException.class)
                 .hasMessageContaining("Failed to delete all ROM race");
 
         verify(repo).count();
@@ -231,7 +231,7 @@ class RaceServiceTest {
         m.setAccessible(true);
 
         @SuppressWarnings("unchecked")
-        List<RomRaceDocument> out = (List<RomRaceDocument>) m.invoke(service, new RuntimeException("cb"));
+        List<RaceDocument> out = (List<RaceDocument>) m.invoke(service, new RuntimeException("cb"));
 
         assertThat(out).isEmpty();
         verifyNoInteractions(repo);
@@ -248,7 +248,7 @@ class RaceServiceTest {
             } catch (java.lang.reflect.InvocationTargetException e) {
                 throw e.getCause();
             }
-        }).isInstanceOf(RomRacePersistenceException.class)
+        }).isInstanceOf(RacePersistenceException.class)
                 .hasMessageContaining("temporarily unavailable: R1");
 
         verifyNoInteractions(repo);

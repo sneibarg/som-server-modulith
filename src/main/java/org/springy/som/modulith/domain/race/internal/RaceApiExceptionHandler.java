@@ -4,5 +4,5 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springy.som.modulith.exception.BaseApiExceptionHandler;
 
 @RestControllerAdvice(assignableTypes = RaceController.class)
-public final class RomRaceApiExceptionHandler extends BaseApiExceptionHandler {
+public final class RaceApiExceptionHandler extends BaseApiExceptionHandler {
 }

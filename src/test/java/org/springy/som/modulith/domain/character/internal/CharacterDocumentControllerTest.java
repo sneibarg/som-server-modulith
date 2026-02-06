@@ -100,7 +100,7 @@ class CharacterDocumentControllerTest {
         saved.setId("A1");
         saved.setName("Midgaard");
 
-        when(characterService.savePlayerCharacter(any(CharacterDocument.class))).thenReturn(saved);
+        when(characterService.createPlayerCharacter(any(CharacterDocument.class))).thenReturn(saved);
 
         mockMvc.perform(post("/api/v1/characters")
                         .with(csrf())
@@ -112,7 +112,7 @@ class CharacterDocumentControllerTest {
                 .andExpect(jsonPath("$.id").value("A1"))
                 .andExpect(jsonPath("$.name").value("Midgaard"));
 
-        verify(characterService).savePlayerCharacter(any(CharacterDocument.class));
+        verify(characterService).createPlayerCharacter(any(CharacterDocument.class));
     }
 
     @Test

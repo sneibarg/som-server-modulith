@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import org.springy.som.modulith.domain.area.api.AreaApi;
 import org.springy.som.modulith.util.DomainGuards;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
-public class AreaService {
+public class AreaService implements AreaApi {
     private final AreaRepository areaRepository;
 
     public AreaService(AreaRepository areaRepository) {

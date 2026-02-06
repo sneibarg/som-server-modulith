@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springy.som.modulith.domain.DeleteAllResponse;
+import org.springy.som.modulith.web.DeleteAllResponse;
 import org.springy.som.modulith.domain.character.api.CharacterMapper;
 import org.springy.som.modulith.domain.character.api.CharacterView;
 
@@ -57,7 +57,7 @@ public class CharacterController {
 
     @PostMapping
     public ResponseEntity<CharacterView> createPlayerCharacter(@Valid @RequestBody CharacterDocument characterDocument) {
-        CharacterDocument saved = characterService.savePlayerCharacter(characterDocument);
+        CharacterDocument saved = characterService.createPlayerCharacter(characterDocument);
         CharacterView characterView = CharacterMapper.toView(saved);
         return ResponseEntity
                 .created(URI.create("/api/v1/characters/" + saved.getId()))

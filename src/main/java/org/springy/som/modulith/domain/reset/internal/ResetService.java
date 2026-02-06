@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springy.som.modulith.domain.reset.api.ResetApi;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
-public class ResetService {
+public class ResetService implements ResetApi {
     private final ResetRepository resetRepository;
 
     public ResetService(ResetRepository resetRepository) {

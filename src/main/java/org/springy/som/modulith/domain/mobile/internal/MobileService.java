@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.command.internal.CommandDocument;
+import org.springy.som.modulith.domain.mobile.api.MobileApi;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
-public class MobileService {
+public class MobileService implements MobileApi {
     private final MobileRepository mobileRepository;
 
     public MobileService(MobileRepository mobileRepository) {

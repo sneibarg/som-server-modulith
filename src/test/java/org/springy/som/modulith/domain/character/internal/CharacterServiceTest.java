@@ -119,7 +119,7 @@ class CharacterServiceTest {
 
     @Test
     void savePlayerCharacter_null_throwsInvalid() {
-        assertThatThrownBy(() -> service.savePlayerCharacter(null))
+        assertThatThrownBy(() -> service.createPlayerCharacter(null))
                 .isInstanceOf(InvalidPlayerCharacterException.class)
                 .hasMessageContaining("must be provided");
 
@@ -131,7 +131,7 @@ class CharacterServiceTest {
         CharacterDocument pc = mock(CharacterDocument.class);
         when(pc.getId()).thenReturn(" ");
 
-        assertThatThrownBy(() -> service.savePlayerCharacter(pc))
+        assertThatThrownBy(() -> service.createPlayerCharacter(pc))
                 .isInstanceOf(InvalidPlayerCharacterException.class)
                 .hasMessageContaining("id must be provided");
 
@@ -145,7 +145,7 @@ class CharacterServiceTest {
         when(pc.getId()).thenReturn("C1");
         when(repo.save(pc)).thenReturn(pc);
 
-        CharacterDocument actual = service.savePlayerCharacter(pc);
+        CharacterDocument actual = service.createPlayerCharacter(pc);
 
         assertThat(actual).isSameAs(pc);
 

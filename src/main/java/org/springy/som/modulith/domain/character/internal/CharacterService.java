@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springy.som.modulith.domain.character.api.CharacterApi;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import static org.springy.som.modulith.util.ServiceGuards.requireText;
 
 @Service
 @Slf4j
-public class CharacterService {
+public class CharacterService implements CharacterApi {
     private final CharacterRepository characterRepository;
 
     public CharacterService(CharacterRepository characterRepository) {
@@ -77,7 +78,7 @@ public class CharacterService {
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public CharacterDocument savePlayerCharacter(CharacterDocument characterDocument) {
+    public CharacterDocument createPlayerCharacter(CharacterDocument characterDocument) {
         requireEntityWithId(characterDocument,
                 CharacterDocument::getId, playerCharacterMissing(), playerCharacterIdMissing());
 

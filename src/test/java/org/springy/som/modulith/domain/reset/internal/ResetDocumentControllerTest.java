@@ -10,8 +10,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springy.som.modulith.domain.race.internal.InvalidRomRaceException;
-import org.springy.som.modulith.domain.race.internal.RomRaceNotFoundException;
-import org.springy.som.modulith.domain.race.internal.RomRacePersistenceException;
+import org.springy.som.modulith.domain.race.internal.RaceNotFoundException;
+import org.springy.som.modulith.domain.race.internal.RacePersistenceException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -55,7 +55,7 @@ public class ResetDocumentControllerTest {
 
     @Test
     void getResetById_notFound_becomes404ProblemDetail() throws Exception {
-        when(resetService.getResetById("A1")).thenThrow(new RomRaceNotFoundException("A1"));
+        when(resetService.getResetById("A1")).thenThrow(new RaceNotFoundException("A1"));
 
         mockMvc.perform(get("/api/v1/resets/A1"))
                 .andExpect(status().isNotFound())
@@ -85,7 +85,7 @@ public class ResetDocumentControllerTest {
 
     @Test
     void getAllReset_persistenceDown_becomes503ProblemDetail() throws Exception {
-        when(resetService.getAllResets()).thenThrow(new RomRacePersistenceException("Failed to load players"));
+        when(resetService.getAllResets()).thenThrow(new RacePersistenceException("Failed to load players"));
 
         mockMvc.perform(get("/api/v1/resets"))
                 .andExpect(status().isServiceUnavailable())

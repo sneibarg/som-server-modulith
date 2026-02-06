@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springy.som.modulith.domain.DeleteAllResponse;
-import org.springy.som.modulith.domain.clazz.api.RomClassView;
+import org.springy.som.modulith.web.DeleteAllResponse;
 import org.springy.som.modulith.domain.command.api.CommandMapper;
 import org.springy.som.modulith.domain.command.api.CommandView;
 

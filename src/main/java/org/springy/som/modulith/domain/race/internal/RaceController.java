@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springy.som.modulith.domain.DeleteAllResponse;
-import org.springy.som.modulith.domain.race.api.RomRaceMapper;
-import org.springy.som.modulith.domain.race.api.RomRaceView;
+import org.springy.som.modulith.web.DeleteAllResponse;
+import org.springy.som.modulith.domain.race.api.RaceMapper;
+import org.springy.som.modulith.domain.race.api.RaceView;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -28,42 +28,42 @@ public class RaceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RomRaceView>> getRaces() {
-        List<RomRaceView> romRaceViews = new ArrayList<>();
-        for (RomRaceDocument romRaceDocument : raceService.getAllRomRaces())
-            romRaceViews.add(RomRaceMapper.toView(romRaceDocument));
-        return ResponseEntity.ok(romRaceViews);
+    public ResponseEntity<List<RaceView>> getRaces() {
+        List<RaceView> raceViews = new ArrayList<>();
+        for (RaceDocument raceDocument : raceService.getAllRaces())
+            raceViews.add(RaceMapper.toView(raceDocument));
+        return ResponseEntity.ok(raceViews);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<RomRaceView> getRaceById(@Valid @PathVariable String id) {
-        return ResponseEntity.ok(RomRaceMapper.toView(raceService.getRomRaceById(id)));
+    public ResponseEntity<RaceView> getRaceById(@Valid @PathVariable String id) {
+        return ResponseEntity.ok(RaceMapper.toView(raceService.getRaceById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<RomRaceView> createRomRace(@Valid @RequestBody RomRaceDocument romRaceDocument) {
-        RomRaceDocument saved = raceService.createRomRace(romRaceDocument);
-        RomRaceView romRaceView = RomRaceMapper.toView(saved);
+    public ResponseEntity<RaceView> createRomRace(@Valid @RequestBody RaceDocument raceDocument) {
+        RaceDocument saved = raceService.createRace(raceDocument);
+        RaceView raceView = RaceMapper.toView(saved);
         return ResponseEntity
                 .created(URI.create("/api/v1/races/" + saved.getId()))
-                .body(romRaceView);
+                .body(raceView);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RomRaceView> updateMobile(@PathVariable String id, @Valid @RequestBody RomRaceDocument romRaceDocument) {
-        RomRaceDocument updated = raceService.saveRomRaceForId(id, romRaceDocument);
-        RomRaceView romRaceView = RomRaceMapper.toView(updated);
-        return ResponseEntity.ok(romRaceView);
+    public ResponseEntity<RaceView> updateMobile(@PathVariable String id, @Valid @RequestBody RaceDocument raceDocument) {
+        RaceDocument updated = raceService.saveRaceForId(id, raceDocument);
+        RaceView raceView = RaceMapper.toView(updated);
+        return ResponseEntity.ok(raceView);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMobileById(@PathVariable String id) {
-        raceService.deleteRomRaceById(id);
+        raceService.deleteRaceById(id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
     public ResponseEntity<DeleteAllResponse> deleteAll() {
-        return ResponseEntity.ok(new DeleteAllResponse(raceService.deleteAllRomRace()));
+        return ResponseEntity.ok(new DeleteAllResponse(raceService.deleteAllRaces()));
     }
 }

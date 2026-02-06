@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.clazz.internal.RomClassNotFoundException;
 import org.springy.som.modulith.domain.clazz.internal.RomClassPersistenceException;
+import org.springy.som.modulith.domain.command.api.CommandApi;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
-public class CommandService {
+public class CommandService implements CommandApi {
     private final CommandRepository commandRepository;
 
     public CommandService(CommandRepository commandRepository) {

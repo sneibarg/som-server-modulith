@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springy.som.modulith.domain.DeleteAllResponse;
+import org.springy.som.modulith.web.DeleteAllResponse;
 import org.springy.som.modulith.domain.item.api.ItemMapper;
 import org.springy.som.modulith.domain.item.api.ItemView;
 

@@ -6,12 +6,13 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springy.som.modulith.domain.command.internal.CommandDocument;
+import org.springy.som.modulith.domain.game.api.GameDataApi;
 
 import java.util.List;
 
 @Service
 @Slf4j
-public class GameService {
+public class GameService implements GameDataApi {
     private final GameRepository gameRepository;
 
     public GameService(GameRepository gameRepository) {

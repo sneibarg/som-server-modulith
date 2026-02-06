@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RaceController.class)
-@Import(RomRaceApiExceptionHandler.class)
+@Import(RaceApiExceptionHandler.class)
 @WithMockUser
 public class RaceControllerTest {
     @Autowired
@@ -41,18 +41,18 @@ public class RaceControllerTest {
 
     @Test
     void getAllPlayers_ok() throws Exception {
-        when(raceService.getAllRomRaces()).thenReturn(java.util.List.of());
+        when(raceService.getAllRaces()).thenReturn(java.util.List.of());
 
         mockMvc.perform(get("/api/v1/races"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-        verify(raceService).getAllRomRaces();
+        verify(raceService).getAllRaces();
     }
 
     @Test
     void getPlayerById_notFound_becomes404ProblemDetail() throws Exception {
-        when(raceService.getRomRaceById("A1")).thenThrow(new RomRaceNotFoundException("A1"));
+        when(raceService.getRaceById("A1")).thenThrow(new RaceNotFoundException("A1"));
 
         mockMvc.perform(get("/api/v1/races/A1"))
                 .andExpect(status().isNotFound())
@@ -61,12 +61,12 @@ public class RaceControllerTest {
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(raceService).getRomRaceById("A1");
+        verify(raceService).getRaceById("A1");
     }
 
     @Test
     void getPlayerById_blankId_becomes400ProblemDetail() throws Exception {
-        when(raceService.getRomRaceById(anyString())).thenThrow(new InvalidRomRaceException("Player id must be provided"));
+        when(raceService.getRaceById(anyString())).thenThrow(new InvalidRomRaceException("Player id must be provided"));
 
         mockMvc.perform(get("/api/v1/races/{id}", "  ")
                         .accept(MediaType.APPLICATION_JSON))
@@ -76,43 +76,43 @@ public class RaceControllerTest {
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(raceService).getRomRaceById("  ");
+        verify(raceService).getRaceById("  ");
     }
 
 
     @Test
     void getAllPlayer_persistenceDown_becomes503ProblemDetail() throws Exception {
-        when(raceService.getAllRomRaces()).thenThrow(new RomRacePersistenceException("Failed to load players"));
+        when(raceService.getAllRaces()).thenThrow(new RacePersistenceException("Failed to load players"));
 
         mockMvc.perform(get("/api/v1/races"))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(503));
 
-        verify(raceService).getAllRomRaces();
+        verify(raceService).getAllRaces();
     }
 
     @Test
     void deletePlayer_ok_returns204() throws Exception {
-        doNothing().when(raceService).deleteRomRaceById("A1");
+        doNothing().when(raceService).deleteRaceById("A1");
 
         mockMvc.perform(delete("/api/v1/races/A1").with(csrf()))
                 .andExpect(status().isNoContent());
 
-        verify(raceService).deleteRomRaceById("A1");
+        verify(raceService).deleteRaceById("A1");
     }
 
     @Test
     void createPlayer_returns201() throws Exception {
-        RomRaceDocument input = new RomRaceDocument();
+        RaceDocument input = new RaceDocument();
         input.setId("I1");
         input.setName("scaryMob");
         
-        RomRaceDocument saved = new RomRaceDocument();
+        RaceDocument saved = new RaceDocument();
         saved.setId("I1");
         saved.setName("scaryMob");
         
-        when(raceService.createRomRace(any(RomRaceDocument.class))).thenReturn(saved);
+        when(raceService.createRace(any(RaceDocument.class))).thenReturn(saved);
 
         mockMvc.perform(post("/api/v1/races")
                         .with(csrf())
@@ -124,21 +124,21 @@ public class RaceControllerTest {
                 .andExpect(jsonPath("$.name").value("scaryMob"))
                 .andExpect(jsonPath("$.id").value("I1"));
 
-        verify(raceService).createRomRace(any(RomRaceDocument.class));
+        verify(raceService).createRace(any(RaceDocument.class));
     }
 
     @Test
     void updatePlayer_ok_returns200AndBody() throws Exception {
-        RomRaceDocument input = new RomRaceDocument();
+        RaceDocument input = new RaceDocument();
         input.setId("I1");
         input.setName("scaryMob");
 
-        RomRaceDocument saved = new RomRaceDocument();
+        RaceDocument saved = new RaceDocument();
         saved.setId("I1");
         saved.setName("scaryMob");
 
 
-        when(raceService.saveRomRaceForId(eq("I1"), eq(input))).thenReturn(saved);
+        when(raceService.saveRaceForId(eq("I1"), eq(input))).thenReturn(saved);
 
         mockMvc.perform(put("/api/v1/races/{id}", "I1")
                         .with(csrf())
@@ -150,13 +150,13 @@ public class RaceControllerTest {
                 .andExpect(jsonPath("$.name").value("scaryMob"))
                 .andExpect(jsonPath("$.id").value("I1"));
 
-        verify(raceService).saveRomRaceForId(eq("I1"), eq(input));
+        verify(raceService).saveRaceForId(eq("I1"), eq(input));
         verifyNoMoreInteractions(raceService);
     }
 
     @Test
     void updatePlayer_blankName_returns400ProblemDetail_asJson() throws Exception {
-        RomRaceDocument input = new RomRaceDocument();
+        RaceDocument input = new RaceDocument();
         input.setId("I1");
         input.setName("");
 
@@ -174,7 +174,7 @@ public class RaceControllerTest {
 
     @Test
     void deleteAll_returns200AndDeletedCount() throws Exception {
-        when(raceService.deleteAllRomRace()).thenReturn(7L);
+        when(raceService.deleteAllRaces()).thenReturn(7L);
 
         mockMvc.perform(delete("/api/v1/races")
                         .with(csrf())
@@ -186,7 +186,7 @@ public class RaceControllerTest {
 
     @Test
     void deleteAll_whenNothingDeleted_returns200AndZero() throws Exception {
-        when(raceService.deleteAllRomRace()).thenReturn(0L);
+        when(raceService.deleteAllRaces()).thenReturn(0L);
 
         mockMvc.perform(delete("/api/v1/races")
                         .with(csrf())

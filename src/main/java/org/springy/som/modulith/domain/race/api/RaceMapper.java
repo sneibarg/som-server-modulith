@@ -1,13 +1,13 @@
 package org.springy.som.modulith.domain.race.api;
 
-import org.springy.som.modulith.domain.race.internal.RomRaceDocument;
+import org.springy.som.modulith.domain.race.internal.RaceDocument;
 
-public final class RomRaceMapper {
+public final class RaceMapper {
 
-    private RomRaceMapper() {}
+    private RaceMapper() {}
 
-    public static RomRaceView toView(RomRaceDocument doc) {
-        return new RomRaceView(
+    public static RaceView toView(RaceDocument doc) {
+        return new RaceView(
                 doc.getId(),
                 doc.getName(),
                 doc.getSize(),

@@ -11,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springy.som.modulith.domain.player.api.PlayerApi;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ import static org.springy.som.modulith.util.ServiceGuards.safeId;
 
 @Slf4j
 @Service
-public class PlayerService {
+public class PlayerService implements PlayerApi {
     private final PlayerAccountRepository playerAccountRepository;
 
     public PlayerService(PlayerAccountRepository playerAccountRepository) {
