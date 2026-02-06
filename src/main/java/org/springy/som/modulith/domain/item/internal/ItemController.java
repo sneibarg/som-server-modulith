@@ -18,6 +18,7 @@ import org.springy.som.modulith.domain.item.api.ItemView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/items", produces = "application/json")
@@ -31,9 +32,10 @@ public class ItemController {
     @GetMapping
     @ResponseBody
     public ResponseEntity<List<ItemView>> getAllItems() {
-        List<ItemView> itemViews = new ArrayList<>();
-        for (ItemDocument item : itemService.getAllItems())
-            itemViews.add(ItemMapper.toView(item));
+        List<ItemView> itemViews = itemService.getAllItems()
+                .stream()
+                .map(ItemMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(itemViews);
     }
 

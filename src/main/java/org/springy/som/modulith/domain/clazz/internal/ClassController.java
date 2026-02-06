@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springy.som.modulith.web.DeleteAllResponse;
-import org.springy.som.modulith.domain.clazz.api.RomClassMapper;
-import org.springy.som.modulith.domain.clazz.api.RomClassView;
+import org.springy.som.modulith.domain.clazz.api.ClassMapper;
+import org.springy.som.modulith.domain.clazz.api.ClassView;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/classes", produces = "application/json")
@@ -28,32 +28,33 @@ public class ClassController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RomClassView>> getAllRomClasses() {
-        List<RomClassView> romClassViews = new ArrayList<>();
-        for (RomClassDocument romClassDocument : classService.getAllClasses())
-            romClassViews.add(RomClassMapper.toView(romClassDocument));
-        return ResponseEntity.ok(romClassViews);
+    public ResponseEntity<List<ClassView>> getAllRomClasses() {
+        List<ClassView> classViews = classService.getAllClasses()
+                .stream()
+                .map(ClassMapper::toView)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(classViews);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RomClassView> getRomClassById(@PathVariable String id) {
-        return ResponseEntity.ok(RomClassMapper.toView(classService.getRomClassById(id)));
+    public ResponseEntity<ClassView> getRomClassById(@PathVariable String id) {
+        return ResponseEntity.ok(ClassMapper.toView(classService.getRomClassById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<RomClassView> createRomClass(@Valid @RequestBody RomClassDocument romClassDocument) {
-        RomClassDocument saved = classService.createRomClass(romClassDocument);
-        RomClassView romClassView = RomClassMapper.toView(saved);
+    public ResponseEntity<ClassView> createRomClass(@Valid @RequestBody ClassDocument classDocument) {
+        ClassDocument saved = classService.createRomClass(classDocument);
+        ClassView classView = ClassMapper.toView(saved);
         return ResponseEntity
                 .created(URI.create("/api/v1/classes/" + saved.getId()))
-                .body(romClassView);
+                .body(classView);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RomClassView> updateArea(@PathVariable String id, @Valid @RequestBody RomClassDocument romClassDocument) {
-        RomClassDocument updated = classService.saveRomClassForId(id, romClassDocument);
-        RomClassView romClassView = RomClassMapper.toView(updated);
-        return ResponseEntity.ok(romClassView);
+    public ResponseEntity<ClassView> updateArea(@PathVariable String id, @Valid @RequestBody ClassDocument classDocument) {
+        ClassDocument updated = classService.saveRomClassForId(id, classDocument);
+        ClassView classView = ClassMapper.toView(updated);
+        return ResponseEntity.ok(classView);
     }
 
     @DeleteMapping("/{id}")

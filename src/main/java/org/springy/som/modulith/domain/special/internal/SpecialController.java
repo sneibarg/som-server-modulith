@@ -17,6 +17,7 @@ import org.springy.som.modulith.domain.special.api.SpecialView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/specials", produces = "application/json")
@@ -29,9 +30,10 @@ public class SpecialController {
 
     @GetMapping
     public ResponseEntity<List<SpecialView>> getResets() {
-        List<SpecialView> specialViews = new ArrayList<>();
-        for (SpecialDocument specialDocument : specialService.getAllSpecials())
-            specialViews.add(SpecialMapper.toView(specialDocument));
+        List<SpecialView> specialViews = specialService.getAllSpecials()
+                .stream()
+                .map(SpecialMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(specialViews);
     }
 

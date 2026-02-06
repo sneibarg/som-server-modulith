@@ -2,7 +2,7 @@ package org.springy.som.modulith.util;
 
 import org.springy.som.modulith.domain.area.internal.InvalidAreaException;
 import org.springy.som.modulith.domain.character.internal.InvalidPlayerCharacterException;
-import org.springy.som.modulith.domain.clazz.internal.InvalidRomClassException;
+import org.springy.som.modulith.domain.clazz.internal.InvalidClassException;
 import org.springy.som.modulith.domain.command.internal.InvalidCommandException;
 import org.springy.som.modulith.domain.item.internal.InvalidItemException;
 import org.springy.som.modulith.domain.mobile.internal.InvalidMobileException;
@@ -34,12 +34,12 @@ public final class DomainGuards {
         return () -> new InvalidPlayerCharacterException("CharacterDocument id must be provided");
     }
 
-    public static Supplier<InvalidRomClassException> romClassMissing() {
-        return () -> new InvalidRomClassException("RomClassDocument must be provided");
+    public static Supplier<InvalidClassException> romClassMissing() {
+        return () -> new InvalidClassException("ClassDocument must be provided");
     }
 
-    public static Supplier<InvalidRomClassException> romClassIdMissing() {
-        return () -> new InvalidRomClassException("RomClassDocument id must be provided");
+    public static Supplier<InvalidClassException> romClassIdMissing() {
+        return () -> new InvalidClassException("ClassDocument id must be provided");
     }
 
     public static Supplier<InvalidCommandException> commandMissing() {

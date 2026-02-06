@@ -24,10 +24,10 @@ class ClassServiceTest {
 
     @Test
     void getAllClasses_ok_returnsList() {
-        List<RomClassDocument> expected = List.of(new RomClassDocument(), new RomClassDocument());
+        List<ClassDocument> expected = List.of(new ClassDocument(), new ClassDocument());
         when(repo.findAll()).thenReturn(expected);
 
-        List<RomClassDocument> actual = service.getAllClasses();
+        List<ClassDocument> actual = service.getAllClasses();
 
         assertThat(actual).isSameAs(expected);
         verify(repo).findAll();
@@ -36,10 +36,10 @@ class ClassServiceTest {
 
     @Test
     void getRomClassById_ok_returnsEntityOrNull_passthrough() {
-        RomClassDocument rc = new RomClassDocument();
+        ClassDocument rc = new ClassDocument();
         when(repo.findRomClassById("C1")).thenReturn(rc);
 
-        RomClassDocument actual = service.getRomClassById("C1");
+        ClassDocument actual = service.getRomClassById("C1");
 
         assertThat(actual).isSameAs(rc);
         verify(repo).findRomClassById("C1");
@@ -49,7 +49,7 @@ class ClassServiceTest {
     @Test
     void createRomClass_null_throwsInvalid() {
         assertThatThrownBy(() -> service.createRomClass(null))
-                .isInstanceOf(InvalidRomClassException.class)
+                .isInstanceOf(InvalidClassException.class)
                 .hasMessageContaining("must be provided");
 
         verifyNoInteractions(repo);
@@ -57,11 +57,11 @@ class ClassServiceTest {
 
     @Test
     void createRomClass_blankId_throwsInvalid() {
-        RomClassDocument rc = mock(RomClassDocument.class);
+        ClassDocument rc = mock(ClassDocument.class);
         when(rc.getId()).thenReturn(" ");
 
         assertThatThrownBy(() -> service.createRomClass(rc))
-                .isInstanceOf(InvalidRomClassException.class)
+                .isInstanceOf(InvalidClassException.class)
                 .hasMessageContaining("id must be provided");
 
         verify(rc).getId();
@@ -70,11 +70,11 @@ class ClassServiceTest {
 
     @Test
     void createRomClass_ok_saves() {
-        RomClassDocument rc = mock(RomClassDocument.class);
+        ClassDocument rc = mock(ClassDocument.class);
         when(rc.getId()).thenReturn("C1");
         when(repo.save(rc)).thenReturn(rc);
 
-        RomClassDocument actual = service.createRomClass(rc);
+        ClassDocument actual = service.createRomClass(rc);
 
         assertThat(actual).isSameAs(rc);
 
@@ -85,12 +85,12 @@ class ClassServiceTest {
 
     @Test
     void createRomClass_dataAccess_becomesPersistenceException() {
-        RomClassDocument rc = mock(RomClassDocument.class);
+        ClassDocument rc = mock(ClassDocument.class);
         when(rc.getId()).thenReturn("C1");
         when(repo.save(rc)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createRomClass(rc))
-                .isInstanceOf(RomClassPersistenceException.class)
+                .isInstanceOf(ClassPersistenceException.class)
                 .hasMessageContaining("Failed to create area");
 
         verify(repo).save(rc);
@@ -99,21 +99,21 @@ class ClassServiceTest {
 
     @Test
     void safeId_whenGetIdThrows_returnsNull_reflection() {
-        RomClassDocument badClass = mock(RomClassDocument.class);
+        ClassDocument badClass = mock(ClassDocument.class);
         when(badClass.getId()).thenThrow(new RuntimeException("boom"));
 
-        String result = ServiceGuards.safeId(badClass, RomClassDocument::getId);
+        String result = ServiceGuards.safeId(badClass, ClassDocument::getId);
 
         assertThat(result).isNull();
     }
 
     @Test
     void saveRomClassForId_blankId_throwsInvalid() {
-        RomClassDocument rc = mock(RomClassDocument.class);
+        ClassDocument rc = mock(ClassDocument.class);
         when(rc.getId()).thenReturn("C1");
 
         assertThatThrownBy(() -> service.saveRomClassForId(" ", rc))
-                .isInstanceOf(InvalidRomClassException.class)
+                .isInstanceOf(InvalidClassException.class)
                 .hasMessageContaining("id must be provided");
 
         verifyNoInteractions(repo);
@@ -122,7 +122,7 @@ class ClassServiceTest {
     @Test
     void saveRomClassForId_nullBody_throwsInvalid() {
         assertThatThrownBy(() -> service.saveRomClassForId("C1", null))
-                .isInstanceOf(InvalidRomClassException.class)
+                .isInstanceOf(InvalidClassException.class)
                 .hasMessageContaining("must be provided");
 
         verifyNoInteractions(repo);
@@ -130,11 +130,11 @@ class ClassServiceTest {
 
     @Test
     void saveRomClassForId_blankBodyId_throwsInvalid() {
-        RomClassDocument rc = mock(RomClassDocument.class);
+        ClassDocument rc = mock(ClassDocument.class);
         when(rc.getId()).thenReturn("");
 
         assertThatThrownBy(() -> service.saveRomClassForId("C1", rc))
-                .isInstanceOf(InvalidRomClassException.class)
+                .isInstanceOf(InvalidClassException.class)
                 .hasMessageContaining("id must be provided");
 
         verify(rc).getId();
@@ -143,14 +143,14 @@ class ClassServiceTest {
 
     @Test
     void saveRomClassForId_ok_loadsThenSavesLoadedEntity() {
-        RomClassDocument input = mock(RomClassDocument.class);
+        ClassDocument input = mock(ClassDocument.class);
         when(input.getId()).thenReturn("C1");
 
-        RomClassDocument loaded = new RomClassDocument();
+        ClassDocument loaded = new ClassDocument();
         when(repo.findRomClassById("C1")).thenReturn(loaded);
         when(repo.save(loaded)).thenReturn(loaded);
 
-        RomClassDocument actual = service.saveRomClassForId("C1", input);
+        ClassDocument actual = service.saveRomClassForId("C1", input);
 
         assertThat(actual).isSameAs(loaded);
 
@@ -163,7 +163,7 @@ class ClassServiceTest {
     @Test
     void deleteRomClassById_blankId_throwsInvalid() {
         assertThatThrownBy(() -> service.deleteRomClassById(""))
-                .isInstanceOf(InvalidRomClassException.class);
+                .isInstanceOf(InvalidClassException.class);
 
         verifyNoInteractions(repo);
     }
@@ -173,7 +173,7 @@ class ClassServiceTest {
         when(repo.existsById("C1")).thenReturn(false);
 
         assertThatThrownBy(() -> service.deleteRomClassById("C1"))
-                .isInstanceOf(RomClassNotFoundException.class)
+                .isInstanceOf(ClassNotFoundException.class)
                 .hasMessageContaining("C1");
 
         verify(repo).existsById("C1");
@@ -196,7 +196,7 @@ class ClassServiceTest {
         when(repo.existsById("C1")).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.deleteRomClassById("C1"))
-                .isInstanceOf(RomClassPersistenceException.class)
+                .isInstanceOf(ClassPersistenceException.class)
                 .hasMessageContaining("Failed to delete area");
 
         verify(repo).existsById("C1");
@@ -221,7 +221,7 @@ class ClassServiceTest {
         when(repo.count()).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.deleteAllRomClasses())
-                .isInstanceOf(RomClassPersistenceException.class)
+                .isInstanceOf(ClassPersistenceException.class)
                 .hasMessageContaining("Failed to delete all areas");
 
         verify(repo).count();
@@ -234,7 +234,7 @@ class ClassServiceTest {
         m.setAccessible(true);
 
         @SuppressWarnings("unchecked")
-        List<RomClassDocument> result = (List<RomClassDocument>) m.invoke(service, new RuntimeException("cb"));
+        List<ClassDocument> result = (List<ClassDocument>) m.invoke(service, new RuntimeException("cb"));
 
         assertThat(result).isEmpty();
     }
@@ -250,7 +250,7 @@ class ClassServiceTest {
             } catch (Exception e) {
                 throw e.getCause(); // unwrap InvocationTargetException
             }
-        }).isInstanceOf(RomClassPersistenceException.class)
+        }).isInstanceOf(ClassPersistenceException.class)
                 .hasMessageContaining("temporarily unavailable")
                 .hasMessageContaining("C1");
     }

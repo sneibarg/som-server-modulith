@@ -18,6 +18,7 @@ import org.springy.som.modulith.domain.player.api.PlayerView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -31,9 +32,10 @@ public class PlayerController {
 
     @GetMapping
     public ResponseEntity<List<PlayerView>> getPlayerAccounts() {
-        List<PlayerView> playerViews = new ArrayList<>();
-        for (PlayerDocument playerDocument : playerService.getAllPlayerAccounts())
-            playerViews.add(PlayerMapper.toView(playerDocument));
+        List<PlayerView> playerViews = playerService.getAllPlayerAccounts()
+                .stream()
+                .map(PlayerMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(playerViews);
     }
 

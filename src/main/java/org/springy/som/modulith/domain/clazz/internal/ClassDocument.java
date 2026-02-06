@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document("RomClasses")
-public class RomClassDocument {
+public class ClassDocument {
     @NotBlank(message = "name must not be blank")
     private String name;
     private String whoName;

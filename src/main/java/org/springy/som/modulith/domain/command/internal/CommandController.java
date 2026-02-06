@@ -17,6 +17,7 @@ import org.springy.som.modulith.domain.command.api.CommandView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/commands", produces = "application/json")
@@ -28,9 +29,10 @@ public class CommandController {
 
     @GetMapping
     public ResponseEntity<List<CommandView>> getCommands() {
-        List<CommandView> commandViews = new ArrayList<>();
-        for (CommandDocument commandDocument : commandService.getAllCommands())
-            commandViews.add(CommandMapper.toView(commandDocument));
+        List<CommandView> commandViews = commandService.getAllCommands()
+                .stream()
+                .map(CommandMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(commandViews);
     }
 

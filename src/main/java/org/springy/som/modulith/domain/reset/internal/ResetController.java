@@ -17,6 +17,7 @@ import org.springy.som.modulith.domain.reset.api.ResetView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/resets", produces = "application/json")
@@ -29,9 +30,10 @@ public class ResetController {
 
     @GetMapping
     public ResponseEntity<List<ResetView>> getResets() {
-        List<ResetView> resetViews = new ArrayList<>();
-        for (ResetDocument resetDocument : resetService.getAllResets())
-            resetViews.add(ResetMapper.toView(resetDocument));
+        List<ResetView> resetViews = resetService.getAllResets()
+                .stream()
+                .map(ResetMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(resetViews);
     }
 

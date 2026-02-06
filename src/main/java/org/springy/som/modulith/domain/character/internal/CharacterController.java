@@ -19,6 +19,7 @@ import org.springy.som.modulith.domain.character.api.CharacterView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -33,18 +34,20 @@ public class CharacterController {
     @GetMapping
     @ResponseBody
     public ResponseEntity<List<CharacterView>> getPlayerCharacters() {
-        List<CharacterView> characterViews = new ArrayList<>();
-        for (CharacterDocument characterDocument : characterService.getAllPlayerCharacters())
-            characterViews.add(CharacterMapper.toView(characterDocument));
+        List<CharacterView> characterViews = characterService.getAllPlayerCharacters()
+                .stream()
+                .map(CharacterMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(characterViews);
     }
 
     @GetMapping(path = "/account/{accountId}")
     @ResponseBody
     public ResponseEntity<List<CharacterView>> getPlayerCharactersByAccountId(@PathVariable String accountId) {
-        List<CharacterView> characterViews = new ArrayList<>();
-        for (CharacterDocument characterDocument : characterService.getPlayerCharactersByAccountId(accountId))
-            characterViews.add(CharacterMapper.toView(characterDocument));
+        List<CharacterView> characterViews = characterService.getPlayerCharactersByAccountId(accountId)
+                .stream()
+                .map(CharacterMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(characterViews);
     }
 

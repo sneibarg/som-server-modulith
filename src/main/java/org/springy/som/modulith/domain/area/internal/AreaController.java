@@ -17,6 +17,7 @@ import org.springy.som.modulith.domain.area.api.AreaView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/areas", produces = "application/json")
@@ -29,9 +30,10 @@ public class AreaController {
 
     @GetMapping
     public ResponseEntity<List<AreaView>> getAllAreas() {
-        List<AreaView> areaViews = new ArrayList<>();
-        for (AreaDocument area : areaService.getAllAreas())
-            areaViews.add(AreaMapper.toView(area));
+        List<AreaView> areaViews = areaService.getAllAreas()
+                .stream()
+                .map(AreaMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(areaViews);
     }
 

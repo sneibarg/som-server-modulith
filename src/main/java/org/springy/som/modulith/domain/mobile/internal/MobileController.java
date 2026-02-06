@@ -17,6 +17,7 @@ import org.springy.som.modulith.domain.mobile.api.MobileView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/mobiles", produces = "application/json")
@@ -29,9 +30,10 @@ public class MobileController {
 
     @GetMapping
     public ResponseEntity<List<MobileView>> getMobiles() {
-        List<MobileView> mobileViews = new ArrayList<>();
-        for (MobileDocument document : mobileService.getAllMobiles())
-            mobileViews.add(MobileMapper.toView(document));
+        List<MobileView> mobileViews = mobileService.getAllMobiles()
+                .stream()
+                .map(MobileMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(mobileViews);
     }
 

@@ -17,6 +17,7 @@ import org.springy.som.modulith.domain.race.api.RaceView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/races", produces = "application/json")
@@ -29,9 +30,10 @@ public class RaceController {
 
     @GetMapping
     public ResponseEntity<List<RaceView>> getRaces() {
-        List<RaceView> raceViews = new ArrayList<>();
-        for (RaceDocument raceDocument : raceService.getAllRaces())
-            raceViews.add(RaceMapper.toView(raceDocument));
+        List<RaceView> raceViews = raceService.getAllRaces()
+                .stream()
+                .map(RaceMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(raceViews);
     }
 

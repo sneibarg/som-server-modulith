@@ -17,6 +17,7 @@ import org.springy.som.modulith.domain.shop.api.ShopView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/shops", produces = "application/json")
@@ -29,9 +30,10 @@ public class ShopController {
 
     @GetMapping
     public ResponseEntity<List<ShopView>> getResets() {
-        List<ShopView> shopViews = new ArrayList<>();
-        for (ShopDocument shopDocument : shopService.getAllShops())
-            shopViews.add(ShopMapper.toView(shopDocument));
+        List<ShopView> shopViews = shopService.getAllShops()
+                .stream()
+                .map(ShopMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(shopViews);
     }
 

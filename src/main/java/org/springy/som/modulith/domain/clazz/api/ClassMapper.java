@@ -1,13 +1,13 @@
 package org.springy.som.modulith.domain.clazz.api;
 
-import org.springy.som.modulith.domain.clazz.internal.RomClassDocument;
+import org.springy.som.modulith.domain.clazz.internal.ClassDocument;
 
-public final class RomClassMapper {
+public final class ClassMapper {
 
-    private RomClassMapper() {}
+    private ClassMapper() {}
 
-    public static RomClassView toView(RomClassDocument doc) {
-        return new RomClassView(
+    public static ClassView toView(ClassDocument doc) {
+        return new ClassView(
                 doc.getId(),
                 doc.getName(),
                 doc.getWhoName(),

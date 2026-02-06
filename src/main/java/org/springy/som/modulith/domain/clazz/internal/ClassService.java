@@ -32,36 +32,36 @@ public class ClassService implements ClassApi {
     @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllRomClassesFallback")
     @Retry(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public List<RomClassDocument> getAllClasses() {
+    public List<ClassDocument> getAllClasses() {
         return classRepository.findAll();
     }
 
     @CircuitBreaker(name = "somAPI", fallbackMethod = "getRomClassByIdFallback")
     @Retry(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public RomClassDocument getRomClassById(@RequestParam String classId) {
+    public ClassDocument getRomClassById(@RequestParam String classId) {
         return classRepository.findRomClassById(classId);
     }
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public RomClassDocument createRomClass(@Valid @RequestBody RomClassDocument romClassDocument) {
-        requireEntityWithId(romClassDocument, RomClassDocument::getId, romClassMissing(), romClassIdMissing());
+    public ClassDocument createRomClass(@Valid @RequestBody ClassDocument classDocument) {
+        requireEntityWithId(classDocument, ClassDocument::getId, romClassMissing(), romClassIdMissing());
 
         try {
             // if (areaRepository.existsById(area.getAreaId())) throw new AreaConflictException(...)
-            return classRepository.save(romClassDocument);
+            return classRepository.save(classDocument);
         } catch (DataAccessException ex) {
-            log.warn("DB failure in createRomClass romClassId={}", ServiceGuards.safeId(romClassDocument, RomClassDocument::getId), ex);
-            throw new RomClassPersistenceException("Failed to create area"+ex);
+            log.warn("DB failure in createRomClass romClassId={}", ServiceGuards.safeId(classDocument, ClassDocument::getId), ex);
+            throw new ClassPersistenceException("Failed to create area"+ex);
         }
     }
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
-    public RomClassDocument saveRomClassForId(String id, RomClassDocument romClassDocument) {
+    public ClassDocument saveRomClassForId(String id, ClassDocument classDocument) {
         requireText(id, romClassIdMissing());
-        requireEntityWithId(romClassDocument, RomClassDocument::getId, romClassMissing(), romClassIdMissing());
+        requireEntityWithId(classDocument, ClassDocument::getId, romClassMissing(), romClassIdMissing());
 
         return classRepository.save(getRomClassById(id));
     }
@@ -73,12 +73,12 @@ public class ClassService implements ClassApi {
 
         try {
             if (!classRepository.existsById(id)) {
-                throw new RomClassNotFoundException(id);
+                throw new ClassNotFoundException(id);
             }
             classRepository.deleteById(id);
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAreaById id={}", id, ex);
-            throw new RomClassPersistenceException("Failed to delete area: " + id+" "+ex);
+            throw new ClassPersistenceException("Failed to delete area: " + id+" "+ex);
         }
     }
 
@@ -91,17 +91,17 @@ public class ClassService implements ClassApi {
             return itemCount;
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllAreas", ex);
-            throw new RomClassPersistenceException("Failed to delete all areas "+ ex);
+            throw new ClassPersistenceException("Failed to delete all areas "+ ex);
         }
     }
 
-    private List<RomClassDocument> getAllRomClassesFallback(Throwable t) {
+    private List<ClassDocument> getAllRomClassesFallback(Throwable t) {
         log.warn("Fallback getAllRomClasses due to {}", t.toString());
         return List.of();
     }
 
     private AreaDocument getRomClassByIdFallback(String id, Throwable t) {
         log.warn("Fallback getRomClassById id={} due to {}", id, t.toString());
-        throw new RomClassPersistenceException("romClass lookup temporarily unavailable: " + id+" "+t);
+        throw new ClassPersistenceException("romClass lookup temporarily unavailable: " + id+" "+t);
     }
 }

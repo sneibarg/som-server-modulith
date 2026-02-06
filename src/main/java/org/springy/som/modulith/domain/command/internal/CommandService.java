@@ -9,8 +9,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springy.som.modulith.domain.clazz.internal.RomClassNotFoundException;
-import org.springy.som.modulith.domain.clazz.internal.RomClassPersistenceException;
+import org.springy.som.modulith.domain.clazz.internal.ClassNotFoundException;
+import org.springy.som.modulith.domain.clazz.internal.ClassPersistenceException;
 import org.springy.som.modulith.domain.command.api.CommandApi;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class CommandService implements CommandApi {
             return commandRepository.save(commandDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createCommand commandId={}", safeId(commandDocument, CommandDocument::getId), ex);
-            throw new RomClassPersistenceException("Failed to create commandDocument"+ex);
+            throw new ClassPersistenceException("Failed to create commandDocument"+ex);
         }
     }
 
@@ -79,7 +79,7 @@ public class CommandService implements CommandApi {
 
         try {
             if (!commandRepository.existsById(id)) {
-                throw new RomClassNotFoundException(id);
+                throw new ClassNotFoundException(id);
             }
             commandRepository.deleteById(id);
         } catch (DataAccessException ex) {

@@ -1,6 +1,6 @@
 package org.springy.som.modulith.domain.clazz.api;
 
-public record RomClassView(
+public record ClassView(
         String id,
         String name,
         String whoName,

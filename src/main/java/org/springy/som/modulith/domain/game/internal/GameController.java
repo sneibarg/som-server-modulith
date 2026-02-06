@@ -10,6 +10,7 @@ import org.springy.som.modulith.domain.game.api.GameDataView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/game", produces = "application/json")
@@ -22,9 +23,10 @@ public class GameController {
 
     @GetMapping
     public ResponseEntity<List<GameDataView>> findAll() {
-        List<GameDataView> gameDataViews = new ArrayList<>();
-        for (GameDataDocument gameDataDocument : gameService.findAll())
-            gameDataViews.add(GameDataMapper.toView(gameDataDocument));
+        List<GameDataView> gameDataViews = gameService.findAll()
+                .stream()
+                .map(GameDataMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(gameDataViews);
     }
 

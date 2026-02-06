@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ClassController.class)
-@Import(RomClassApiExceptionHandler.class)
+@Import(ClassApiExceptionHandler.class)
 @WithMockUser
 class ClassControllerTest {
     @Autowired
@@ -41,7 +41,7 @@ class ClassControllerTest {
 
     @Test
     void getRomClassById_notFound_becomes404ProblemDetail() throws Exception {
-        when(classService.getRomClassById("A1")).thenThrow(new RomClassNotFoundException("A1"));
+        when(classService.getRomClassById("A1")).thenThrow(new ClassNotFoundException("A1"));
 
         mockMvc.perform(get("/api/v1/classes/A1"))
                 .andExpect(status().isNotFound())
@@ -55,7 +55,7 @@ class ClassControllerTest {
 
     @Test
     void getRomClassById_blankId_becomes400ProblemDetail() throws Exception {
-        when(classService.getRomClassById(anyString())).thenThrow(new InvalidRomClassException("ROM class id must be provided"));
+        when(classService.getRomClassById(anyString())).thenThrow(new InvalidClassException("ROM class id must be provided"));
 
         mockMvc.perform(get("/api/v1/classes/{id}", "  ")
                         .accept(MediaType.APPLICATION_JSON))
@@ -71,7 +71,7 @@ class ClassControllerTest {
 
     @Test
     void getAllRomClasses_persistenceDown_becomes503ProblemDetail() throws Exception {
-        when(classService.getAllClasses()).thenThrow(new RomClassPersistenceException("Failed to load ROM classes"));
+        when(classService.getAllClasses()).thenThrow(new ClassPersistenceException("Failed to load ROM classes"));
 
         mockMvc.perform(get("/api/v1/classes"))
                 .andExpect(status().isServiceUnavailable())
@@ -93,14 +93,14 @@ class ClassControllerTest {
 
     @Test
     void createRomClass_returns201() throws Exception {
-        RomClassDocument input = new RomClassDocument();
+        ClassDocument input = new ClassDocument();
         input.setName("Midgaard");
 
-        RomClassDocument saved = new RomClassDocument();
+        ClassDocument saved = new ClassDocument();
         saved.setId("A1");
         saved.setName("Midgaard");
 
-        when(classService.createRomClass(any(RomClassDocument.class))).thenReturn(saved);
+        when(classService.createRomClass(any(ClassDocument.class))).thenReturn(saved);
 
         mockMvc.perform(post("/api/v1/classes")
                         .with(csrf())
@@ -112,16 +112,16 @@ class ClassControllerTest {
                 .andExpect(jsonPath("$.id").value("A1"))
                 .andExpect(jsonPath("$.name").value("Midgaard"));
 
-        verify(classService).createRomClass(any(RomClassDocument.class));
+        verify(classService).createRomClass(any(ClassDocument.class));
     }
 
     @Test
     void updateRomClass_ok_returns200AndBody() throws Exception {
-        RomClassDocument input = new RomClassDocument();
+        ClassDocument input = new ClassDocument();
         input.setId("A1");
         input.setName("Midgaard");
 
-        RomClassDocument saved = new RomClassDocument();
+        ClassDocument saved = new ClassDocument();
         saved.setId("A1");
         saved.setName("Midgaard (updated)");
 
@@ -143,7 +143,7 @@ class ClassControllerTest {
 
     @Test
     void updateRomClass_blankName_returns400ProblemDetail_asJson() throws Exception {
-        RomClassDocument input = new RomClassDocument();
+        ClassDocument input = new ClassDocument();
         input.setId("A1");
         input.setName("");
 

@@ -18,6 +18,7 @@ import org.springy.som.modulith.domain.room.api.RoomView;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -31,9 +32,10 @@ public class RoomController {
 
     @GetMapping
     public ResponseEntity<List<RoomView>> getRooms() {
-        List<RoomView> roomViews = new ArrayList<>();
-        for (RoomDocument roomDocument : roomService.getAllRooms())
-            roomViews.add(RoomMapper.toView(roomDocument));
+        List<RoomView> roomViews = roomService.getAllRooms()
+                .stream()
+                .map(RoomMapper::toView)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(roomViews);
     }
 

@@ -5,8 +5,8 @@ import org.springy.som.modulith.exception.ApiError;
 import org.springy.som.modulith.exception.NotFoundApiException;
 
 @ApiError(status = HttpStatus.NOT_FOUND, title = "ROM class not found", code = "ROM_CLASS_NOT_FOUND")
-public class RomClassNotFoundException extends NotFoundApiException {
-    public RomClassNotFoundException(String message) {
+public class ClassNotFoundException extends NotFoundApiException {
+    public ClassNotFoundException(String message) {
         super(message);
     }
 }

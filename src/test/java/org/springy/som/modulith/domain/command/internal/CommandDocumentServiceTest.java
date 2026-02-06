@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.domain.clazz.internal.RomClassNotFoundException;
-import org.springy.som.modulith.domain.clazz.internal.RomClassPersistenceException;
+import org.springy.som.modulith.domain.clazz.internal.ClassNotFoundException;
+import org.springy.som.modulith.domain.clazz.internal.ClassPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.lang.reflect.Method;
@@ -104,7 +104,7 @@ class CommandDocumentServiceTest {
         when(repo.save(c)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createCommand(c))
-                .isInstanceOf(RomClassPersistenceException.class)
+                .isInstanceOf(ClassPersistenceException.class)
                 .hasMessageContaining("Failed to create command");
 
         verify(repo).save(c);
@@ -120,7 +120,7 @@ class CommandDocumentServiceTest {
         when(repo.save(c)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createCommand(c))
-                .isInstanceOf(RomClassPersistenceException.class)
+                .isInstanceOf(ClassPersistenceException.class)
                 .hasMessageContaining("Failed to create command");
 
         verify(repo).save(c);
@@ -193,7 +193,7 @@ class CommandDocumentServiceTest {
         when(repo.existsById("C1")).thenReturn(false);
 
         assertThatThrownBy(() -> service.deleteCommandById("C1"))
-                .isInstanceOf(RomClassNotFoundException.class);
+                .isInstanceOf(ClassNotFoundException.class);
 
         verify(repo).existsById("C1");
         verifyNoMoreInteractions(repo);
