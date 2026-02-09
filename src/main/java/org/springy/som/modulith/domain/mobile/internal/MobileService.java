@@ -14,11 +14,11 @@ import org.springy.som.modulith.domain.mobile.api.MobileApi;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.DomainGuards.mobileIdMissing;
-import static org.springy.som.modulith.util.DomainGuards.mobileMissing;
-import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
-import static org.springy.som.modulith.util.ServiceGuards.requireText;
-import static org.springy.som.modulith.util.ServiceGuards.safeId;
+import static org.springy.som.modulith.domain.DomainGuards.mobileIdMissing;
+import static org.springy.som.modulith.domain.DomainGuards.mobileMissing;
+import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireText;
+import static org.springy.som.modulith.domain.ServiceGuards.safeId;
 
 @Slf4j
 @Service

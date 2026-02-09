@@ -13,11 +13,11 @@ import org.springy.som.modulith.domain.race.api.RaceApi;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.DomainGuards.romRaceIdMissing;
-import static org.springy.som.modulith.util.DomainGuards.romRaceMissing;
-import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
-import static org.springy.som.modulith.util.ServiceGuards.requireText;
-import static org.springy.som.modulith.util.ServiceGuards.safeId;
+import static org.springy.som.modulith.domain.DomainGuards.romRaceIdMissing;
+import static org.springy.som.modulith.domain.DomainGuards.romRaceMissing;
+import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireText;
+import static org.springy.som.modulith.domain.ServiceGuards.safeId;
 
 @Service
 @Slf4j

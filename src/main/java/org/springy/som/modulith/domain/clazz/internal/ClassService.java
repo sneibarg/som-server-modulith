@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.area.internal.AreaDocument;
 import org.springy.som.modulith.domain.clazz.api.ClassApi;
-import org.springy.som.modulith.util.ServiceGuards;
+import org.springy.som.modulith.domain.ServiceGuards;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.DomainGuards.romClassIdMissing;
-import static org.springy.som.modulith.util.DomainGuards.romClassMissing;
-import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
-import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.domain.DomainGuards.romClassIdMissing;
+import static org.springy.som.modulith.domain.DomainGuards.romClassMissing;
+import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireText;
 
 @Service
 @Slf4j

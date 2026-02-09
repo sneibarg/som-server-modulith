@@ -1,4 +1,4 @@
-package org.springy.som.modulith.util;
+package org.springy.som.modulith.domain;
 
 import org.springframework.util.StringUtils;
 

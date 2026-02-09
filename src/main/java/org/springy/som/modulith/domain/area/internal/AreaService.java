@@ -4,25 +4,29 @@ import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import org.springy.som.modulith.domain.area.api.AreaDeletedEvent;
 import org.springy.som.modulith.domain.area.api.AreaApi;
-import org.springy.som.modulith.util.DomainGuards;
+import org.springy.som.modulith.domain.DomainGuards;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
-import static org.springy.som.modulith.util.ServiceGuards.requireText;
-import static org.springy.som.modulith.util.ServiceGuards.safeId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireText;
+import static org.springy.som.modulith.domain.ServiceGuards.safeId;
 
 @Slf4j
 @Service
 public class AreaService implements AreaApi {
     private final AreaRepository areaRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public AreaService(AreaRepository areaRepository) {
+    public AreaService(AreaRepository areaRepository, ApplicationEventPublisher eventPublisher) {
         this.areaRepository = areaRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllAreasFallback")
@@ -90,6 +94,7 @@ public class AreaService implements AreaApi {
                 throw new AreaNotFoundException(id);
             }
             areaRepository.deleteById(id);
+            eventPublisher.publishEvent(new AreaDeletedEvent(id));
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAreaById id={}", id, ex);
             throw new AreaPersistenceException("Failed to delete area: " + id+" "+ex);
@@ -100,8 +105,15 @@ public class AreaService implements AreaApi {
     @Bulkhead(name = "somAPI")
     public long deleteAllAreas() {
         try {
-            long itemCount = areaRepository.count();
+            List<String> areaIds = areaRepository.findAll()
+                    .stream()
+                    .map(AreaDocument::getId)
+                    .toList();
+            long itemCount = areaIds.size();
             areaRepository.deleteAll();
+            for (String areaId : areaIds) {
+                eventPublisher.publishEvent(new AreaDeletedEvent(areaId));
+            }
             return itemCount;
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteAllAreas", ex);

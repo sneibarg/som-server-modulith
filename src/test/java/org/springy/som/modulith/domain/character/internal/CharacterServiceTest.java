@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springy.som.modulith.util.ServiceGuards;
+import org.springy.som.modulith.domain.ServiceGuards;
 
 import java.lang.reflect.Method;
 import java.util.List;

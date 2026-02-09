@@ -14,11 +14,11 @@ import org.springy.som.modulith.domain.reset.api.ResetApi;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.DomainGuards.resetIdMissing;
-import static org.springy.som.modulith.util.DomainGuards.resetMissing;
-import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
-import static org.springy.som.modulith.util.ServiceGuards.requireText;
-import static org.springy.som.modulith.util.ServiceGuards.safeId;
+import static org.springy.som.modulith.domain.DomainGuards.resetIdMissing;
+import static org.springy.som.modulith.domain.DomainGuards.resetMissing;
+import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireText;
+import static org.springy.som.modulith.domain.ServiceGuards.safeId;
 
 @Slf4j
 @Service

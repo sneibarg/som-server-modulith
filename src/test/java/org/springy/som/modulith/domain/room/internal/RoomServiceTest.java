@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RoomDocumentServiceTest {
+class RoomServiceTest {
     private final String roomIdMissing = "ROM room id must be provided";
     private final String roomMissing = "ROM room must be provided";
     private final String dbDown = "Service unavailable Failed to create ROM roomDocument: org.springframework.dao.DataAccessResourceFailureException: db down";

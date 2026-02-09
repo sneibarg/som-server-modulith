@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AreaController.class)
 @Import(AreaApiExceptionHandler.class)
 @WithMockUser
-class AreaDocumentControllerTest {
+class AreaControllerTest {
     @Autowired
     MockMvc mockMvc;
 

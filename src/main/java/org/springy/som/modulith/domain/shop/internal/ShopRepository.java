@@ -23,4 +23,6 @@ public interface ShopRepository extends MongoRepository<ShopDocument, String> {
 
     @Query("{quantity: {$gte: '?0'}}")
     List<ShopDocument> findShopsWithMinQuantity(int minQuantity);
+
+    long deleteAllByAreaId(String areaId);
 }

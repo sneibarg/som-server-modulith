@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ResetController.class)
 @Import(ResetApiExceptionHandler.class)
 @WithMockUser
-public class ResetDocumentControllerTest {
+public class ResetControllerTest {
     @Autowired
     MockMvc mockMvc;
 

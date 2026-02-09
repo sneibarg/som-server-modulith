@@ -1,4 +1,4 @@
-package org.springy.som.modulith.util;
+package org.springy.som.modulith.domain;
 
 import org.springy.som.modulith.domain.area.internal.InvalidAreaException;
 import org.springy.som.modulith.domain.character.internal.InvalidPlayerCharacterException;

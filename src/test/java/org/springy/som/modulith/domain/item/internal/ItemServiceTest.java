@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ItemDocumentServiceTest {
+class ItemServiceTest {
     private final String romItemMissing = "ROM item must be provided";
     private final String romItemIdMissing = "ROM item id must be provided";
 

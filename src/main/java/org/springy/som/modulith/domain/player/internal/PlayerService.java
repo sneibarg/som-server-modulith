@@ -15,11 +15,11 @@ import org.springy.som.modulith.domain.player.api.PlayerApi;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.DomainGuards.playerAccountIdMissing;
-import static org.springy.som.modulith.util.DomainGuards.playerAccountMissing;
-import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
-import static org.springy.som.modulith.util.ServiceGuards.requireText;
-import static org.springy.som.modulith.util.ServiceGuards.safeId;
+import static org.springy.som.modulith.domain.DomainGuards.playerAccountIdMissing;
+import static org.springy.som.modulith.domain.DomainGuards.playerAccountMissing;
+import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireText;
+import static org.springy.som.modulith.domain.ServiceGuards.safeId;
 
 @Slf4j
 @Service

@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CommandDocumentServiceTest {
+class CommandServiceTest {
     private final String commandIdMissing = "ROM command id must be provided";
     private final String commandMissing = "ROM command must be provided";
     private CommandRepository repo;

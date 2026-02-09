@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SpecialDocumentServiceTest {
+class SpecialServiceTest {
     private final String specialIdMissing = "ROM special id must be provided";
     private final String specialMissing = "ROM special must be provided";
 

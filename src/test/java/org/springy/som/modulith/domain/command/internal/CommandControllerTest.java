@@ -1,24 +1,35 @@
-package org.springy.som.modulith.domain.character.internal;
+package org.springy.som.modulith.domain.command.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CharacterController.class)
-@Import(PlayerCharacterApiExceptionHandler.class)
+@WebMvcTest(CommandController.class)
+@Import(CommandApiExceptionHandler.class)
 @WithMockUser
-class CharacterDocumentControllerTest {
+public class CommandControllerTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -26,38 +37,38 @@ class CharacterDocumentControllerTest {
     ObjectMapper objectMapper;
 
     @MockitoBean
-    CharacterService characterService;
+    CommandService commandService;
 
     @Test
-    void getAllPlayerCharacters_ok() throws Exception {
-        when(characterService.getAllPlayerCharacters()).thenReturn(java.util.List.of());
+    void getAllCommands_ok() throws Exception {
+        when(commandService.getAllCommands()).thenReturn(java.util.List.of());
 
-        mockMvc.perform(get("/api/v1/characters"))
+        mockMvc.perform(get("/api/v1/commands"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-        verify(characterService).getAllPlayerCharacters();
+        verify(commandService).getAllCommands();
     }
 
     @Test
-    void getPlayerCharacterById_notFound_becomes404ProblemDetail() throws Exception {
-        when(characterService.getPlayerCharacterById("A1")).thenThrow(new PlayerCharacterNotFoundException("A1"));
+    void getCommandById_notFound_becomes404ProblemDetail() throws Exception {
+        when(commandService.getCommandById("A1")).thenThrow(new CommandNotFoundException("A1"));
 
-        mockMvc.perform(get("/api/v1/characters/A1"))
+        mockMvc.perform(get("/api/v1/commands/A1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(characterService).getPlayerCharacterById("A1");
+        verify(commandService).getCommandById("A1");
     }
 
     @Test
-    void getPlayerCharacterById_blankId_becomes400ProblemDetail() throws Exception {
-        when(characterService.getPlayerCharacterById(anyString())).thenThrow(new InvalidPlayerCharacterException("Player Character id must be provided"));
+    void getCommandById_blankId_becomes400ProblemDetail() throws Exception {
+        when(commandService.getCommandById(anyString())).thenThrow(new InvalidCommandException("CommandDocument id must be provided"));
 
-        mockMvc.perform(get("/api/v1/characters/{id}", "  ")
+        mockMvc.perform(get("/api/v1/commands/{id}", "  ")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -65,44 +76,44 @@ class CharacterDocumentControllerTest {
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(characterService).getPlayerCharacterById("  ");
+        verify(commandService).getCommandById("  ");
     }
 
 
     @Test
-    void getAllPlayerCharacters_persistenceDown_becomes503ProblemDetail() throws Exception {
-        when(characterService.getAllPlayerCharacters()).thenThrow(new PlayerCharacterPersistenceException("Failed to load player characters"));
+    void getAllCommandes_persistenceDown_becomes503ProblemDetail() throws Exception {
+        when(commandService.getAllCommands()).thenThrow(new CommandPersistenceException("Failed to load commands"));
 
-        mockMvc.perform(get("/api/v1/characters"))
+        mockMvc.perform(get("/api/v1/commands"))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(503));
 
-        verify(characterService).getAllPlayerCharacters();
+        verify(commandService).getAllCommands();
     }
 
     @Test
-    void deletePlayerCharacter_ok_returns204() throws Exception {
-        doNothing().when(characterService).deletePlayerCharacterById("A1");
+    void deleteCommand_ok_returns204() throws Exception {
+        doNothing().when(commandService).deleteCommandById("A1");
 
-        mockMvc.perform(delete("/api/v1/characters/A1").with(csrf()))
+        mockMvc.perform(delete("/api/v1/commands/A1").with(csrf()))
                 .andExpect(status().isNoContent());
 
-        verify(characterService).deletePlayerCharacterById("A1");
+        verify(commandService).deleteCommandById("A1");
     }
 
     @Test
-    void createPlayerCharacter_returns201() throws Exception {
-        CharacterDocument input = new CharacterDocument();
+    void createCommand_returns201() throws Exception {
+        CommandDocument input = new CommandDocument();
         input.setName("Midgaard");
 
-        CharacterDocument saved = new CharacterDocument();
+        CommandDocument saved = new CommandDocument();
         saved.setId("A1");
         saved.setName("Midgaard");
 
-        when(characterService.createPlayerCharacter(any(CharacterDocument.class))).thenReturn(saved);
+        when(commandService.createCommand(any(CommandDocument.class))).thenReturn(saved);
 
-        mockMvc.perform(post("/api/v1/characters")
+        mockMvc.perform(post("/api/v1/commands")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -112,22 +123,22 @@ class CharacterDocumentControllerTest {
                 .andExpect(jsonPath("$.id").value("A1"))
                 .andExpect(jsonPath("$.name").value("Midgaard"));
 
-        verify(characterService).createPlayerCharacter(any(CharacterDocument.class));
+        verify(commandService).createCommand(any(CommandDocument.class));
     }
 
     @Test
-    void updatePlayerCharacter_ok_returns200AndBody() throws Exception {
-        CharacterDocument input = new CharacterDocument();
+    void updateCommand_ok_returns200AndBody() throws Exception {
+        CommandDocument input = new CommandDocument();
         input.setId("A1");
         input.setName("Midgaard");
 
-        CharacterDocument saved = new CharacterDocument();
+        CommandDocument saved = new CommandDocument();
         saved.setId("A1");
         saved.setName("Midgaard (updated)");
 
-        when(characterService.savePlayerCharacterForId(eq("A1"), eq(input))).thenReturn(saved);
+        when(commandService.saveCommandForId(eq("A1"), eq(input))).thenReturn(saved);
 
-        mockMvc.perform(put("/api/v1/characters/{id}", "A1")
+        mockMvc.perform(put("/api/v1/commands/{id}", "A1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -137,17 +148,17 @@ class CharacterDocumentControllerTest {
                 .andExpect(jsonPath("$.id").value("A1"))
                 .andExpect(jsonPath("$.name").value("Midgaard (updated)"));
 
-        verify(characterService).savePlayerCharacterForId(eq("A1"), eq(input));
-        verifyNoMoreInteractions(characterService);
+        verify(commandService).saveCommandForId(eq("A1"), eq(input));
+        verifyNoMoreInteractions(commandService);
     }
 
     @Test
-    void updatePlayerCharacter_blankName_returns400ProblemDetail_asJson() throws Exception {
-        CharacterDocument input = new CharacterDocument();
+    void updateCommand_blankName_returns400ProblemDetail_asJson() throws Exception {
+        CommandDocument input = new CommandDocument();
         input.setId("A1");
         input.setName("");
 
-        mockMvc.perform(put("/api/v1/characters/{id}", "A1")
+        mockMvc.perform(put("/api/v1/commands/{id}", "A1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -161,9 +172,9 @@ class CharacterDocumentControllerTest {
 
     @Test
     void deleteAll_returns200AndDeletedCount() throws Exception {
-        when(characterService.deleteAllPlayerCharacters()).thenReturn(7L);
+        when(commandService.deleteAllCommands()).thenReturn(7L);
 
-        mockMvc.perform(delete("/api/v1/characters")
+        mockMvc.perform(delete("/api/v1/commands")
                         .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -173,9 +184,9 @@ class CharacterDocumentControllerTest {
 
     @Test
     void deleteAll_whenNothingDeleted_returns200AndZero() throws Exception {
-        when(characterService.deleteAllPlayerCharacters()).thenReturn(0L);
+        when(commandService.deleteAllCommands()).thenReturn(0L);
 
-        mockMvc.perform(delete("/api/v1/characters")
+        mockMvc.perform(delete("/api/v1/commands")
                         .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -22,4 +22,5 @@ public interface MobileRepository extends MongoRepository<MobileDocument, String
     @Query("{ 'level': { $gte: 1, $lte: 10 } }")
     List<MobileDocument> findMobilesByLevelRange(int min, int max);
 
+    long deleteAllByAreaId(String areaId);
 }

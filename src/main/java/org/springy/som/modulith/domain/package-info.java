@@ -1,5 +1,5 @@
 @ApplicationModule(
-        type = ApplicationModule.Type.OPEN
+        type = ApplicationModule.Type.CLOSED
 )
 package org.springy.som.modulith.domain;
 

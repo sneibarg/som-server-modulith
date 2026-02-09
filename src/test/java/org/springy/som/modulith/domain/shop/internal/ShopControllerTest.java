@@ -1,4 +1,4 @@
-package org.springy.som.modulith.domain.special.internal;
+package org.springy.som.modulith.domain.shop.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -26,10 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(SpecialController.class)
-@Import(SpecialApiExceptionHandler.class)
+@WebMvcTest(ShopController.class)
+@Import(ShopApiExceptionHandler.class)
 @WithMockUser
-public class SpecialDocumentControllerTest {
+public class ShopControllerTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -37,38 +37,38 @@ public class SpecialDocumentControllerTest {
     ObjectMapper objectMapper;
 
     @MockitoBean
-    SpecialService specialService;
+    ShopService shopService;
 
     @Test
-    void getAllSpecials_ok() throws Exception {
-        when(specialService.getAllSpecials()).thenReturn(java.util.List.of());
+    void getAllShops_ok() throws Exception {
+        when(shopService.getAllShops()).thenReturn(java.util.List.of());
 
-        mockMvc.perform(get("/api/v1/specials"))
+        mockMvc.perform(get("/api/v1/shops"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-        verify(specialService).getAllSpecials();
+        verify(shopService).getAllShops();
     }
 
     @Test
     void getShopById_notFound_becomes404ProblemDetail() throws Exception {
-        when(specialService.getSpecialById("A1")).thenThrow(new SpecialNotFoundException("A1"));
+        when(shopService.getShopById("A1")).thenThrow(new ShopNotFoundException("A1"));
 
-        mockMvc.perform(get("/api/v1/specials/A1"))
+        mockMvc.perform(get("/api/v1/shops/A1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(specialService).getSpecialById("A1");
+        verify(shopService).getShopById("A1");
     }
 
     @Test
     void getShopById_blankId_becomes400ProblemDetail() throws Exception {
-        when(specialService.getSpecialById(anyString())).thenThrow(new InvalidSpecialException("Player id must be provided"));
+        when(shopService.getShopById(anyString())).thenThrow(new InvalidShopException("Player id must be provided"));
 
-        mockMvc.perform(get("/api/v1/specials/{id}", "  ")
+        mockMvc.perform(get("/api/v1/shops/{id}", "  ")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -76,45 +76,45 @@ public class SpecialDocumentControllerTest {
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.detail").exists());
 
-        verify(specialService).getSpecialById("  ");
+        verify(shopService).getShopById("  ");
     }
 
 
     @Test
-    void getAllSpecial_persistenceDown_becomes503ProblemDetail() throws Exception {
-        when(specialService.getAllSpecials()).thenThrow(new SpecialPersistenceException("Failed to load players"));
+    void getAllShop_persistenceDown_becomes503ProblemDetail() throws Exception {
+        when(shopService.getAllShops()).thenThrow(new ShopPersistenceException("Failed to load players"));
 
-        mockMvc.perform(get("/api/v1/specials"))
+        mockMvc.perform(get("/api/v1/shops"))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(503));
 
-        verify(specialService).getAllSpecials();
+        verify(shopService).getAllShops();
     }
 
     @Test
-    void deleteSpecial_ok_returns204() throws Exception {
-        doNothing().when(specialService).deleteSpecialById("A1");
+    void deleteShop_ok_returns204() throws Exception {
+        doNothing().when(shopService).deleteShopById("A1");
 
-        mockMvc.perform(delete("/api/v1/specials/A1").with(csrf()))
+        mockMvc.perform(delete("/api/v1/shops/A1").with(csrf()))
                 .andExpect(status().isNoContent());
 
-        verify(specialService).deleteSpecialById("A1");
+        verify(shopService).deleteShopById("A1");
     }
 
     @Test
-    void createSpecial_returns201() throws Exception {
-        SpecialDocument input = new SpecialDocument();
+    void createShop_returns201() throws Exception {
+        ShopDocument input = new ShopDocument();
         input.setId("I1");
         input.setAreaId("A1");
 
-        SpecialDocument saved = new SpecialDocument();
+        ShopDocument saved = new ShopDocument();
         saved.setId("I1");
         saved.setAreaId("A1");
 
-        when(specialService.createSpecial(any(SpecialDocument.class))).thenReturn(saved);
+        when(shopService.createShop(any(ShopDocument.class))).thenReturn(saved);
 
-        mockMvc.perform(post("/api/v1/specials")
+        mockMvc.perform(post("/api/v1/shops")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -124,22 +124,22 @@ public class SpecialDocumentControllerTest {
                 .andExpect(jsonPath("$.id").value("I1"))
                 .andExpect(jsonPath("$.areaId").value("A1"));
 
-        verify(specialService).createSpecial(any(SpecialDocument.class));
+        verify(shopService).createShop(any(ShopDocument.class));
     }
 
     @Test
-    void updateSpecial_ok_returns200AndBody() throws Exception {
-        SpecialDocument input = new SpecialDocument();
+    void updateShop_ok_returns200AndBody() throws Exception {
+        ShopDocument input = new ShopDocument();
         input.setId("I1");
         input.setAreaId("A1");
 
-        SpecialDocument saved = new SpecialDocument();
+        ShopDocument saved = new ShopDocument();
         saved.setId("I1");
         saved.setAreaId("A1");
 
-        when(specialService.saveSpecialForId(eq("I1"), eq(input))).thenReturn(saved);
+        when(shopService.saveShopForId(eq("I1"), eq(input))).thenReturn(saved);
 
-        mockMvc.perform(put("/api/v1/specials/{id}", "I1")
+        mockMvc.perform(put("/api/v1/shops/{id}", "I1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -149,16 +149,16 @@ public class SpecialDocumentControllerTest {
                 .andExpect(jsonPath("$.id").value("I1"))
                 .andExpect(jsonPath("$.areaId").value("A1"));
 
-        verify(specialService).saveSpecialForId(eq("I1"), eq(input));
-        verifyNoMoreInteractions(specialService);
+        verify(shopService).saveShopForId(eq("I1"), eq(input));
+        verifyNoMoreInteractions(shopService);
     }
 
     @Test
-    void updateSpecial_blankName_returns400ProblemDetail_asJson() throws Exception {
-        SpecialDocument input = new SpecialDocument();
+    void updateShop_blankName_returns400ProblemDetail_asJson() throws Exception {
+        ShopDocument input = new ShopDocument();
         input.setId("I1");
 
-        mockMvc.perform(put("/api/v1/specials/{id}", "I1")
+        mockMvc.perform(put("/api/v1/shops/{id}", "I1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -172,9 +172,9 @@ public class SpecialDocumentControllerTest {
 
     @Test
     void deleteAll_returns200AndDeletedCount() throws Exception {
-        when(specialService.deleteAllSpecials()).thenReturn(7L);
+        when(shopService.deleteAllShops()).thenReturn(7L);
 
-        mockMvc.perform(delete("/api/v1/specials")
+        mockMvc.perform(delete("/api/v1/shops")
                         .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -184,9 +184,9 @@ public class SpecialDocumentControllerTest {
 
     @Test
     void deleteAll_whenNothingDeleted_returns200AndZero() throws Exception {
-        when(specialService.deleteAllSpecials()).thenReturn(0L);
+        when(shopService.deleteAllShops()).thenReturn(0L);
 
-        mockMvc.perform(delete("/api/v1/specials")
+        mockMvc.perform(delete("/api/v1/shops")
                         .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

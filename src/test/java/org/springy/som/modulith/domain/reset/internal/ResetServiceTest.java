@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ResetDocumentServiceTest {
+class ResetServiceTest {
     private final String resetIdMissing = "ROM reset id must be provided";
     private final String resetMissing = "ROM reset must be provided";
     private final String dbDown = "Service unavailable Failed to delete all ROM resets org.springframework.dao.DataAccessResourceFailureException: db down";

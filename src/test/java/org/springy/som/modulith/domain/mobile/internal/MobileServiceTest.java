@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MobileDocumentServiceTest {
+class MobileServiceTest {
     private final String mobileIdMissing = "ROM mobile id must be provided";
     private final String mobileMissing = "ROM mobile must be provided";
 

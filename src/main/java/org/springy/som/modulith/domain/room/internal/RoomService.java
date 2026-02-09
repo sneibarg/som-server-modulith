@@ -13,11 +13,11 @@ import org.springy.som.modulith.domain.room.api.RoomApi;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.DomainGuards.roomIdMissing;
-import static org.springy.som.modulith.util.DomainGuards.roomMissing;
-import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
-import static org.springy.som.modulith.util.ServiceGuards.requireText;
-import static org.springy.som.modulith.util.ServiceGuards.safeId;
+import static org.springy.som.modulith.domain.DomainGuards.roomIdMissing;
+import static org.springy.som.modulith.domain.DomainGuards.roomMissing;
+import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireText;
+import static org.springy.som.modulith.domain.ServiceGuards.safeId;
 
 @Slf4j
 @Service

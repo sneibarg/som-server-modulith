@@ -6,4 +6,6 @@ import org.springframework.data.mongodb.repository.Query;
 public interface ResetRepository extends MongoRepository<ResetDocument, String> {
     @Query("{id: '?0'}")
     ResetDocument findResetById(String resetId);
+
+    long deleteAllByAreaId(String areaId);
 }

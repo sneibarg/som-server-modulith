@@ -21,11 +21,12 @@ public abstract class BaseApiExceptionHandler {
         pd.setDetail("Request body failed validation");
 
         // optional: include field errors
-        Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()
+        Map<String, String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
                 .collect(Collectors.toMap(FieldError::getField,
-                        fe -> Objects.toString(fe.getDefaultMessage(), "invalid"),
-                        (a, b) -> a,
-                        LinkedHashMap::new));
+        fe -> Objects.toString(fe.getDefaultMessage(), "invalid"),
+                        (a, b) -> a, LinkedHashMap::new));
         pd.setProperty("errors", errors);
 
         return ResponseEntity.badRequest()

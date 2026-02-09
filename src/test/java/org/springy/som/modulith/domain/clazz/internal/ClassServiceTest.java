@@ -3,7 +3,7 @@ package org.springy.som.modulith.domain.clazz.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springy.som.modulith.util.ServiceGuards;
+import org.springy.som.modulith.domain.ServiceGuards;
 
 import java.lang.reflect.Method;
 import java.util.List;

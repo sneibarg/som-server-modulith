@@ -16,4 +16,6 @@ public interface RoomRepository extends MongoRepository<RoomDocument, String> {
     RoomDocument findRoomByNameAndAreaId(String name, String areaId);
 
     List<RoomDocument> findAllByAreaId(String areaId);
+
+    long deleteAllByAreaId(String areaId);
 }

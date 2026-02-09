@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(MobileController.class)
 @Import(MobileApiExceptionHandler.class)
 @WithMockUser
-public class MobileDocumentControllerTest {
+public class MobileControllerTest {
     @Autowired
     MockMvc mockMvc;
 

@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springy.som.modulith.util.ServiceGuards;
+import org.springy.som.modulith.domain.ServiceGuards;
+import org.springy.som.modulith.domain.area.api.AreaDeletedEvent;
 
 import java.util.List;
 
@@ -15,18 +17,19 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AreaDocumentServiceTest {
+class AreaServiceTest {
     private final String areaIdMissing = "AreaDocument id must be provided";
     private final String areaMissing = "AreaDocument must be provided";
 
     @Mock
     private AreaRepository areaRepository;
-
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
     private AreaService areaService;
 
     @BeforeEach
     void setUp() {
-        areaService = new AreaService(areaRepository);
+        areaService = new AreaService(areaRepository, applicationEventPublisher);
     }
 
     @Test
@@ -204,25 +207,27 @@ class AreaDocumentServiceTest {
 
     @Test
     void deleteAllAreas_ok_returnsCountThenDeletesAll() {
-        when(areaRepository.count()).thenReturn(42L);
+        List<AreaDocument> areas = List.of(area("A1", "Midgaard"), area("A2", "Ofcol"));
+        when(areaRepository.findAll()).thenReturn(areas);
 
         long deletedCount = areaService.deleteAllAreas();
 
-        assertThat(deletedCount).isEqualTo(42L);
-        verify(areaRepository).count();
+        assertThat(deletedCount).isEqualTo(2L);
+        verify(areaRepository).findAll();
         verify(areaRepository).deleteAll();
+        verify(applicationEventPublisher, times(2)).publishEvent(any(AreaDeletedEvent.class));
         verifyNoMoreInteractions(areaRepository);
     }
 
     @Test
     void deleteAllAreas_dataAccess_becomesAreaPersistenceException() {
-        when(areaRepository.count()).thenThrow(new DataAccessResourceFailureException("db down"));
+        when(areaRepository.findAll()).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> areaService.deleteAllAreas())
                 .isInstanceOf(AreaPersistenceException.class)
                 .hasMessageContaining("Failed to delete all areas");
 
-        verify(areaRepository).count();
+        verify(areaRepository).findAll();
         verifyNoMoreInteractions(areaRepository);
     }
 

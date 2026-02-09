@@ -11,10 +11,10 @@ import org.springy.som.modulith.domain.character.api.CharacterApi;
 
 import java.util.List;
 
-import static org.springy.som.modulith.util.DomainGuards.playerCharacterIdMissing;
-import static org.springy.som.modulith.util.DomainGuards.playerCharacterMissing;
-import static org.springy.som.modulith.util.ServiceGuards.requireEntityWithId;
-import static org.springy.som.modulith.util.ServiceGuards.requireText;
+import static org.springy.som.modulith.domain.DomainGuards.playerCharacterIdMissing;
+import static org.springy.som.modulith.domain.DomainGuards.playerCharacterMissing;
+import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
+import static org.springy.som.modulith.domain.ServiceGuards.requireText;
 
 @Service
 @Slf4j

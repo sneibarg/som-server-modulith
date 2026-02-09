@@ -23,4 +23,6 @@ public interface ItemRepository extends MongoRepository<ItemDocument, String> {
 
     @Query("{quantity: {$gte: '?0'}}")
     List<ItemDocument> findItemsWithMinQuantity(int minQuantity);
+
+    long deleteAllByAreaId(String areaId);
 }
