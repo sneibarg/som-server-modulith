@@ -1,6 +1,7 @@
 package org.springy.som.modulith.domain.reset.internal;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import org.springy.som.modulith.domain.area.api.AreaDeletedEvent;
@@ -13,6 +14,7 @@ public class ResetAreaCleanupListener {
         this.resetRepository = resetRepository;
     }
 
+    @Async
     @EventListener
     void onAreaDeleted(AreaDeletedEvent event) {
         resetRepository.deleteAllByAreaId(event.areaId());
