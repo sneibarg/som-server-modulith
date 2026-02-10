@@ -55,7 +55,7 @@ public class PlayerService implements PlayerApi {
         requireEntityWithId(playerDocument, PlayerDocument::getId, playerAccountMissing(), playerAccountIdMissing());
 
         try {
-            // if (playerAccountRepository.existsById(mobile.getPlayerAccountId())) throw new PlayerAccountConflictException(...)
+            // if (playerAccountRepository.existsById(playerDocument.getPlayerAccountId())) throw new PlayerConflictException(...)
             return playerAccountRepository.save(playerDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createPlayerAccount playerAccountId={}", safeId(playerDocument, PlayerDocument::getId), ex);

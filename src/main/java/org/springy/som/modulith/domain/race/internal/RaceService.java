@@ -53,7 +53,7 @@ public class RaceService implements RaceApi {
         requireEntityWithId(raceDocument, RaceDocument::getId, romRaceMissing(), romRaceIdMissing());
 
         try {
-            // if (raceRepository.existsById(raceDocument.getRomRaceId())) throw new RomRaceConflictException(...)
+            // if (raceRepository.existsById(raceDocument.getRaceId())) throw new RaceConflictException(...)
             return raceRepository.save(raceDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createRomRace romRaceId={}", safeId(raceDocument, RaceDocument::getId), ex);

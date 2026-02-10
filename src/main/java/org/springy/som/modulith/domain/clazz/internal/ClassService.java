@@ -49,7 +49,7 @@ public class ClassService implements ClassApi {
         requireEntityWithId(classDocument, ClassDocument::getId, romClassMissing(), romClassIdMissing());
 
         try {
-            // if (areaRepository.existsById(area.getAreaId())) throw new AreaConflictException(...)
+            // if (classRepository.existsById(classDocument.getClassId())) throw new ClassConflictException(...)
             return classRepository.save(classDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createRomClass romClassId={}", ServiceGuards.safeId(classDocument, ClassDocument::getId), ex);

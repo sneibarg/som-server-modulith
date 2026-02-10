@@ -38,7 +38,7 @@ public class CharacterService implements CharacterApi {
 
     }
 
-    @CircuitBreaker(name = "somAPI", fallbackMethod = "getPlayerCharacterByIdFallback")
+    @CircuitBreaker(name = "somAPI", fallbackMethod = "getPlayerCharactersByAccountIdFallback")
     @Retry(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public List<CharacterDocument> getPlayerCharactersByAccountId(@RequestParam String id) {
@@ -79,8 +79,7 @@ public class CharacterService implements CharacterApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public CharacterDocument createPlayerCharacter(CharacterDocument characterDocument) {
-        requireEntityWithId(characterDocument,
-                CharacterDocument::getId, playerCharacterMissing(), playerCharacterIdMissing());
+        requireEntityWithId(characterDocument, CharacterDocument::getId, playerCharacterMissing(), playerCharacterIdMissing());
 
         return characterRepository.save(characterDocument);
     }
@@ -89,8 +88,7 @@ public class CharacterService implements CharacterApi {
     @Bulkhead(name = "somAPI")
     public CharacterDocument savePlayerCharacterForId(String id, CharacterDocument characterDocument) {
         requireText(id, playerCharacterIdMissing());
-        requireEntityWithId(characterDocument,
-                CharacterDocument::getId, playerCharacterMissing(), playerCharacterIdMissing());
+        requireEntityWithId(characterDocument, CharacterDocument::getId, playerCharacterMissing(), playerCharacterIdMissing());
 
         return characterRepository.save(getPlayerCharacterById(id));
     }
@@ -134,8 +132,8 @@ public class CharacterService implements CharacterApi {
         throw new PlayerCharacterPersistenceException("CharacterDocument lookup temporarily unavailable: " + id + " " + t);
     }
 
-    private CharacterDocument getPlayerCharactersByAccountIdFallback(String accountId, Throwable t) {
-        log.warn("Fallback getPlayerCharactersByAccountId due to {}", t.toString());
+    private List<CharacterDocument> getPlayerCharactersByAccountIdFallback(String accountId, Throwable t) {
+        log.warn("Fallback getPlayerCharactersByAccountId accountId={} due to {}", accountId, t.toString());
         throw new PlayerCharacterPersistenceException("CharacterDocument lookup temporarily unavailable: " + accountId + " " + t);
     }
 }

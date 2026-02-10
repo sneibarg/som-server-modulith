@@ -15,8 +15,7 @@ public class KeyStoreConfig {
     public PrivateKey configPrivateKey(@Value("${som.crypto.keystore.location}") String location,
                                        @Value("${som.crypto.keystore.password}") String storePassword,
                                        @Value("${som.crypto.key.alias}") String alias,
-                                       @Value("${som.crypto.key.password}") String keyPassword,
-                                       @Value("${som.web-security.api.password}") String apiPassword) throws Exception {
+                                       @Value("${som.crypto.key.password}") String keyPassword) throws Exception {
         KeyStore ks = KeyStore.getInstance("PKCS12");
         try (InputStream is = openLocation(location)) {
             ks.load(is, storePassword.toCharArray());
