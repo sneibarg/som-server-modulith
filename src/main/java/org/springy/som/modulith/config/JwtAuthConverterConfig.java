@@ -3,7 +3,7 @@ package org.springy.som.modulith.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springy.som.modulith.security.KeycloakRealmRoleConverter;
+import org.springy.som.security.KeycloakRealmRoleConverter;
 
 @Configuration
 public class JwtAuthConverterConfig {

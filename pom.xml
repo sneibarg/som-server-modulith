@@ -12,7 +12,7 @@
 	<artifactId>som-server-modulith</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>som-server-modulith</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Springs of MUD Modulith</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -147,6 +147,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springy.som</groupId>
+			<artifactId>som-auth-service</artifactId>
+			<version>0.0.2-20260212.025228-5</version>
+			<classifier>client</classifier>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -166,7 +172,18 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Nexus Releases</name>
+			<url>http://dragon:8089/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Nexus Snapshots</name>
+			<url>http://dragon:8089/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
