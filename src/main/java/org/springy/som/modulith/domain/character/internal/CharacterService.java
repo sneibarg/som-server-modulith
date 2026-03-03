@@ -79,8 +79,6 @@ public class CharacterService implements CharacterApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public CharacterDocument createPlayerCharacter(CharacterDocument characterDocument) {
-        requireEntityWithId(characterDocument, CharacterDocument::getId, playerCharacterMissing(), playerCharacterIdMissing());
-
         return characterRepository.save(characterDocument);
     }
 

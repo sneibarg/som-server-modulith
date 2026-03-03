@@ -41,6 +41,11 @@ public class CommandController {
         return ResponseEntity.ok(CommandMapper.toView(commandService.getCommandById(id)));
     }
 
+    @GetMapping(path = "/name/{name}")
+    public ResponseEntity<CommandView> getCommandByName(@PathVariable String name) {
+        return ResponseEntity.ok(CommandMapper.toView(commandService.getCommandByName(name)));
+    }
+
     @PostMapping
     public ResponseEntity<CommandView> createCommand(@Valid @RequestBody CommandDocument commandDocument) {
         CommandDocument saved = commandService.createCommand(commandDocument);
