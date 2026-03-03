@@ -146,6 +146,8 @@ class CharacterServiceTest {
     void savePlayerCharacter_ok_saves() {
         CharacterDocument pc = mock(CharacterDocument.class);
 //        when(pc.getId()).thenReturn("C1");
+        when(pc.getName()).thenReturn("TestChar");
+        when(repo.findByName("TestChar")).thenReturn(null);
         when(repo.save(pc)).thenReturn(pc);
 
         CharacterDocument actual = service.createPlayerCharacter(pc);
@@ -154,7 +156,25 @@ class CharacterServiceTest {
 
         InOrder inOrder = inOrder(pc, repo);
 //        inOrder.verify(pc).getId();
+        inOrder.verify(pc).getName();
+        inOrder.verify(repo).findByName("TestChar");
         inOrder.verify(repo).save(pc);
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
+    void savePlayerCharacter_duplicateName_throwsDuplicateCharacterNameException() {
+        CharacterDocument pc = mock(CharacterDocument.class);
+        CharacterDocument existing = mock(CharacterDocument.class);
+        when(pc.getName()).thenReturn("DuplicateName");
+        when(repo.findByName("DuplicateName")).thenReturn(existing);
+
+        assertThatThrownBy(() -> service.createPlayerCharacter(pc))
+                .isInstanceOf(DuplicateCharacterNameException.class)
+                .hasMessageContaining("DuplicateName");
+
+        verify(pc).getName();
+        verify(repo).findByName("DuplicateName");
         verifyNoMoreInteractions(repo);
     }
 

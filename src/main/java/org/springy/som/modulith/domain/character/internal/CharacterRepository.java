@@ -11,4 +11,7 @@ public interface CharacterRepository extends MongoRepository<CharacterDocument, 
 
     @Query("{accountId: '?0'}")
     List<CharacterDocument> findAllByAccountId(String accountId);
+
+    @Query("{name: '?0'}")
+    CharacterDocument findByName(String name);
 }

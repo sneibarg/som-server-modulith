@@ -79,6 +79,9 @@ public class CharacterService implements CharacterApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public CharacterDocument createPlayerCharacter(CharacterDocument characterDocument) {
+        if (characterDocument.getName() != null && characterRepository.findByName(characterDocument.getName()) != null) {
+            throw new DuplicateCharacterNameException(characterDocument.getName());
+        }
         return characterRepository.save(characterDocument);
     }
 
