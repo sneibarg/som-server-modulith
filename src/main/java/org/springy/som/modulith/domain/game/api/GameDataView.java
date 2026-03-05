@@ -11,8 +11,23 @@ public record GameDataView(
         VersionView version,
         ConstantsView constants,
         Map<String, List<String>> enums,
-        Map<String, List<String>> flagDomains,
-        CatalogsView catalogs,
+        Map<String, Map<String, Integer>> flags,
+        Map<String, Map<String, Object>> classes,
+        Map<String, Map<String, Object>> races,
+        Map<String, Map<String, Object>> pcRaces,
+        Map<String, Map<String, Object>> skills,
+        Map<String, Map<String, Object>> groups,
+        Map<String, Map<String, Object>> weapons,
+        Map<String, Map<String, Object>> attacks,
+        Map<String, Map<String, Object>> liquids,
+        Map<String, String> classesNameIndex,
+        Map<String, String> racesNameIndex,
+        Map<String, String> pcRacesNameIndex,
+        Map<String, String> skillsNameIndex,
+        Map<String, String> groupsNameIndex,
+        Map<String, String> weaponsNameIndex,
+        Map<String, String> attacksNameIndex,
+        Map<String, String> liquidsNameIndex,
         Map<String, Map<String, Integer>> wellKnownVnums,
         IntegrityView integrity
 ) {
@@ -29,22 +44,6 @@ public record GameDataView(
             Map<String, Integer> pulses
     ) {}
 
-    public record CatalogsView(
-            CatalogView classes,
-            CatalogView races,
-            CatalogView pcRaces,
-            CatalogView skills,
-            CatalogView groups,
-            CatalogView weapons,
-            CatalogView attacks,
-            CatalogView liquids
-    ) {}
-
-    public record CatalogView(
-            Map<String, Map<String, Object>> byId,
-            Map<String, String> byName
-    ) {}
-
     public record IntegrityView(
             String contentHash,
             BuildView build
@@ -52,6 +51,7 @@ public record GameDataView(
 
     public record BuildView(
             String source,
-            String toolVersion
+            String toolVersion,
+            Map<String, Object> extra
     ) {}
 }

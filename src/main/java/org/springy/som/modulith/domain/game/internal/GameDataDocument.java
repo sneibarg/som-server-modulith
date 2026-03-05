@@ -15,8 +15,23 @@ public record GameDataDocument(
         Version version,
         Constants constants,
         Map<String, List<String>> enums,
-        Map<String, List<String>> flagDomains,
-        Catalogs catalogs,
+        Map<String, Map<String, Integer>> flags,
+        Map<String, Map<String, Object>> classes,
+        Map<String, Map<String, Object>> races,
+        Map<String, Map<String, Object>> pcRaces,
+        Map<String, Map<String, Object>> skills,
+        Map<String, Map<String, Object>> groups,
+        Map<String, Map<String, Object>> weapons,
+        Map<String, Map<String, Object>> attacks,
+        Map<String, Map<String, Object>> liquids,
+        Map<String, String> classesNameIndex,
+        Map<String, String> racesNameIndex,
+        Map<String, String> pcRacesNameIndex,
+        Map<String, String> skillsNameIndex,
+        Map<String, String> groupsNameIndex,
+        Map<String, String> weaponsNameIndex,
+        Map<String, String> attacksNameIndex,
+        Map<String, String> liquidsNameIndex,
         Map<String, Map<String, Integer>> wellKnownVnums,
         Integrity integrity) {
 
@@ -33,22 +48,6 @@ public record GameDataDocument(
             Map<String, Integer> pulses
     ) {}
 
-    public record Catalogs(
-            Catalog classes,
-            Catalog races,
-            Catalog pcRaces,
-            Catalog skills,
-            Catalog groups,
-            Catalog weapons,
-            Catalog attacks,
-            Catalog liquids
-    ) {}
-
-    public record Catalog(
-            Map<String, Map<String, Object>> byId,
-            Map<String, String> byName
-    ) {}
-
     public record Integrity(
             String contentHash,
             Build build
@@ -56,6 +55,7 @@ public record GameDataDocument(
 
     public record Build(
             String source,
-            String toolVersion
+            String toolVersion,
+            Map<String, Object> extra
     ) {}
 }
