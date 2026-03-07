@@ -58,7 +58,7 @@ public class MobileService implements MobileApi {
             return mobileRepository.save(mobileDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createMobile mobileId={}", safeId(mobileDocument, MobileDocument::getId), ex);
-            throw new MobilePersistenceException("Failed to create command"+ex);
+            throw new MobilePersistenceException("Failed to create mobile"+ex);
         }
     }
 
