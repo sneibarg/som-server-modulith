@@ -101,7 +101,7 @@ class MobileServiceTest {
 
         assertThatThrownBy(() -> service.createMobile(mobileDocument))
                 .isInstanceOf(MobilePersistenceException.class)
-                .hasMessageContaining("Failed to create command");
+                .hasMessageContaining("Failed to create mobile");
 
         verify(repo).save(mobileDocument);
         verifyNoMoreInteractions(repo);
@@ -115,7 +115,7 @@ class MobileServiceTest {
 
         assertThatThrownBy(() -> service.createMobile(mobileDocument))
                 .isInstanceOf(MobilePersistenceException.class)
-                .hasMessageContaining("Failed to create command");
+                .hasMessageContaining("Failed to create mobile");
 
         verify(repo).save(mobileDocument);
         verifyNoMoreInteractions(repo);
