@@ -12,16 +12,16 @@ import java.util.List;
 public class ShopDocument {
     @NotBlank(message = "area ID must not be blank")
     private String areaId;
-    private String keeper;
-    private String buyType0;
-    private String buyType1;
-    private String buyType2;
-    private String buyType3;
-    private String buyType4;
-    private String profitBuy;
-    private String profitSell;
-    private String openHour;
-    private String closeHour;
+    private int keeper;
+    private int buyType0;
+    private int buyType1;
+    private int buyType2;
+    private int buyType3;
+    private int buyType4;
+    private int profitBuy;
+    private int profitSell;
+    private int openHour;
+    private int closeHour;
     private String comment;
 
     @Id
