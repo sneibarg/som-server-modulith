@@ -10,13 +10,17 @@ public final class ShopMapper {
         return new ShopView(
                 doc.getId(),
                 doc.getAreaId(),
-                doc.getVnum(),
+                doc.getKeeper(),
+                doc.getBuyType0(),
+                doc.getBuyType1(),
+                doc.getBuyType2(),
+                doc.getBuyType3(),
+                doc.getBuyType4(),
                 doc.getProfitBuy(),
                 doc.getProfitSell(),
                 doc.getOpenHour(),
                 doc.getCloseHour(),
-                doc.getOwnerName(),
-                doc.getTradeItems()
+                doc.getComment()
         );
     }
 }

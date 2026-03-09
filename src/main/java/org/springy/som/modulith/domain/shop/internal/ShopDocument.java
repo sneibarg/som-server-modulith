@@ -12,14 +12,17 @@ import java.util.List;
 public class ShopDocument {
     @NotBlank(message = "area ID must not be blank")
     private String areaId;
-    private String vnum;
+    private String keeper;
+    private String buyType0;
+    private String buyType1;
+    private String buyType2;
+    private String buyType3;
+    private String buyType4;
     private String profitBuy;
     private String profitSell;
     private String openHour;
     private String closeHour;
-    private String ownerName;
-    private List<String> tradeItems;
-
+    private String comment;
 
     @Id
     private String id;
