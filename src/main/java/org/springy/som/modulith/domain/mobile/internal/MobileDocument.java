@@ -16,18 +16,41 @@ public class MobileDocument {
     private String shortDescription;
     private String longDescription;
     private String description;
+    private String race;
     private String actFlags;
     private String affectFlags;
     private String alignment;
-    private String race;
-    private String sex;
+    private String group;
+    private String damType;
+    private String offFlags;
+    private String immFlags;
+    private String resFlags;
+    private String vulnFlags;
     private String startPos;
     private String defaultPos;
-    private String hitroll;
-    private String damage;
-
+    private String sex;
+    private String form;
+    private String parts;
+    private String size;
+    private String material;
+    private String flags;
     private int level;
+    private int hitroll;
+    private int hitDiceNumber;
+    private int hitDiceType;
+    private int hitDiceBonus;
+    private int manaDiceNumber;
+    private int manaDiceType;
+    private int manaDiceBonus;
+    private int damageDiceNumber;
+    private int damageDiceType;
+    private int damageDiceBonus;
+    private int acPierce;
+    private int acBash;
+    private int acSlash;
+    private int acExotic;
     private int gold;
+
 
     @Id
     private String id;
