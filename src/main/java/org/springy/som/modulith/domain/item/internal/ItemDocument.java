@@ -17,16 +17,21 @@ public class ItemDocument {
     private String name;
     private String shortDescription;
     private String longDescription;
-    private String description;
     private String itemType;
-    private String weight;
     private String extraFlags;
     private String wearFlags;
     private String value;
     private String level;
+    private String weight;
+    private String cost;
+    private String condition;
+    private String value0;
+    private String value1;
+    private String value2;
+    private String value3;
+    private String value4;
     private List<String> affectData;
     private List<String> extraDescr;
-
 
     @Id
     private String id;
