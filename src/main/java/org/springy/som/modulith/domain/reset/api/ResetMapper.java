@@ -10,9 +10,12 @@ public final class ResetMapper {
         return new ResetView(
                 doc.getId(),
                 doc.getAreaId(),
-                doc.getResetType(),
+                doc.getCommand(),
                 doc.getComment(),
-                doc.getArgs()
+                doc.getArg1(),
+                doc.getArg2(),
+                doc.getArg3(),
+                doc.getArg4()
         );
     }
 }

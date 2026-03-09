@@ -12,9 +12,12 @@ import java.util.List;
 public class ResetDocument {
     @NotBlank(message = "area ID must not be blank")
     private String areaId;
-    private String resetType;
+    private String command;
+    private String arg1;
+    private String arg2;
+    private String arg3;
+    private String arg4;
     private String comment;
-    private List<String> args;
 
 
     @Id

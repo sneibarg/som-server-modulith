@@ -1,11 +1,12 @@
 package org.springy.som.modulith.domain.reset.api;
 
-import java.util.List;
-
 public record ResetView(
         String id,
         String areaId,
-        String resetType,
-        String comment,
-        List<String> args
-) {}
+        String command,
+        String arg1,
+        String arg2,
+        String arg3,
+        String arg4,
+        String comment
+    ) {}
