@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain.item.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -122,38 +123,44 @@ class ItemServiceTest {
     }
 
     @Test
-    void saveItemForId_blankId_becomesInvalidItemException() {
-        ItemDocument itemDocument = mock(ItemDocument.class);
+    void saveItemForId_blankId_becomesNullPointerException() {
+        ItemDocument item = mock(ItemDocument.class);
+        when(repo.findItemById(" ")).thenReturn(null);
 
-        assertThatThrownBy(() -> service.saveItemForId(" ", itemDocument))
-                .isInstanceOf(InvalidItemException.class)
-                .hasMessageContaining(romItemIdMissing);
+        assertThatThrownBy(() -> service.saveItemForId(" ", item))
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findItemById(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void saveItemForId_nullItem_becomesInvalidItemException() {
-        assertThatThrownBy(() -> service.saveItemForId("I1", null))
-                .isInstanceOf(InvalidItemException.class)
-                .hasMessageContaining(romItemMissing);
+    void saveItemForId_nullItem_becomesNullPointerException() {
+        ItemDocument item = null;
+        when(repo.findItemById("I1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.saveItemForId("I1", item))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findItemById("I1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveItemForId_ok_savesItemByLookup() {
         ItemDocument input = mock(ItemDocument.class);
-        when(input.getId()).thenReturn("I1");
-
         ItemDocument existing = mock(ItemDocument.class);
+
+        when(existing.getId()).thenReturn("I1");
         when(repo.findItemById("I1")).thenReturn(existing);
-        when(repo.save(existing)).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
-        assertThat(service.saveItemForId("I1", input)).isSameAs(existing);
+        assertThat(service.saveItemForId("I1", input)).isSameAs(input);
 
-        verify(repo).findItemById("I1");
-        verify(repo).save(existing);
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findItemById("I1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 

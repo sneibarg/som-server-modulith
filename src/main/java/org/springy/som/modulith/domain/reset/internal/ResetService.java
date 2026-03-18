@@ -65,10 +65,11 @@ public class ResetService implements ResetApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public ResetDocument saveResetForId(String id, ResetDocument resetDocument) {
-        requireText(id, resetIdMissing());
-        requireEntityWithId(resetDocument, ResetDocument::getId, resetMissing(), resetIdMissing());
+        ResetDocument existing = resetRepository.findResetById(id);
+        requireText(existing.getId(), resetIdMissing());
+        requireEntityWithId(existing, ResetDocument::getId, resetMissing(), resetIdMissing());
 
-        return resetRepository.save(getResetById(id));
+        return resetRepository.save(resetDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

@@ -60,10 +60,11 @@ public class ClassService implements ClassApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public ClassDocument saveRomClassForId(String id, ClassDocument classDocument) {
-        requireText(id, romClassIdMissing());
-        requireEntityWithId(classDocument, ClassDocument::getId, romClassMissing(), romClassIdMissing());
+        ClassDocument existing = classRepository.findRomClassById(id);
+        requireText(existing.getId(), romClassIdMissing());
+        requireEntityWithId(existing, ClassDocument::getId, romClassMissing(), romClassIdMissing());
 
-        return classRepository.save(getRomClassById(id));
+        return classRepository.save(classDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

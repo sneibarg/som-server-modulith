@@ -64,10 +64,11 @@ public class SpecialService implements SpecialApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public SpecialDocument saveSpecialForId(String id, SpecialDocument specialDocument) {
-        requireText(id, specialIdMissing());
-        requireEntityWithId(specialDocument, SpecialDocument::getId, specialMissing(), specialIdMissing());
+        SpecialDocument existing = specialRepository.findSpecialById(id);
+        requireText(existing.getId(), specialIdMissing());
+        requireEntityWithId(existing, SpecialDocument::getId, specialMissing(), specialIdMissing());
 
-        return specialRepository.save(getSpecialById(id));
+        return specialRepository.save(specialDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

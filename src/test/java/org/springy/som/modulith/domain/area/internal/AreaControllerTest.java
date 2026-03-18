@@ -63,7 +63,7 @@ class AreaControllerTest {
     @Test
     void getAreaById_blankId_becomes400ProblemDetail() throws Exception {
         when(areaService.getAreaById(anyString())).thenThrow(new InvalidAreaException("AreaDocument id must be provided"));
-        when(areaRepository.findAreaByAreaId(anyString())).thenReturn(areaDocument);
+        when(areaRepository.findAreaById(anyString())).thenReturn(areaDocument);
 
         mockMvc.perform(get("/api/v1/areas/{id}", "  ")
                         .accept(MediaType.APPLICATION_JSON))

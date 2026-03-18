@@ -52,7 +52,7 @@ public class CommandService implements CommandApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public CommandDocument createCommand(@Valid @RequestBody CommandDocument commandDocument) {
-        requireEntityWithId(commandDocument, CommandDocument::getId, commandMissing(), commandIdMissing());
+        requireEntityWithId(commandDocument, CommandDocument::getId, commandIdMissing(), commandIdMissing());
 
         try {
             // if (commandRepository.existsById(commandDocument.getId())) throw new CommandConflictException(...)
@@ -66,10 +66,11 @@ public class CommandService implements CommandApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public CommandDocument saveCommandForId(String id, CommandDocument commandDocument) {
-        requireText(id, commandIdMissing());
-        requireEntityWithId(commandDocument, CommandDocument::getId, commandMissing(), commandIdMissing());
+        CommandDocument existing = commandRepository.findCommandById(id);
+        requireText(existing.getId(), commandIdMissing());
+        requireEntityWithId(existing, CommandDocument::getId, commandIdMissing(), commandIdMissing());
 
-        return commandRepository.save(getCommandById(id));
+        return commandRepository.save(commandDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

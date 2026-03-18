@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain.race.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -124,36 +125,41 @@ class RaceServiceTest {
     @Test
     void saveRomRaceForId_blankId_becomesInvalidRomRaceException() {
         RaceDocument race = mock(RaceDocument.class);
+        when(repo.findRomRaceById(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.saveRaceForId(" ", race))
-                .isInstanceOf(InvalidRomRaceException.class)
-                .hasMessageContaining(raceIdMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findRomRaceById(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveRomRaceForId_nullRace_becomesInvalidRomRaceException() {
-        assertThatThrownBy(() -> service.saveRaceForId("R1", null))
-                .isInstanceOf(InvalidRomRaceException.class)
-                .hasMessageContaining(raceMissing);
+        when(repo.findRomRaceById("R1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.saveRaceForId("R1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findRomRaceById("R1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveRomRaceForId_ok_savesByLookup() {
         RaceDocument input = mock(RaceDocument.class);
-        when(input.getId()).thenReturn("R1");
-
         RaceDocument existing = mock(RaceDocument.class);
+
+        when(existing.getId()).thenReturn("R1");
         when(repo.findRomRaceById("R1")).thenReturn(existing);
-        when(repo.save(existing)).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
-        assertThat(service.saveRaceForId("R1", input)).isSameAs(existing);
+        assertThat(service.saveRaceForId("R1", input)).isSameAs(input);
 
-        verify(repo).findRomRaceById("R1");
-        verify(repo).save(existing);
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findRomRaceById("R1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 

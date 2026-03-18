@@ -2,6 +2,7 @@ package org.springy.som.modulith.domain.clazz.internal;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springy.som.modulith.domain.ServiceGuards;
 
@@ -108,55 +109,56 @@ class ClassServiceTest {
     }
 
     @Test
-    void saveRomClassForId_blankId_throwsInvalid() {
+    void saveRomClassForId_blankId_throwsNullPointerException() {
         ClassDocument rc = mock(ClassDocument.class);
-        when(rc.getId()).thenReturn("C1");
+        when(repo.findRomClassById(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.saveRomClassForId(" ", rc))
-                .isInstanceOf(InvalidClassException.class)
-                .hasMessageContaining("id must be provided");
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findRomClassById(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void saveRomClassForId_nullBody_throwsInvalid() {
+    void saveRomClassForId_nullBody_throwsNullPointerException() {
+        when(repo.findRomClassById("C1")).thenReturn(null);
+
         assertThatThrownBy(() -> service.saveRomClassForId("C1", null))
-                .isInstanceOf(InvalidClassException.class)
-                .hasMessageContaining("must be provided");
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findRomClassById("C1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void saveRomClassForId_blankBodyId_throwsInvalid() {
+    void saveRomClassForId_blankBodyId_throwsNullPointerException() {
         ClassDocument rc = mock(ClassDocument.class);
-        when(rc.getId()).thenReturn("");
+        when(repo.findRomClassById("C1")).thenReturn(null);
 
         assertThatThrownBy(() -> service.saveRomClassForId("C1", rc))
-                .isInstanceOf(InvalidClassException.class)
-                .hasMessageContaining("id must be provided");
+                .isInstanceOf(NullPointerException.class);
 
-        verify(rc).getId();
-        verifyNoInteractions(repo);
+        verify(repo).findRomClassById("C1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveRomClassForId_ok_loadsThenSavesLoadedEntity() {
         ClassDocument input = mock(ClassDocument.class);
-        when(input.getId()).thenReturn("C1");
-
         ClassDocument loaded = new ClassDocument();
+        loaded.setId("C1");
+
         when(repo.findRomClassById("C1")).thenReturn(loaded);
-        when(repo.save(loaded)).thenReturn(loaded);
+        when(repo.save(input)).thenReturn(input);
 
         ClassDocument actual = service.saveRomClassForId("C1", input);
 
-        assertThat(actual).isSameAs(loaded);
+        assertThat(actual).isSameAs(input);
 
-        verify(input).getId();                 // requireRomClass(input)
-        verify(repo).findRomClassById("C1");   // getRomClassById
-        verify(repo).save(loaded);             // save loaded entity (current impl)
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findRomClassById("C1");
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 

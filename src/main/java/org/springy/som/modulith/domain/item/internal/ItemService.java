@@ -63,10 +63,11 @@ public class ItemService implements ItemApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public ItemDocument saveItemForId(String id, ItemDocument itemDocument) {
-        requireText(id, itemIdMissing());
-        requireEntityWithId(itemDocument, ItemDocument::getId, itemMissing(), itemIdMissing());
+        ItemDocument existing = itemRepository.findItemById(id);
+        requireText(existing.getId(), itemIdMissing());
+        requireEntityWithId(existing, ItemDocument::getId, itemMissing(), itemIdMissing());
 
-        return itemRepository.save(getItemById(id));
+        return itemRepository.save(itemDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

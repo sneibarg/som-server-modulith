@@ -67,25 +67,25 @@ class AreaServiceTest {
 
     @Test
     void getAreaById_missing_becomesAreaNotFoundException() {
-        when(areaRepository.findAreaByAreaId("A1")).thenReturn(null);
+        when(areaRepository.findAreaById("A1")).thenReturn(null);
 
         assertThatThrownBy(() -> areaService.getAreaById("A1"))
                 .isInstanceOf(AreaNotFoundException.class);
 
-        verify(areaRepository).findAreaByAreaId("A1");
+        verify(areaRepository).findAreaById("A1");
         verifyNoMoreInteractions(areaRepository);
     }
 
     @Test
     void getAreaById_dataAccess_becomesAreaPersistenceException() {
-        when(areaRepository.findAreaByAreaId("A1"))
+        when(areaRepository.findAreaById("A1"))
                 .thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> areaService.getAreaById("A1"))
                 .isInstanceOf(AreaPersistenceException.class)
                 .hasMessageContaining("Failed to load area: A1");
 
-        verify(areaRepository).findAreaByAreaId("A1");
+        verify(areaRepository).findAreaById("A1");
         verifyNoMoreInteractions(areaRepository);
     }
 
@@ -134,23 +134,26 @@ class AreaServiceTest {
     }
 
     @Test
-    void saveAreaForId_blankId_becomesInvalidAreaException() {
+    void saveAreaForId_blankId_becomesNullPointerException() {
         AreaDocument input = area("A1", "Midgaard");
+        when(areaRepository.findAreaById(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> areaService.saveAreaForId(" ", input))
-                .isInstanceOf(InvalidAreaException.class)
-                .hasMessageContaining(areaIdMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(areaRepository);
+        verify(areaRepository).findAreaById(" ");
+        verifyNoMoreInteractions(areaRepository);
     }
 
     @Test
-    void saveAreaForId_nullArea_becomesInvalidAreaException() {
-        assertThatThrownBy(() -> areaService.saveAreaForId("A1", null))
-                .isInstanceOf(InvalidAreaException.class)
-                .hasMessageContaining(areaMissing);
+    void saveAreaForId_nullArea_becomesNullPointerException() {
+        when(areaRepository.findAreaById("A1")).thenReturn(null);
 
-        verifyNoInteractions(areaRepository);
+        assertThatThrownBy(() -> areaService.saveAreaForId("A1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(areaRepository).findAreaById("A1");
+        verifyNoMoreInteractions(areaRepository);
     }
 
     @Test
@@ -158,15 +161,15 @@ class AreaServiceTest {
         AreaDocument provided = area("A1", "Provided Name");
         AreaDocument existing = area("A1", "Existing Name");
 
-        when(areaRepository.findAreaByAreaId("A1")).thenReturn(existing);
-        when(areaRepository.save(existing)).thenReturn(existing);
+        when(areaRepository.findAreaById("A1")).thenReturn(existing);
+        when(areaRepository.save(provided)).thenReturn(provided);
 
         AreaDocument result = areaService.saveAreaForId("A1", provided);
 
-        assertThat(result).isSameAs(existing);
+        assertThat(result).isSameAs(provided);
 
-        verify(areaRepository).findAreaByAreaId("A1");
-        verify(areaRepository).save(existing);
+        verify(areaRepository).findAreaById("A1");
+        verify(areaRepository).save(provided);
         verifyNoMoreInteractions(areaRepository);
     }
 

@@ -64,10 +64,11 @@ public class ShopService implements ShopApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public ShopDocument saveShopForId(String id, ShopDocument shopDocument) {
-        requireText(id, shopIdMissing());
-        requireEntityWithId(shopDocument, ShopDocument::getId, shopMissing(), shopIdMissing());
+        ShopDocument existing = shopRepository.findShopById(id);
+        requireText(existing.getId(), shopIdMissing());
+        requireEntityWithId(existing, ShopDocument::getId, shopMissing(), shopIdMissing());
 
-        return shopRepository.save(getShopById(id));
+        return shopRepository.save(shopDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

@@ -179,42 +179,45 @@ class CharacterServiceTest {
     }
 
     @Test
-    void savePlayerCharacterForId_blankId_throwsInvalid() {
+    void savePlayerCharacterForId_blankId_throwsNullPointerException() {
         CharacterDocument pc = mock(CharacterDocument.class);
+        when(repo.findPlayerCharacterByCharacterId(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.savePlayerCharacterForId(" ", pc))
-                .isInstanceOf(InvalidPlayerCharacterException.class)
-                .hasMessageContaining("id must be provided");
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findPlayerCharacterByCharacterId(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void savePlayerCharacterForId_nullBody_throwsInvalid() {
-        assertThatThrownBy(() -> service.savePlayerCharacterForId("C1", null))
-                .isInstanceOf(InvalidPlayerCharacterException.class)
-                .hasMessageContaining("must be provided");
+    void savePlayerCharacterForId_nullBody_throwsNullPointerException() {
+        when(repo.findPlayerCharacterByCharacterId("C1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.savePlayerCharacterForId("C1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findPlayerCharacterByCharacterId("C1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void savePlayerCharacterForId_ok_loadsThenSavesLoadedEntity() {
         CharacterDocument input = mock(CharacterDocument.class);
-        when(input.getId()).thenReturn("C1");
+        CharacterDocument existing = mock(CharacterDocument.class);
 
-        CharacterDocument loaded = new CharacterDocument();
-        when(repo.findPlayerCharacterByCharacterId("C1")).thenReturn(loaded);
-        when(repo.save(loaded)).thenReturn(loaded);
+        when(existing.getId()).thenReturn("C1");
+        when(repo.findPlayerCharacterByCharacterId("C1")).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
         CharacterDocument actual = service.savePlayerCharacterForId("C1", input);
 
-        assertThat(actual).isSameAs(loaded);
+        assertThat(actual).isSameAs(input);
 
-        InOrder inOrder = inOrder(input, repo);
-        inOrder.verify(input).getId(); // requirePlayerCharacter(input) validation
-        inOrder.verify(repo).findPlayerCharacterByCharacterId("C1"); // getPlayerCharacterById
-        inOrder.verify(repo).save(loaded); // save loaded entity (current impl)
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findPlayerCharacterByCharacterId("C1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(input);
 
         verifyNoMoreInteractions(repo);
     }

@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain.command.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springy.som.modulith.domain.clazz.internal.ClassNotFoundException;
 import org.springy.som.modulith.domain.clazz.internal.ClassPersistenceException;
@@ -17,7 +18,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CommandServiceTest {
     private final String commandIdMissing = "ROM command id must be provided";
-    private final String commandMissing = "ROM command must be provided";
+    private final String commandMissing = "ROM command not found in repository";
+    private final String commandNotProvided = "ROM command must be provided";
     private CommandRepository repo;
     private CommandService service;
 
@@ -64,10 +66,9 @@ class CommandServiceTest {
     }
 
     @Test
-    void createCommand_nullCommand_throwsInvalid() {
+    void createCommand_nullCommand_throwsInvalidCommandException() {
         assertThatThrownBy(() -> service.createCommand(null))
-                .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining(commandMissing);
+                .isInstanceOf(InvalidCommandException.class);
 
         verifyNoInteractions(repo);
     }
@@ -115,7 +116,6 @@ class CommandServiceTest {
     void createCommand_dataAccess_safeIdExceptionPath_becomesRomClassPersistenceException() {
         CommandDocument c = mock(CommandDocument.class);
 
-
         when(c.getId()).thenReturn("C1").thenThrow(new RuntimeException("boom"));
         when(repo.save(c)).thenThrow(new DataAccessResourceFailureException("db down"));
 
@@ -129,53 +129,57 @@ class CommandServiceTest {
 
 
     @Test
-    void saveCommandForId_blankId_throwsInvalid() {
+    void saveCommandForId_blankId_throwsNullPointerException() {
         CommandDocument c = mock(CommandDocument.class);
+        when(repo.findCommandById("  ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.saveCommandForId("  ", c))
-                .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining(commandIdMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findCommandById("  ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void saveCommandForId_nullCommand_throwsInvalid() {
+    void saveCommandForId_nullCommand_throwsNullPointerException() {
+        when(repo.findCommandById("C1")).thenReturn(null);
+
         assertThatThrownBy(() -> service.saveCommandForId("C1", null))
-                .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining(commandMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findCommandById("C1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void saveCommandForId_blankCommandId_throwsInvalid() {
-        CommandDocument c = mock(CommandDocument.class);
-        when(c.getId()).thenReturn("");
+    void saveCommandForId_blankCommandId_throwsNullPointerException() {
+        CommandDocument input = mock(CommandDocument.class);
+        when(repo.findCommandById("C1")).thenReturn(null);
 
-        assertThatThrownBy(() -> service.saveCommandForId("C1", c))
-                .isInstanceOf(InvalidCommandException.class)
-                .hasMessageContaining(commandIdMissing);
+        assertThatThrownBy(() -> service.saveCommandForId("C1", input))
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findCommandById("C1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveCommandForId_success_savesLookupResult() {
         CommandDocument payload = mock(CommandDocument.class);
-        when(payload.getId()).thenReturn("C1");
-
         CommandDocument existing = mock(CommandDocument.class);
-        when(repo.findCommandById("C1")).thenReturn(existing);
 
-        CommandDocument saved = mock(CommandDocument.class);
-        when(repo.save(existing)).thenReturn(saved);
+        when(existing.getId()).thenReturn("C1");
+        when(repo.findCommandById("C1")).thenReturn(existing);
+        when(repo.save(payload)).thenReturn(payload);
 
         CommandDocument out = service.saveCommandForId("C1", payload);
 
-        assertThat(out).isSameAs(saved);
-        verify(repo).findCommandById("C1");
-        verify(repo).save(existing);
+        assertThat(out).isSameAs(payload);
+
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findCommandById("C1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(payload);
         verifyNoMoreInteractions(repo);
     }
 

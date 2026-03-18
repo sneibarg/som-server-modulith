@@ -64,10 +64,11 @@ public class RaceService implements RaceApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public RaceDocument saveRaceForId(String id, RaceDocument raceDocument) {
-        requireText(id, romRaceIdMissing());
-        requireEntityWithId(raceDocument, RaceDocument::getId, romRaceMissing(), romRaceIdMissing());
+        RaceDocument existing = raceRepository.findRomRaceById(id);
+        requireText(existing.getId(), romRaceIdMissing());
+        requireEntityWithId(existing, RaceDocument::getId, romRaceMissing(), romRaceIdMissing());
 
-        return raceRepository.save(getRaceById(id));
+        return raceRepository.save(raceDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

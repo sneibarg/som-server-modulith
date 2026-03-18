@@ -64,10 +64,11 @@ public class RoomService implements RoomApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public RoomDocument saveRoomForId(String id, RoomDocument roomDocument) {
-        requireText(id, roomIdMissing());
-        requireEntityWithId(roomDocument, RoomDocument::getId, roomMissing(), roomIdMissing());
+        RoomDocument existing = roomRepository.findRoomById(id);
+        requireText(existing.getId(), roomIdMissing());
+        requireEntityWithId(existing, RoomDocument::getId, roomMissing(), roomIdMissing());
 
-        return roomRepository.save(getRoomById(id));
+        return roomRepository.save(roomDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

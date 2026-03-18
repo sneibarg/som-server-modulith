@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain;
 import org.springy.som.modulith.domain.area.internal.InvalidAreaException;
 import org.springy.som.modulith.domain.character.internal.InvalidPlayerCharacterException;
 import org.springy.som.modulith.domain.clazz.internal.InvalidClassException;
+import org.springy.som.modulith.domain.command.internal.CommandNotFoundException;
 import org.springy.som.modulith.domain.command.internal.InvalidCommandException;
 import org.springy.som.modulith.domain.item.internal.InvalidItemException;
 import org.springy.som.modulith.domain.mobile.internal.InvalidMobileException;
@@ -11,6 +12,7 @@ import org.springy.som.modulith.domain.race.internal.InvalidRomRaceException;
 import org.springy.som.modulith.domain.reset.internal.InvalidResetException;
 import org.springy.som.modulith.domain.room.internal.InvalidRoomException;
 import org.springy.som.modulith.domain.shop.internal.InvalidShopException;
+import org.springy.som.modulith.domain.skill.internal.InvalidSkillException;
 import org.springy.som.modulith.domain.special.internal.InvalidSpecialException;
 
 import java.util.function.Supplier;
@@ -42,8 +44,8 @@ public final class DomainGuards {
         return () -> new InvalidClassException("ClassDocument id must be provided");
     }
 
-    public static Supplier<InvalidCommandException> commandMissing() {
-        return () -> new InvalidCommandException("ROM command must be provided");
+    public static Supplier<CommandNotFoundException> commandMissing() {
+        return () -> new CommandNotFoundException("ROM command not found in repository");
     }
 
     public static Supplier<InvalidCommandException> commandIdMissing() {
@@ -112,5 +114,17 @@ public final class DomainGuards {
 
     public static Supplier<InvalidSpecialException> specialIdMissing() {
         return () -> new InvalidSpecialException("ROM special id must be provided");
+    }
+
+    public static Supplier<InvalidSkillException> skillNameMissing() {
+        return () -> new InvalidSkillException("ROM skill name must be provided");
+    }
+
+    public static Supplier<InvalidSkillException> skillIdMissing() {
+        return () -> new InvalidSkillException("ROM skill id must be provided");
+    }
+
+    public static Supplier<InvalidSkillException> skillMissing() {
+        return () -> new InvalidSkillException("ROM skill must be provided");
     }
 }

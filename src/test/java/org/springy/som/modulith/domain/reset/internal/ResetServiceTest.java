@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain.reset.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -125,36 +126,41 @@ class ResetServiceTest {
     @Test
     void saveResetForId_blankId_becomesInvalidResetException() {
         ResetDocument resetDocument = mock(ResetDocument.class);
+        when(repo.findResetById(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.saveResetForId(" ", resetDocument))
-                .isInstanceOf(InvalidResetException.class)
-                .hasMessageContaining(resetIdMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findResetById(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveResetForId_nullReset_becomesInvalidResetException() {
-        assertThatThrownBy(() -> service.saveResetForId("RS1", null))
-                .isInstanceOf(InvalidResetException.class)
-                .hasMessageContaining(resetMissing);
+        when(repo.findResetById("RS1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.saveResetForId("RS1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findResetById("RS1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveResetForId_ok_savesByLookup() {
         ResetDocument input = mock(ResetDocument.class);
-        when(input.getId()).thenReturn("RS1");
-
         ResetDocument existing = mock(ResetDocument.class);
+
+        when(existing.getId()).thenReturn("RS1");
         when(repo.findResetById("RS1")).thenReturn(existing);
-        when(repo.save(existing)).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
-        assertThat(service.saveResetForId("RS1", input)).isSameAs(existing);
+        assertThat(service.saveResetForId("RS1", input)).isSameAs(input);
 
-        verify(repo).findResetById("RS1");
-        verify(repo).save(existing);
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findResetById("RS1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 

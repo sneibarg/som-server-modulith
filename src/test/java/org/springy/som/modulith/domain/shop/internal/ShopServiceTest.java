@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain.shop.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -122,38 +123,43 @@ class ShopServiceTest {
     }
 
     @Test
-    void saveShopForId_blankId_becomesInvalidShopException() {
+    void saveShopForId_blankId_becomesNullPointerException() {
         ShopDocument shopDocument = mock(ShopDocument.class);
+        when(repo.findShopById(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.saveShopForId(" ", shopDocument))
-                .isInstanceOf(InvalidShopException.class)
-                .hasMessageContaining(shopIdMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findShopById(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void saveShopForId_nullShop_becomesInvalidShopException() {
-        assertThatThrownBy(() -> service.saveShopForId("S1", null))
-                .isInstanceOf(InvalidShopException.class)
-                .hasMessageContaining(shopMissing);
+    void saveShopForId_nullShop_becomesNullPointerException() {
+        when(repo.findShopById("S1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.saveShopForId("S1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findShopById("S1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveShopForId_ok_savesByLookup() {
         ShopDocument input = mock(ShopDocument.class);
-        when(input.getId()).thenReturn("S1");
-
         ShopDocument existing = mock(ShopDocument.class);
+
+        when(existing.getId()).thenReturn("S1");
         when(repo.findShopById("S1")).thenReturn(existing);
-        when(repo.save(existing)).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
-        assertThat(service.saveShopForId("S1", input)).isSameAs(existing);
+        assertThat(service.saveShopForId("S1", input)).isSameAs(input);
 
-        verify(repo).findShopById("S1");
-        verify(repo).save(existing);
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findShopById("S1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 

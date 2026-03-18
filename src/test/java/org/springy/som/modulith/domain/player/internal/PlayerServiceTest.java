@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain.player.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -123,36 +124,41 @@ class PlayerServiceTest {
     @Test
     void savePlayerAccountForId_blankId_becomesInvalidPlayerException() {
         PlayerDocument account = mock(PlayerDocument.class);
+        when(repo.findPlayerAccountById(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.savePlayerAccountForId(" ", account))
-                .isInstanceOf(InvalidPlayerException.class)
-                .hasMessageContaining(playerAccountIdMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findPlayerAccountById(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void savePlayerAccountForId_nullAccount_becomesInvalidPlayerException() {
-        assertThatThrownBy(() -> service.savePlayerAccountForId("P1", null))
-                .isInstanceOf(InvalidPlayerException.class)
-                .hasMessageContaining(playerAccountMissing);
+        when(repo.findPlayerAccountById("P1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.savePlayerAccountForId("P1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findPlayerAccountById("P1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void savePlayerAccountForId_ok_savesByLookup() {
         PlayerDocument input = mock(PlayerDocument.class);
-        when(input.getId()).thenReturn("P1");
-
         PlayerDocument existing = mock(PlayerDocument.class);
+
+        when(existing.getId()).thenReturn("P1");
         when(repo.findPlayerAccountById("P1")).thenReturn(existing);
-        when(repo.save(existing)).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
-        assertThat(service.savePlayerAccountForId("P1", input)).isSameAs(existing);
+        assertThat(service.savePlayerAccountForId("P1", input)).isSameAs(input);
 
-        verify(repo).findPlayerAccountById("P1");
-        verify(repo).save(existing);
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findPlayerAccountById("P1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 

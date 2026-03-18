@@ -66,10 +66,11 @@ public class PlayerService implements PlayerApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public PlayerDocument savePlayerAccountForId(String id, PlayerDocument playerDocument) {
-        requireText(id, playerAccountIdMissing());
-        requireEntityWithId(playerDocument, PlayerDocument::getId, playerAccountMissing(), playerAccountIdMissing());
+        PlayerDocument existing = playerAccountRepository.findPlayerAccountById(id);
+        requireText(existing.getId(), playerAccountIdMissing());
+        requireEntityWithId(existing, PlayerDocument::getId, playerAccountMissing(), playerAccountIdMissing());
 
-        return playerAccountRepository.save(getPlayerAccountById(id));
+        return playerAccountRepository.save(playerDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

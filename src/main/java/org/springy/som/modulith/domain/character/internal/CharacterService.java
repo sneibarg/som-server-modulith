@@ -89,10 +89,11 @@ public class CharacterService implements CharacterApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public CharacterDocument savePlayerCharacterForId(String id, CharacterDocument characterDocument) {
-        requireText(id, playerCharacterIdMissing());
-        requireEntityWithId(characterDocument, CharacterDocument::getId, playerCharacterMissing(), playerCharacterIdMissing());
+        CharacterDocument existing = characterRepository.findPlayerCharacterByCharacterId(id);
+        requireText(existing.getId(), playerCharacterIdMissing());
+        requireEntityWithId(existing, CharacterDocument::getId, playerCharacterMissing(), playerCharacterIdMissing());
 
-        return characterRepository.save(getPlayerCharacterById(id));
+        return characterRepository.save(characterDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

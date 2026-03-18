@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain.special.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -122,38 +123,43 @@ class SpecialServiceTest {
     }
 
     @Test
-    void saveSpecialForId_blankId_becomesInvalidSpecialException() {
+    void saveSpecialForId_blankId_becomesNullPointerException() {
         SpecialDocument specialDocument = mock(SpecialDocument.class);
+        when(repo.findSpecialById(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.saveSpecialForId(" ", specialDocument))
-                .isInstanceOf(InvalidSpecialException.class)
-                .hasMessageContaining(specialIdMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findSpecialById(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void saveSpecialForId_nullSpecial_becomesInvalidSpecialException() {
-        assertThatThrownBy(() -> service.saveSpecialForId("S1", null))
-                .isInstanceOf(InvalidSpecialException.class)
-                .hasMessageContaining(specialMissing);
+    void saveSpecialForId_nullSpecial_becomesNullPointerException() {
+        when(repo.findSpecialById("S1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.saveSpecialForId("S1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findSpecialById("S1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveSpecialForId_ok_savesByLookup() {
         SpecialDocument input = mock(SpecialDocument.class);
-        when(input.getId()).thenReturn("S1");
-
         SpecialDocument existing = mock(SpecialDocument.class);
+
+        when(existing.getId()).thenReturn("S1");
         when(repo.findSpecialById("S1")).thenReturn(existing);
-        when(repo.save(existing)).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
-        assertThat(service.saveSpecialForId("S1", input)).isSameAs(existing);
+        assertThat(service.saveSpecialForId("S1", input)).isSameAs(input);
 
-        verify(repo).findSpecialById("S1");
-        verify(repo).save(existing);
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findSpecialById("S1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 

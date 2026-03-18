@@ -48,7 +48,7 @@ public class AreaService implements AreaApi {
         requireText(id, DomainGuards.areaIdMissing());
 
         try {
-            AreaDocument areaDocument = areaRepository.findAreaByAreaId(id);
+            AreaDocument areaDocument = areaRepository.findAreaById(id);
             if (areaDocument == null) {
                 throw new AreaNotFoundException(id);
             }
@@ -78,10 +78,11 @@ public class AreaService implements AreaApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public AreaDocument saveAreaForId(String id, AreaDocument areaDocument) {
-        requireText(id, DomainGuards.areaIdMissing());
-        requireEntityWithId(areaDocument, AreaDocument::getId, DomainGuards.areaMissing(), DomainGuards.areaIdMissing());
+        AreaDocument existing = areaRepository.findAreaById(id);
+        requireText(existing.getId(), DomainGuards.areaIdMissing());
+        requireEntityWithId(existing, AreaDocument::getId, DomainGuards.areaMissing(), DomainGuards.areaIdMissing());
 
-        return areaRepository.save(getAreaById(id));
+        return areaRepository.save(areaDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

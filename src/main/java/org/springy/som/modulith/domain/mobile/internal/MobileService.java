@@ -65,10 +65,11 @@ public class MobileService implements MobileApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public MobileDocument saveMobileForId(String id, MobileDocument mobileDocument) {
-        requireText(id, mobileIdMissing());
+        MobileDocument existing = mobileRepository.findMobileById(id);
+        requireText(existing.getId(), mobileIdMissing());
         requireEntityWithId(mobileDocument, MobileDocument::getId, mobileMissing(), mobileIdMissing());
 
-        return mobileRepository.save(getMobileById(id));
+        return mobileRepository.save(mobileDocument);
     }
 
     @CircuitBreaker(name = "somAPI")

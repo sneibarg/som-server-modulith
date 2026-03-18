@@ -3,9 +3,11 @@ package org.springy.som.modulith.domain.mobile.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springy.som.modulith.domain.command.internal.CommandDocument;
 
 import java.util.List;
 
@@ -122,38 +124,45 @@ class MobileServiceTest {
     }
 
     @Test
-    void saveMobileForId_blankId_becomesInvalidMobileException() {
-        MobileDocument mobileDocument = mock(MobileDocument.class);
+    void saveMobileForId_blankId_becomesNullPointerException() {
+        MobileDocument input = mock(MobileDocument.class);
+        when(repo.findMobileById("M1")).thenReturn(null);
 
-        assertThatThrownBy(() -> service.saveMobileForId(" ", mobileDocument))
-                .isInstanceOf(InvalidMobileException.class)
-                .hasMessageContaining(mobileIdMissing);
+        assertThatThrownBy(() -> service.saveMobileForId("M1", input))
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findMobileById("M1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveMobileForId_nullMobile_becomesInvalidMobileException() {
-        assertThatThrownBy(() -> service.saveMobileForId("M1", null))
-                .isInstanceOf(InvalidMobileException.class)
-                .hasMessageContaining(mobileMissing);
+        when(repo.findMobileById("M1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.saveMobileForId("M1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findMobileById("M1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveMobileForId_ok_savesByLookup() {
         MobileDocument input = mock(MobileDocument.class);
-        when(input.getId()).thenReturn("M1");
-
         MobileDocument existing = mock(MobileDocument.class);
+
+        when(existing.getId()).thenReturn("M1");
+        when(input.getId()).thenReturn("M1");
         when(repo.findMobileById("M1")).thenReturn(existing);
-        when(repo.save(existing)).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
-        assertThat(service.saveMobileForId("M1", input)).isSameAs(existing);
+        assertThat(service.saveMobileForId("M1", input)).isSameAs(input);
 
-        verify(repo).findMobileById("M1");
-        verify(repo).save(existing);
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findMobileById("M1");
+        verify(existing, times(1)).getId();
+        verify(input, times(1)).getId();
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 

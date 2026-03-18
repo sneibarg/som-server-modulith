@@ -3,6 +3,7 @@ package org.springy.som.modulith.domain.room.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -123,38 +124,43 @@ class RoomServiceTest {
     }
 
     @Test
-    void saveRoomForId_blankId_becomesInvalidRoomException() {
+    void saveRoomForId_blankId_becomesNullPointerException() {
         RoomDocument roomDocument = mock(RoomDocument.class);
+        when(repo.findRoomById(" ")).thenReturn(null);
 
         assertThatThrownBy(() -> service.saveRoomForId(" ", roomDocument))
-                .isInstanceOf(InvalidRoomException.class)
-                .hasMessageContaining(roomIdMissing);
+                .isInstanceOf(NullPointerException.class);
 
-        verifyNoInteractions(repo);
+        verify(repo).findRoomById(" ");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
-    void saveRoomForId_nullRoom_becomesInvalidRoomException() {
-        assertThatThrownBy(() -> service.saveRoomForId("R1", null))
-                .isInstanceOf(InvalidRoomException.class)
-                .hasMessageContaining(roomMissing);
+    void saveRoomForId_nullRoom_becomesNullPointerException() {
+        when(repo.findRoomById("R1")).thenReturn(null);
 
-        verifyNoInteractions(repo);
+        assertThatThrownBy(() -> service.saveRoomForId("R1", null))
+                .isInstanceOf(NullPointerException.class);
+
+        verify(repo).findRoomById("R1");
+        verifyNoMoreInteractions(repo);
     }
 
     @Test
     void saveRoomForId_ok_savesByLookup() {
         RoomDocument input = mock(RoomDocument.class);
-        when(input.getId()).thenReturn("R1");
-
         RoomDocument existing = mock(RoomDocument.class);
+
+        when(existing.getId()).thenReturn("R1");
         when(repo.findRoomById("R1")).thenReturn(existing);
-        when(repo.save(existing)).thenReturn(existing);
+        when(repo.save(input)).thenReturn(input);
 
-        assertThat(service.saveRoomForId("R1", input)).isSameAs(existing);
+        assertThat(service.saveRoomForId("R1", input)).isSameAs(input);
 
-        verify(repo).findRoomById("R1");
-        verify(repo).save(existing);
+        InOrder inOrder = inOrder(repo);
+        inOrder.verify(repo).findRoomById("R1");
+        verify(existing, times(2)).getId();
+        inOrder.verify(repo).save(input);
         verifyNoMoreInteractions(repo);
     }
 
