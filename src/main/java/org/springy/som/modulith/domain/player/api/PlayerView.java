@@ -9,5 +9,6 @@ public record PlayerView(
         String accountName,
         String emailAddress,
         String password,
-        List<String> playerCharacterList
+        List<String> playerCharacterList,
+        boolean banned
 ) {}

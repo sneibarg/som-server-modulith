@@ -14,7 +14,8 @@ public final class PlayerMapper {
                 doc.getAccountName(),
                 doc.getEmailAddress(),
                 doc.getPassword(),
-                doc.getPlayerCharacterList()
+                doc.getPlayerCharacterList(),
+                doc.isBanned()
         );
     }
 }

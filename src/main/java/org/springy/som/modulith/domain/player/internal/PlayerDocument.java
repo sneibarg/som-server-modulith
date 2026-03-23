@@ -21,6 +21,7 @@ public class PlayerDocument {
     @NotBlank(message = "password must not be blank")
     private String password;
     private List<String> playerCharacterList;
+    private boolean banned;
 
     @Id
     private String id;
