@@ -1,6 +1,7 @@
 package org.springy.som.modulith.domain.character.api;
 
 import java.util.List;
+import java.util.Map;
 
 public record CharacterView(
         String id,
@@ -17,6 +18,7 @@ public record CharacterView(
         String role,
         Boolean cloaked,
         List<String> inventory,
+        Map<String, Boolean> promptFormat,
         int health,
         int mana,
         int movement,

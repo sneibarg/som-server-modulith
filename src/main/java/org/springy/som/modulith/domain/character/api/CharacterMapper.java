@@ -22,6 +22,7 @@ public final class CharacterMapper {
                 doc.getRole(),
                 doc.getCloaked(),
                 doc.getInventory(),
+                doc.getPromptFormat(),
                 doc.getHealth(),
                 doc.getMana(),
                 doc.getMovement(),
