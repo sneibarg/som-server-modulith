@@ -24,14 +24,6 @@ public final class GameDataMapper {
                 doc.weapons(),
                 doc.attacks(),
                 doc.liquids(),
-                doc.classesNameIndex(),
-                doc.racesNameIndex(),
-                doc.pcRacesNameIndex(),
-                doc.skillsNameIndex(),
-                doc.groupsNameIndex(),
-                doc.weaponsNameIndex(),
-                doc.attacksNameIndex(),
-                doc.liquidsNameIndex(),
                 doc.wellKnownVnums(),
                 toView(doc.integrity())
         );

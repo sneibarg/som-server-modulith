@@ -20,14 +20,6 @@ public record GameDataView(
         Map<String, Map<String, Object>> weapons,
         Map<String, Map<String, Object>> attacks,
         Map<String, Map<String, Object>> liquids,
-        Map<String, String> classesNameIndex,
-        Map<String, String> racesNameIndex,
-        Map<String, String> pcRacesNameIndex,
-        Map<String, String> skillsNameIndex,
-        Map<String, String> groupsNameIndex,
-        Map<String, String> weaponsNameIndex,
-        Map<String, String> attacksNameIndex,
-        Map<String, String> liquidsNameIndex,
         Map<String, Map<String, Integer>> wellKnownVnums,
         IntegrityView integrity
 ) {
