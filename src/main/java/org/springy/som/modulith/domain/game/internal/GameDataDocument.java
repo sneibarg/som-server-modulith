@@ -14,7 +14,7 @@ public record GameDataDocument(
         String status,
         Version version,
         Constants constants,
-        Map<String, List<String>> enums,
+        Map<String, Map<String, Integer>> enums,
         Map<String, Map<String, Integer>> flags,
         Map<String, Map<String, Object>> classes,
         Map<String, Map<String, Object>> races,
