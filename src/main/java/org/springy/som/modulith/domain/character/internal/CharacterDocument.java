@@ -23,6 +23,7 @@ public class CharacterDocument {
     private String areaId;
     private String guild;
     private String role;
+    private String act;
     private Boolean cloaked;
     private List<String> attributes;
     private List<String> inventory;

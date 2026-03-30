@@ -20,6 +20,7 @@ public final class CharacterMapper {
                 doc.getAreaId(),
                 doc.getGuild(),
                 doc.getRole(),
+                doc.getAct(),
                 doc.getCloaked(),
                 doc.getAttributes(),
                 doc.getInventory(),
