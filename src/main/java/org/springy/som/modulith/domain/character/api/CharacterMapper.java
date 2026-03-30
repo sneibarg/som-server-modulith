@@ -45,8 +45,8 @@ public final class CharacterMapper {
                 doc.getMagic(),
                 doc.getPlayed(),
                 doc.getLogon(),
-                doc.getWait(),
-                doc.getDaze()
+                doc.getPulseWait(),
+                doc.getPulseDaze()
         );
     }
 }
