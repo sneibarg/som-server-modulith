@@ -48,6 +48,8 @@ public class CharacterDocument {
     private int magic;
     private int played;
     private int logon;
+    private int wait;
+    private int daze;
 
     @Id
     private String id;

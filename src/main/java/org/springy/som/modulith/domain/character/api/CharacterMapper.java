@@ -44,7 +44,9 @@ public final class CharacterMapper {
                 doc.getSlashing(),
                 doc.getMagic(),
                 doc.getPlayed(),
-                doc.getLogon()
+                doc.getLogon(),
+                doc.getWait(),
+                doc.getDaze()
         );
     }
 }

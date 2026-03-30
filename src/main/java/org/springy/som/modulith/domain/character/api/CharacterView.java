@@ -40,5 +40,7 @@ public record CharacterView(
         int slashing,
         int magic,
         int played,
-        int logon
+        int logon,
+        int wait,
+        int daze
 ) {}
