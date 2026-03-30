@@ -24,6 +24,8 @@ public class CharacterDocument {
     private String guild;
     private String role;
     private String act;
+    private String comm;
+    private String affectedBy;
     private Boolean cloaked;
     private List<String> attributes;
     private List<String> inventory;

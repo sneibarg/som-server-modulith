@@ -17,6 +17,8 @@ public record CharacterView(
         String guild,
         String role,
         String act,
+        String comm,
+        String affectedBy,
         Boolean cloaked,
         List<String> attributes,
         List<String> inventory,
