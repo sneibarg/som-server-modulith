@@ -21,6 +21,7 @@ public final class CharacterMapper {
                 doc.getGuild(),
                 doc.getRole(),
                 doc.getCloaked(),
+                doc.getAttributes(),
                 doc.getInventory(),
                 doc.getPromptFormat(),
                 doc.getHealth(),
@@ -41,7 +42,9 @@ public final class CharacterMapper {
                 doc.getPiercing(),
                 doc.getBashing(),
                 doc.getSlashing(),
-                doc.getMagic()
+                doc.getMagic(),
+                doc.getPlayed(),
+                doc.getLogon()
         );
     }
 }

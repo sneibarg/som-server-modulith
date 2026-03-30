@@ -17,6 +17,7 @@ public record CharacterView(
         String guild,
         String role,
         Boolean cloaked,
+        List<String> attributes,
         List<String> inventory,
         Map<String, Boolean> promptFormat,
         int health,
@@ -37,5 +38,7 @@ public record CharacterView(
         int piercing,
         int bashing,
         int slashing,
-        int magic
+        int magic,
+        int played,
+        int logon
 ) {}

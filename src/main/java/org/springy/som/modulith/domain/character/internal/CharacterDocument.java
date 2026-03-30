@@ -24,6 +24,7 @@ public class CharacterDocument {
     private String guild;
     private String role;
     private Boolean cloaked;
+    private List<String> attributes;
     private List<String> inventory;
     private Map<String, Boolean> promptFormat;
     private int health;
@@ -41,11 +42,12 @@ public class CharacterDocument {
     private int maxWeight;
     private int maxItems;
     private int alignment;
-    // defense stats
     private int piercing;
     private int bashing;
     private int slashing;
     private int magic;
+    private int played;
+    private int logon;
 
     @Id
     private String id;
