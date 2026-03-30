@@ -49,7 +49,8 @@ public final class CharacterMapper {
                 doc.getPlayed(),
                 doc.getLogon(),
                 doc.getPulseWait(),
-                doc.getPulseDaze()
+                doc.getPulseDaze(),
+                doc.getTrust()
         );
     }
 }

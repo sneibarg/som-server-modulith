@@ -45,5 +45,6 @@ public record CharacterView(
         int played,
         int logon,
         int pulseWait,
-        int pulseDaze
+        int pulseDaze,
+        int trust
 ) {}

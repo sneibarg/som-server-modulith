@@ -53,6 +53,7 @@ public class CharacterDocument {
     private int logon;
     private int pulseWait;
     private int pulseDaze;
+    private int trust;
 
     @Id
     private String id;
