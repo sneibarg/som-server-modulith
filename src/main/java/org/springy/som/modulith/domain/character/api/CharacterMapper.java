@@ -37,7 +37,7 @@ public final class CharacterMapper {
                 doc.getPosition(),
                 doc.getMaxWeight(),
                 doc.getMaxItems(),
-                doc.getReputation(),
+                doc.getAlignment(),
                 doc.getPiercing(),
                 doc.getBashing(),
                 doc.getSlashing(),

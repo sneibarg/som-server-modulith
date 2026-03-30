@@ -33,7 +33,7 @@ public record CharacterView(
         int position,
         int maxWeight,
         int maxItems,
-        int reputation,
+        int alignment,
         int piercing,
         int bashing,
         int slashing,

@@ -40,7 +40,7 @@ public class CharacterDocument {
     private int position; // stand, rest, sleep
     private int maxWeight;
     private int maxItems;
-    private int reputation;
+    private int alignment;
     // defense stats
     private int piercing;
     private int bashing;
