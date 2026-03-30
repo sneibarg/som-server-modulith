@@ -34,6 +34,7 @@ public class MobileDocument {
     private String size;
     private String material;
     private String flags;
+    private String act;
     private int level;
     private int hitroll;
     private int hitDiceNumber;
@@ -50,6 +51,9 @@ public class MobileDocument {
     private int acSlash;
     private int acExotic;
     private int gold;
+    private int silver;
+    private int pulseWait;
+    private int pulseDaze;
 
 
     @Id
