@@ -4,7 +4,9 @@ import org.springy.som.modulith.domain.area.internal.InvalidAreaException;
 import org.springy.som.modulith.domain.character.internal.InvalidPlayerCharacterException;
 import org.springy.som.modulith.domain.clazz.internal.InvalidClassException;
 import org.springy.som.modulith.domain.command.internal.CommandNotFoundException;
+import org.springy.som.modulith.domain.command.internal.HelpNotFoundException;
 import org.springy.som.modulith.domain.command.internal.InvalidCommandException;
+import org.springy.som.modulith.domain.command.internal.InvalidHelpException;
 import org.springy.som.modulith.domain.command.internal.InvalidSocialException;
 import org.springy.som.modulith.domain.command.internal.SocialNotFoundException;
 import org.springy.som.modulith.domain.item.internal.InvalidItemException;
@@ -60,6 +62,14 @@ public final class DomainGuards {
 
     public static Supplier<InvalidSocialException> socialIdMissing() {
         return () -> new InvalidSocialException("ROM social id must be provided");
+    }
+
+    public static Supplier<HelpNotFoundException> helpMissing() {
+        return () -> new HelpNotFoundException("ROM help not found in repository");
+    }
+
+    public static Supplier<InvalidHelpException> helpIdMissing() {
+        return () -> new InvalidHelpException("ROM help id must be provided");
     }
 
     public static Supplier<InvalidItemException> itemMissing() {
