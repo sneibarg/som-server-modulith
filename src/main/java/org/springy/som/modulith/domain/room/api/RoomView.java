@@ -8,12 +8,6 @@ public record RoomView(
         String vnum,
         String name,
         String description,
-        String exitEast,
-        String exitSouth,
-        String exitNorth,
-        String exitWest,
-        String exitUp,
-        String exitDown,
         String exits,
         boolean pvp,
         boolean spawn,
@@ -23,6 +17,5 @@ public record RoomView(
         int roomFlags,
         int sectorType,
         List<String> mobiles,
-        List<String> alternateRoutes,
         List<String> extraDescription
 ) {}

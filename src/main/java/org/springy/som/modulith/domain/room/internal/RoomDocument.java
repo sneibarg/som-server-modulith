@@ -17,12 +17,6 @@ public class RoomDocument {
     @NotBlank(message = "name must not be blank")
     private String name;
     private String description;
-    private String exitEast;
-    private String exitSouth;
-    private String exitNorth;
-    private String exitWest;
-    private String exitUp;
-    private String exitDown;
     private String exits;
     private boolean pvp;
     private boolean spawn;
@@ -32,7 +26,6 @@ public class RoomDocument {
     private int roomFlags;
     private int sectorType;
     private List<String> mobiles;
-    private List<String> alternateRoutes;
     private List<String> extraDescription;
 
     @Id

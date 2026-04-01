@@ -13,12 +13,6 @@ public final class RoomMapper {
                 doc.getVnum(),
                 doc.getName(),
                 doc.getDescription(),
-                doc.getExitEast(),
-                doc.getExitSouth(),
-                doc.getExitNorth(),
-                doc.getExitWest(),
-                doc.getExitUp(),
-                doc.getExitDown(),
                 doc.getExits(),
                 doc.isPvp(),
                 doc.isSpawn(),
@@ -28,7 +22,6 @@ public final class RoomMapper {
                 doc.getRoomFlags(),
                 doc.getSectorType(),
                 doc.getMobiles(),
-                doc.getAlternateRoutes(),
                 doc.getExtraDescription()
         );
     }
