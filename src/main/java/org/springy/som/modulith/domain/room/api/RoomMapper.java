@@ -19,6 +19,7 @@ public final class RoomMapper {
                 doc.getExitWest(),
                 doc.getExitUp(),
                 doc.getExitDown(),
+                doc.getExits(),
                 doc.isPvp(),
                 doc.isSpawn(),
                 doc.getSpawnTimer(),

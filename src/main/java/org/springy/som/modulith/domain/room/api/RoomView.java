@@ -14,6 +14,7 @@ public record RoomView(
         String exitWest,
         String exitUp,
         String exitDown,
+        String exits,
         boolean pvp,
         boolean spawn,
         int spawnTimer,

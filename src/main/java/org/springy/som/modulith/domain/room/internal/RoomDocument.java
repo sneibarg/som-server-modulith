@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Document("Rooms")
@@ -22,6 +23,7 @@ public class RoomDocument {
     private String exitWest;
     private String exitUp;
     private String exitDown;
+    private String exits;
     private boolean pvp;
     private boolean spawn;
     private int spawnTimer;
