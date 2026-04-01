@@ -9,14 +9,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springy.som.modulith.domain.clazz.internal.ClassNotFoundException;
-import org.springy.som.modulith.domain.clazz.internal.ClassPersistenceException;
 import org.springy.som.modulith.domain.command.api.CommandApi;
 
 import java.util.List;
 
 import static org.springy.som.modulith.domain.DomainGuards.commandIdMissing;
-import static org.springy.som.modulith.domain.DomainGuards.commandMissing;
 import static org.springy.som.modulith.domain.ServiceGuards.requireEntityWithId;
 import static org.springy.som.modulith.domain.ServiceGuards.requireText;
 import static org.springy.som.modulith.domain.ServiceGuards.safeId;
@@ -59,7 +56,7 @@ public class CommandService implements CommandApi {
             return commandRepository.save(commandDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createCommand commandId={}", safeId(commandDocument, CommandDocument::getId), ex);
-            throw new ClassPersistenceException("Failed to create commandDocument"+ex);
+            throw new CommandPersistenceException("Failed to create commandDocument"+ex);
         }
     }
 
@@ -80,7 +77,7 @@ public class CommandService implements CommandApi {
 
         try {
             if (!commandRepository.existsById(id)) {
-                throw new ClassNotFoundException(id);
+                throw new CommandNotFoundException(id);
             }
             commandRepository.deleteById(id);
         } catch (DataAccessException ex) {

@@ -5,6 +5,8 @@ import org.springy.som.modulith.domain.character.internal.InvalidPlayerCharacter
 import org.springy.som.modulith.domain.clazz.internal.InvalidClassException;
 import org.springy.som.modulith.domain.command.internal.CommandNotFoundException;
 import org.springy.som.modulith.domain.command.internal.InvalidCommandException;
+import org.springy.som.modulith.domain.command.internal.InvalidSocialException;
+import org.springy.som.modulith.domain.command.internal.SocialNotFoundException;
 import org.springy.som.modulith.domain.item.internal.InvalidItemException;
 import org.springy.som.modulith.domain.mobile.internal.InvalidMobileException;
 import org.springy.som.modulith.domain.player.internal.InvalidPlayerException;
@@ -50,6 +52,14 @@ public final class DomainGuards {
 
     public static Supplier<InvalidCommandException> commandIdMissing() {
         return () -> new InvalidCommandException("ROM command id must be provided");
+    }
+
+    public static Supplier<SocialNotFoundException> socialMissing() {
+        return () -> new SocialNotFoundException("ROM social not found in repository");
+    }
+
+    public static Supplier<InvalidSocialException> socialIdMissing() {
+        return () -> new InvalidSocialException("ROM social id must be provided");
     }
 
     public static Supplier<InvalidItemException> itemMissing() {

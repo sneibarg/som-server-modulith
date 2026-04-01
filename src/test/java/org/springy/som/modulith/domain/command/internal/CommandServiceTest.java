@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springy.som.modulith.domain.clazz.internal.ClassNotFoundException;
-import org.springy.som.modulith.domain.clazz.internal.ClassPersistenceException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.lang.reflect.Method;
@@ -99,13 +97,13 @@ class CommandServiceTest {
     }
 
     @Test
-    void createCommand_dataAccess_becomesRomClassPersistenceException() {
+    void createCommand_dataAccess_becomesCommandPersistenceException() {
         CommandDocument c = mock(CommandDocument.class);
         when(c.getId()).thenReturn("C1");
         when(repo.save(c)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createCommand(c))
-                .isInstanceOf(ClassPersistenceException.class)
+                .isInstanceOf(CommandPersistenceException.class)
                 .hasMessageContaining("Failed to create command");
 
         verify(repo).save(c);
@@ -113,14 +111,14 @@ class CommandServiceTest {
     }
 
     @Test
-    void createCommand_dataAccess_safeIdExceptionPath_becomesRomClassPersistenceException() {
+    void createCommand_dataAccess_safeIdExceptionPath_becomesCommandPersistenceException() {
         CommandDocument c = mock(CommandDocument.class);
 
         when(c.getId()).thenReturn("C1").thenThrow(new RuntimeException("boom"));
         when(repo.save(c)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createCommand(c))
-                .isInstanceOf(ClassPersistenceException.class)
+                .isInstanceOf(CommandPersistenceException.class)
                 .hasMessageContaining("Failed to create command");
 
         verify(repo).save(c);
@@ -193,11 +191,11 @@ class CommandServiceTest {
     }
 
     @Test
-    void deleteCommandById_notFound_propagatesRomClassNotFound() {
+    void deleteCommandById_notFound_propagatesCommandNotFound() {
         when(repo.existsById("C1")).thenReturn(false);
 
         assertThatThrownBy(() -> service.deleteCommandById("C1"))
-                .isInstanceOf(ClassNotFoundException.class);
+                .isInstanceOf(CommandNotFoundException.class);
 
         verify(repo).existsById("C1");
         verifyNoMoreInteractions(repo);

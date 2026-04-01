@@ -15,7 +15,6 @@ import org.springy.som.modulith.domain.command.api.CommandMapper;
 import org.springy.som.modulith.domain.command.api.CommandView;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +50,7 @@ public class CommandController {
         CommandDocument saved = commandService.createCommand(commandDocument);
         CommandView commandView = CommandMapper.toView(saved);
         return ResponseEntity
-                .created(URI.create("/api/v1/characters/" + saved.getId()))
+                .created(URI.create("/api/v1/commands/" + saved.getId()))
                 .body(commandView);
     }
 
