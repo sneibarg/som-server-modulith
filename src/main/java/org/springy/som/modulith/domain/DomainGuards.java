@@ -11,6 +11,8 @@ import org.springy.som.modulith.domain.command.internal.InvalidSocialException;
 import org.springy.som.modulith.domain.command.internal.SocialNotFoundException;
 import org.springy.som.modulith.domain.item.internal.InvalidItemException;
 import org.springy.som.modulith.domain.mobile.internal.InvalidMobileException;
+import org.springy.som.modulith.domain.note.internal.InvalidNoteException;
+import org.springy.som.modulith.domain.note.internal.NoteNotFoundException;
 import org.springy.som.modulith.domain.player.internal.InvalidPlayerException;
 import org.springy.som.modulith.domain.race.internal.InvalidRomRaceException;
 import org.springy.som.modulith.domain.reset.internal.InvalidResetException;
@@ -86,6 +88,14 @@ public final class DomainGuards {
 
     public static Supplier<InvalidMobileException> mobileIdMissing() {
         return () -> new InvalidMobileException("ROM mobile id must be provided");
+    }
+
+    public static Supplier<NoteNotFoundException> noteMissing() {
+        return () -> new NoteNotFoundException("ROM note not found in repository");
+    }
+
+    public static Supplier<InvalidNoteException> noteIdMissing() {
+        return () -> new InvalidNoteException("ROM note id must be provided");
     }
 
     public static Supplier<InvalidPlayerException> playerAccountMissing() {
