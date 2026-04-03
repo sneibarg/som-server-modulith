@@ -54,6 +54,16 @@ public abstract class BaseApiExceptionHandler {
                 .body(pd);
     }
 
+    @ExceptionHandler(ConflictApiException.class)
+    public ResponseEntity<ProblemDetail> handleConflict(ConflictApiException ex) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        pd.setTitle("Conflict");
+        pd.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(pd);
+    }
+
     @ExceptionHandler(ServiceUnavailableApiException.class)
     public ResponseEntity<ProblemDetail> unavailable(ServiceUnavailableApiException ex) {
         ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.SERVICE_UNAVAILABLE);

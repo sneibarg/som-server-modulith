@@ -53,8 +53,19 @@ public class MobileService implements MobileApi {
     public MobileDocument createMobile(@Valid @RequestBody MobileDocument mobileDocument) {
         requireEntityWithId(mobileDocument, MobileDocument::getId, mobileMissing(), mobileIdMissing());
 
+        // Validate vnum is not blank
+        String vnum = mobileDocument.getVnum();
+        if (vnum == null || vnum.trim().isEmpty()) {
+            throw new InvalidMobileException("Mobile vnum must not be blank");
+        }
+
+        // Check for duplicate vnum
+        MobileDocument existing = mobileRepository.findMobileByVnum(vnum);
+        if (existing != null) {
+            throw new DuplicateMobileException("Mobile with vnum '" + vnum + "' already exists");
+        }
+
         try {
-            // if (mobileRepository.existsById(mobileDocument.getMobileId())) throw new MobileConflictException(...)
             return mobileRepository.save(mobileDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createMobile mobileId={}", safeId(mobileDocument, MobileDocument::getId), ex);

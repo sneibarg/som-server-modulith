@@ -47,7 +47,7 @@ public class MobileController {
         MobileDocument saved = mobileService.createMobile(mobileDocument);
         MobileView mobileView = MobileMapper.toView(saved);
         return ResponseEntity
-                .created(URI.create("/api/v1/characters/" + saved.getId()))
+                .created(URI.create("/api/v1/mobiles/" + saved.getId()))
                 .body(mobileView);
     }
 

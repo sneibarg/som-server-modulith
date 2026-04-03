@@ -103,15 +103,67 @@ public class MobileControllerTest {
     }
 
     @Test
+    void createMobile_blankVnum_returns400ProblemDetail() throws Exception {
+        MobileDocument input = new MobileDocument();
+        input.setAreaId("A1");
+        input.setId("I1");
+        input.setVnum("");
+        input.setName("Midgaard");
+
+        when(mobileService.createMobile(any(MobileDocument.class)))
+                .thenThrow(new InvalidMobileException("Mobile vnum must not be blank"));
+
+        mockMvc.perform(post("/api/v1/mobiles")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.detail").value("Mobile vnum must not be blank"));
+
+        verify(mobileService).createMobile(any(MobileDocument.class));
+    }
+
+    @Test
+    void createMobile_duplicateVnum_returns409ProblemDetail() throws Exception {
+        MobileDocument input = new MobileDocument();
+        input.setAreaId("A1");
+        input.setId("I1");
+        input.setVnum("1001");
+        input.setName("Midgaard");
+
+        when(mobileService.createMobile(any(MobileDocument.class)))
+                .thenThrow(new DuplicateMobileException("Mobile with vnum '1001' already exists"));
+
+        mockMvc.perform(post("/api/v1/mobiles")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isConflict())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.detail").value("Mobile with vnum '1001' already exists"));
+
+        verify(mobileService).createMobile(any(MobileDocument.class));
+    }
+
+    @Test
     void createMobile_returns201() throws Exception {
         MobileDocument input = new MobileDocument();
         input.setAreaId("A1");
         input.setId("I1");
+        input.setVnum("1001");
         input.setName("Midgaard");
 
         MobileDocument saved = new MobileDocument();
         saved.setAreaId("A1");
         saved.setId("I1");
+        saved.setVnum("1001");
         saved.setName("Midgaard");
 
         when(mobileService.createMobile(any(MobileDocument.class))).thenReturn(saved);
@@ -125,6 +177,7 @@ public class MobileControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.areaId").value("A1"))
                 .andExpect(jsonPath("$.id").value("I1"))
+                .andExpect(jsonPath("$.vnum").value("1001"))
                 .andExpect(jsonPath("$.name").value("Midgaard"));
 
         verify(mobileService).createMobile(any(MobileDocument.class));

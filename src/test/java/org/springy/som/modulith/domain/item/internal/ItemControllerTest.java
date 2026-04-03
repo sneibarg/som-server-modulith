@@ -103,15 +103,67 @@ public class ItemControllerTest {
     }
 
     @Test
+    void createItem_blankVnum_returns400ProblemDetail() throws Exception {
+        ItemDocument input = new ItemDocument();
+        input.setAreaId("A1");
+        input.setId("I1");
+        input.setVnum("");
+        input.setName("Midgaard");
+
+        when(itemService.createItem(any(ItemDocument.class)))
+                .thenThrow(new InvalidItemException("Item vnum must not be blank"));
+
+        mockMvc.perform(post("/api/v1/items")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.detail").value("Item vnum must not be blank"));
+
+        verify(itemService).createItem(any(ItemDocument.class));
+    }
+
+    @Test
+    void createItem_duplicateVnum_returns409ProblemDetail() throws Exception {
+        ItemDocument input = new ItemDocument();
+        input.setAreaId("A1");
+        input.setId("I1");
+        input.setVnum("2001");
+        input.setName("Midgaard");
+
+        when(itemService.createItem(any(ItemDocument.class)))
+                .thenThrow(new DuplicateItemException("Item with vnum '2001' already exists"));
+
+        mockMvc.perform(post("/api/v1/items")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isConflict())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.detail").value("Item with vnum '2001' already exists"));
+
+        verify(itemService).createItem(any(ItemDocument.class));
+    }
+
+    @Test
     void createItem_returns201() throws Exception {
         ItemDocument input = new ItemDocument();
         input.setAreaId("A1");
         input.setId("I1");
+        input.setVnum("2001");
         input.setName("Midgaard");
 
         ItemDocument saved = new ItemDocument();
         saved.setAreaId("A1");
         saved.setId("I1");
+        saved.setVnum("2001");
         saved.setName("Midgaard");
 
         when(itemService.createItem(any(ItemDocument.class))).thenReturn(saved);
@@ -125,6 +177,7 @@ public class ItemControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.areaId").value("A1"))
                 .andExpect(jsonPath("$.id").value("I1"))
+                .andExpect(jsonPath("$.vnum").value("2001"))
                 .andExpect(jsonPath("$.name").value("Midgaard"));
 
         verify(itemService).createItem(any(ItemDocument.class));

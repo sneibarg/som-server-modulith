@@ -83,13 +83,58 @@ class ItemServiceTest {
     }
 
     @Test
+    void createItem_blankVnum_becomesInvalidItemException() {
+        ItemDocument itemDocument = mock(ItemDocument.class);
+        when(itemDocument.getId()).thenReturn("I1");
+        when(itemDocument.getVnum()).thenReturn("  ");
+
+        assertThatThrownBy(() -> service.createItem(itemDocument))
+                .isInstanceOf(InvalidItemException.class)
+                .hasMessageContaining("Item vnum must not be blank");
+
+        verifyNoInteractions(repo);
+    }
+
+    @Test
+    void createItem_nullVnum_becomesInvalidItemException() {
+        ItemDocument itemDocument = mock(ItemDocument.class);
+        when(itemDocument.getId()).thenReturn("I1");
+        when(itemDocument.getVnum()).thenReturn(null);
+
+        assertThatThrownBy(() -> service.createItem(itemDocument))
+                .isInstanceOf(InvalidItemException.class)
+                .hasMessageContaining("Item vnum must not be blank");
+
+        verifyNoInteractions(repo);
+    }
+
+    @Test
+    void createItem_duplicateVnum_becomesDuplicateItemException() {
+        ItemDocument itemDocument = mock(ItemDocument.class);
+        ItemDocument existing = mock(ItemDocument.class);
+        when(itemDocument.getId()).thenReturn("I1");
+        when(itemDocument.getVnum()).thenReturn("2001");
+        when(repo.findItemByVnum("2001")).thenReturn(existing);
+
+        assertThatThrownBy(() -> service.createItem(itemDocument))
+                .isInstanceOf(DuplicateItemException.class)
+                .hasMessageContaining("Item with vnum '2001' already exists");
+
+        verify(repo).findItemByVnum("2001");
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
     void createItem_ok_saves() {
         ItemDocument itemDocument = mock(ItemDocument.class);
         when(itemDocument.getId()).thenReturn("I1");
+        when(itemDocument.getVnum()).thenReturn("2001");
+        when(repo.findItemByVnum("2001")).thenReturn(null);
         when(repo.save(itemDocument)).thenReturn(itemDocument);
 
         assertThat(service.createItem(itemDocument)).isSameAs(itemDocument);
 
+        verify(repo).findItemByVnum("2001");
         verify(repo).save(itemDocument);
         verifyNoMoreInteractions(repo);
     }
@@ -98,12 +143,15 @@ class ItemServiceTest {
     void createItem_dataAccess_becomesItemPersistenceException() {
         ItemDocument itemDocument = mock(ItemDocument.class);
         when(itemDocument.getId()).thenReturn("I1");
+        when(itemDocument.getVnum()).thenReturn("2001");
+        when(repo.findItemByVnum("2001")).thenReturn(null);
         when(repo.save(itemDocument)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createItem(itemDocument))
                 .isInstanceOf(ItemPersistenceException.class)
                 .hasMessageContaining("Failed to create itemDocument");
 
+        verify(repo).findItemByVnum("2001");
         verify(repo).save(itemDocument);
         verifyNoMoreInteractions(repo);
     }
@@ -112,13 +160,11 @@ class ItemServiceTest {
     void createItem_dataAccess_safeIdExceptionPath_becomesItemPersistenceException() {
         ItemDocument itemDocument = mock(ItemDocument.class);
         when(itemDocument.getId()).thenReturn("I1").thenThrow(new RuntimeException("boom"));
-        when(repo.save(itemDocument)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createItem(itemDocument))
-                .isInstanceOf(ItemPersistenceException.class)
-                .hasMessageContaining("Failed to create itemDocument");
+                .isInstanceOf(InvalidItemException.class)
+                .hasMessageContaining("Item vnum must not be blank");
 
-        verify(repo).save(itemDocument);
         verifyNoMoreInteractions(repo);
     }
 

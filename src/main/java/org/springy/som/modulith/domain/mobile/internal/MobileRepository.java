@@ -13,6 +13,9 @@ public interface MobileRepository extends MongoRepository<MobileDocument, String
     @Query("{name:  '?0'}")
     MobileDocument findMobileByName(String name);
 
+    @Query("{vnum: '?0'}")
+    MobileDocument findMobileByVnum(String vnum);
+
     @Query("{raceId: '?0'}")
     List<MobileDocument> findAllByRace(String raceId);
 

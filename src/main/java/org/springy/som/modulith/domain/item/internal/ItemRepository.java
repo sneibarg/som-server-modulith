@@ -12,6 +12,9 @@ public interface ItemRepository extends MongoRepository<ItemDocument, String> {
     @Query("{name: '?0'}")
     List<ItemDocument> findItemsByName(String name);
 
+    @Query("{vnum: '?0'}")
+    ItemDocument findItemByVnum(String vnum);
+
     @Query("{category: '?0'}")
     List<ItemDocument> findItemsByCategory(String category);
 

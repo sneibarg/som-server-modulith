@@ -84,13 +84,58 @@ class MobileServiceTest {
     }
 
     @Test
+    void createMobile_blankVnum_becomesInvalidMobileException() {
+        MobileDocument mobileDocument = mock(MobileDocument.class);
+        when(mobileDocument.getId()).thenReturn("M1");
+        when(mobileDocument.getVnum()).thenReturn("  ");
+
+        assertThatThrownBy(() -> service.createMobile(mobileDocument))
+                .isInstanceOf(InvalidMobileException.class)
+                .hasMessageContaining("Mobile vnum must not be blank");
+
+        verifyNoInteractions(repo);
+    }
+
+    @Test
+    void createMobile_nullVnum_becomesInvalidMobileException() {
+        MobileDocument mobileDocument = mock(MobileDocument.class);
+        when(mobileDocument.getId()).thenReturn("M1");
+        when(mobileDocument.getVnum()).thenReturn(null);
+
+        assertThatThrownBy(() -> service.createMobile(mobileDocument))
+                .isInstanceOf(InvalidMobileException.class)
+                .hasMessageContaining("Mobile vnum must not be blank");
+
+        verifyNoInteractions(repo);
+    }
+
+    @Test
+    void createMobile_duplicateVnum_becomesDuplicateMobileException() {
+        MobileDocument mobileDocument = mock(MobileDocument.class);
+        MobileDocument existing = mock(MobileDocument.class);
+        when(mobileDocument.getId()).thenReturn("M1");
+        when(mobileDocument.getVnum()).thenReturn("1001");
+        when(repo.findMobileByVnum("1001")).thenReturn(existing);
+
+        assertThatThrownBy(() -> service.createMobile(mobileDocument))
+                .isInstanceOf(DuplicateMobileException.class)
+                .hasMessageContaining("Mobile with vnum '1001' already exists");
+
+        verify(repo).findMobileByVnum("1001");
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
     void createMobile_ok_saves() {
         MobileDocument mobileDocument = mock(MobileDocument.class);
         when(mobileDocument.getId()).thenReturn("M1");
+        when(mobileDocument.getVnum()).thenReturn("1001");
+        when(repo.findMobileByVnum("1001")).thenReturn(null);
         when(repo.save(mobileDocument)).thenReturn(mobileDocument);
 
         assertThat(service.createMobile(mobileDocument)).isSameAs(mobileDocument);
 
+        verify(repo).findMobileByVnum("1001");
         verify(repo).save(mobileDocument);
         verifyNoMoreInteractions(repo);
     }
@@ -99,12 +144,15 @@ class MobileServiceTest {
     void createMobile_dataAccess_becomesMobilePersistenceException() {
         MobileDocument mobileDocument = mock(MobileDocument.class);
         when(mobileDocument.getId()).thenReturn("M1");
+        when(mobileDocument.getVnum()).thenReturn("1001");
+        when(repo.findMobileByVnum("1001")).thenReturn(null);
         when(repo.save(mobileDocument)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createMobile(mobileDocument))
                 .isInstanceOf(MobilePersistenceException.class)
                 .hasMessageContaining("Failed to create mobile");
 
+        verify(repo).findMobileByVnum("1001");
         verify(repo).save(mobileDocument);
         verifyNoMoreInteractions(repo);
     }
@@ -113,13 +161,11 @@ class MobileServiceTest {
     void createMobile_dataAccess_safeIdExceptionPath_becomesMobilePersistenceException() {
         MobileDocument mobileDocument = mock(MobileDocument.class);
         when(mobileDocument.getId()).thenReturn("M1").thenThrow(new RuntimeException("boom"));
-        when(repo.save(mobileDocument)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createMobile(mobileDocument))
-                .isInstanceOf(MobilePersistenceException.class)
-                .hasMessageContaining("Failed to create mobile");
+                .isInstanceOf(InvalidMobileException.class)
+                .hasMessageContaining("Mobile vnum must not be blank");
 
-        verify(repo).save(mobileDocument);
         verifyNoMoreInteractions(repo);
     }
 

@@ -51,8 +51,19 @@ public class ItemService implements ItemApi {
     public ItemDocument createItem(@Valid @RequestBody ItemDocument itemDocument) {
         requireEntityWithId(itemDocument, ItemDocument::getId, itemMissing(), itemIdMissing());
 
+        // Validate vnum is not blank
+        String vnum = itemDocument.getVnum();
+        if (vnum == null || vnum.trim().isEmpty()) {
+            throw new InvalidItemException("Item vnum must not be blank");
+        }
+
+        // Check for duplicate vnum
+        ItemDocument existing = itemRepository.findItemByVnum(vnum);
+        if (existing != null) {
+            throw new DuplicateItemException("Item with vnum '" + vnum + "' already exists");
+        }
+
         try {
-            // if (itemRepository.existsById(itemDocument.getId())) throw new ItemConflictException(...)
             return itemRepository.save(itemDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createItem itemId={}", safeId(itemDocument, ItemDocument::getId), ex);
