@@ -17,7 +17,7 @@ public class CommandDocument {
     private String usage;
     private String skillId;
     private String shortcuts;
-    private List<String> lambda;
+    private List<String> lambdas;
     private List<String> function;
     private boolean enabled;
 

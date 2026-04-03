@@ -10,7 +10,7 @@ public record CommandView(
         String usage,
         String skillId,
         String shortcuts,
-        List<String> lambda,
+        List<String> lambdas,
         List<String> function,
         boolean enabled
 ) {}

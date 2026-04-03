@@ -15,7 +15,7 @@ public final class CommandMapper {
                 doc.getUsage(),
                 doc.getSkillId(),
                 doc.getShortcuts(),
-                doc.getLambda(),
+                doc.getLambdas(),
                 doc.getFunction(),
                 doc.isEnabled()
         );
