@@ -15,9 +15,13 @@ public final class CommandMapper {
                 doc.getUsage(),
                 doc.getSkillId(),
                 doc.getShortcuts(),
+                doc.getPosition(),
+                doc.getLog(),
+                doc.getHelp(),
                 doc.getLambdas(),
                 doc.getFunction(),
-                doc.isEnabled()
+                doc.isEnabled(),
+                doc.getLevel()
         );
     }
 }

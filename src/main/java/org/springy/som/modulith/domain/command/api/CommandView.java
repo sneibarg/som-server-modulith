@@ -10,7 +10,11 @@ public record CommandView(
         String usage,
         String skillId,
         String shortcuts,
+        String position,
+        String log,
+        String help,
         List<String> lambdas,
         List<String> function,
-        boolean enabled
+        boolean enabled,
+        int level
 ) {}
