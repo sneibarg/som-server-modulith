@@ -13,8 +13,8 @@ public record CommandView(
         String position,
         String log,
         String help,
+        String level,
         List<String> lambdas,
         List<String> function,
-        boolean enabled,
-        int level
+        boolean enabled
 ) {}

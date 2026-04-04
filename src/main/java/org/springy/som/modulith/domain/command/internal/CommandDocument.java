@@ -20,10 +20,10 @@ public class CommandDocument {
     private String position;
     private String log;
     private String help;
+    private String level;
     private List<String> lambdas;
     private List<String> function;
     private boolean enabled;
-    private int level;
 
     @Id
     private String id;

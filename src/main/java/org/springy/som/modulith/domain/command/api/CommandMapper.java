@@ -18,10 +18,10 @@ public final class CommandMapper {
                 doc.getPosition(),
                 doc.getLog(),
                 doc.getHelp(),
+                doc.getLevel(),
                 doc.getLambdas(),
                 doc.getFunction(),
-                doc.isEnabled(),
-                doc.getLevel()
+                doc.isEnabled()
         );
     }
 }
