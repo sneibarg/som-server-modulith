@@ -11,6 +11,7 @@ public final class AreaMapper {
                 doc.getId(),
                 doc.getAuthor(),
                 doc.getName(),
+                doc.getVnum(),
                 doc.getSuggestedLevelRange(),
                 doc.getRooms(),
                 doc.getMobiles(),

@@ -6,6 +6,7 @@ public record AreaView(
         String id,
         String author,
         String name,
+        String vnum,
         String suggestedLevelRange,
         List<String> rooms,
         List<String> mobiles,
