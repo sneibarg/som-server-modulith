@@ -111,14 +111,58 @@ class AreaServiceTest {
     }
 
     @Test
+    void createArea_blankVnum_becomesInvalidAreaException() {
+        AreaDocument a = area("A1", "Midgaard");
+        a.setVnum("");
+
+        assertThatThrownBy(() -> areaService.createArea(a))
+                .isInstanceOf(InvalidAreaException.class)
+                .hasMessageContaining("Area vnum must not be blank");
+
+        verifyNoInteractions(areaRepository);
+    }
+
+    @Test
+    void createArea_nullVnum_becomesInvalidAreaException() {
+        AreaDocument a = area("A1", "Midgaard");
+        a.setVnum(null);
+
+        assertThatThrownBy(() -> areaService.createArea(a))
+                .isInstanceOf(InvalidAreaException.class)
+                .hasMessageContaining("Area vnum must not be blank");
+
+        verifyNoInteractions(areaRepository);
+    }
+
+    @Test
+    void createArea_duplicateVnum_becomesDuplicateAreaException() {
+        AreaDocument a = area("A1", "Midgaard");
+        a.setVnum("1000");
+        AreaDocument existing = area("A2", "Other");
+        existing.setVnum("1000");
+
+        when(areaRepository.findAreaByVnum("1000")).thenReturn(existing);
+
+        assertThatThrownBy(() -> areaService.createArea(a))
+                .isInstanceOf(DuplicateAreaException.class)
+                .hasMessageContaining("Area with vnum '1000' already exists");
+
+        verify(areaRepository).findAreaByVnum("1000");
+        verifyNoMoreInteractions(areaRepository);
+    }
+
+    @Test
     void createArea_dataAccess_becomesAreaPersistenceException_safeIdNormalPath() {
         AreaDocument input = area("A1", "Midgaard");
+        input.setVnum("1000");
+        when(areaRepository.findAreaByVnum("1000")).thenReturn(null);
         when(areaRepository.save(input)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> areaService.createArea(input))
                 .isInstanceOf(AreaPersistenceException.class)
                 .hasMessageContaining("Failed to create areaDocument");
 
+        verify(areaRepository).findAreaByVnum("1000");
         verify(areaRepository).save(input);
         verifyNoMoreInteractions(areaRepository);
     }

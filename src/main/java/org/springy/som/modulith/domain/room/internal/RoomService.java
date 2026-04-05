@@ -52,6 +52,18 @@ public class RoomService implements RoomApi {
     public RoomDocument createRoom(@Valid @RequestBody RoomDocument roomDocument) {
         requireEntityWithId(roomDocument, RoomDocument::getId, roomMissing(), roomIdMissing());
 
+        // Validate vnum is not blank
+        String vnum = roomDocument.getVnum();
+        if (vnum == null || vnum.trim().isEmpty()) {
+            throw new InvalidRoomException("Room vnum must not be blank");
+        }
+
+        // Check for duplicate vnum
+        RoomDocument existing = roomRepository.findRoomByVnum(vnum);
+        if (existing != null) {
+            throw new DuplicateRoomException("Room with vnum '" + vnum + "' already exists");
+        }
+
         try {
             // if (roomRepository.existsById(roomDocument.getId())) throw new RoomConflictException(...)
             return roomRepository.save(roomDocument);

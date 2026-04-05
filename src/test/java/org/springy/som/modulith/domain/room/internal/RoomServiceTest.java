@@ -84,13 +84,59 @@ class RoomServiceTest {
     }
 
     @Test
+    void createRoom_blankVnum_becomesInvalidRoomException() {
+        RoomDocument roomDocument = mock(RoomDocument.class);
+        when(roomDocument.getId()).thenReturn("R1");
+        when(roomDocument.getVnum()).thenReturn("");
+
+        assertThatThrownBy(() -> service.createRoom(roomDocument))
+                .isInstanceOf(InvalidRoomException.class)
+                .hasMessageContaining("Room vnum must not be blank");
+
+        verifyNoInteractions(repo);
+    }
+
+    @Test
+    void createRoom_nullVnum_becomesInvalidRoomException() {
+        RoomDocument roomDocument = mock(RoomDocument.class);
+        when(roomDocument.getId()).thenReturn("R1");
+        when(roomDocument.getVnum()).thenReturn(null);
+
+        assertThatThrownBy(() -> service.createRoom(roomDocument))
+                .isInstanceOf(InvalidRoomException.class)
+                .hasMessageContaining("Room vnum must not be blank");
+
+        verifyNoInteractions(repo);
+    }
+
+    @Test
+    void createRoom_duplicateVnum_becomesDuplicateRoomException() {
+        RoomDocument roomDocument = mock(RoomDocument.class);
+        when(roomDocument.getId()).thenReturn("R1");
+        when(roomDocument.getVnum()).thenReturn("3001");
+        RoomDocument existing = mock(RoomDocument.class);
+
+        when(repo.findRoomByVnum("3001")).thenReturn(existing);
+
+        assertThatThrownBy(() -> service.createRoom(roomDocument))
+                .isInstanceOf(DuplicateRoomException.class)
+                .hasMessageContaining("Room with vnum '3001' already exists");
+
+        verify(repo).findRoomByVnum("3001");
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
     void createRoom_ok_saves() {
         RoomDocument roomDocument = mock(RoomDocument.class);
         when(roomDocument.getId()).thenReturn("R1");
+        when(roomDocument.getVnum()).thenReturn("3001");
+        when(repo.findRoomByVnum("3001")).thenReturn(null);
         when(repo.save(roomDocument)).thenReturn(roomDocument);
 
         assertThat(service.createRoom(roomDocument)).isSameAs(roomDocument);
 
+        verify(repo).findRoomByVnum("3001");
         verify(repo).save(roomDocument);
         verifyNoMoreInteractions(repo);
     }
@@ -99,12 +145,15 @@ class RoomServiceTest {
     void createRoom_dataAccess_becomesRoomPersistenceException() {
         RoomDocument roomDocument = mock(RoomDocument.class);
         when(roomDocument.getId()).thenReturn("R1");
+        when(roomDocument.getVnum()).thenReturn("3001");
+        when(repo.findRoomByVnum("3001")).thenReturn(null);
         when(repo.save(roomDocument)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createRoom(roomDocument))
                 .isInstanceOf(RoomPersistenceException.class)
                 .hasMessageContaining(dbDown);
 
+        verify(repo).findRoomByVnum("3001");
         verify(repo).save(roomDocument);
         verifyNoMoreInteractions(repo);
     }
@@ -113,12 +162,15 @@ class RoomServiceTest {
     void createRoom_dataAccess_safeIdExceptionPath_becomesRoomPersistenceException() {
         RoomDocument roomDocument = mock(RoomDocument.class);
         when(roomDocument.getId()).thenReturn("R1").thenThrow(new RuntimeException("boom"));
+        when(roomDocument.getVnum()).thenReturn("3001");
+        when(repo.findRoomByVnum("3001")).thenReturn(null);
         when(repo.save(roomDocument)).thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.createRoom(roomDocument))
                 .isInstanceOf(RoomPersistenceException.class)
                 .hasMessageContaining(dbDown);
 
+        verify(repo).findRoomByVnum("3001");
         verify(repo).save(roomDocument);
         verifyNoMoreInteractions(repo);
     }

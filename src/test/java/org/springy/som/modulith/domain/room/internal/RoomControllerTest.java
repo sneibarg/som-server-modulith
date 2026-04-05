@@ -103,17 +103,68 @@ public class RoomControllerTest {
     }
 
     @Test
+    void createReset_blankVnum_returns400ProblemDetail() throws Exception {
+        RoomDocument input = new RoomDocument();
+        input.setId("I1");
+        input.setAreaId("A1");
+        input.setName("name");
+        input.setVnum("");
+
+        when(roomService.createRoom(any(RoomDocument.class)))
+                .thenThrow(new InvalidRoomException("Room vnum must not be blank"));
+
+        mockMvc.perform(post("/api/v1/rooms")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.detail").value("Room vnum must not be blank"));
+
+        verify(roomService).createRoom(any(RoomDocument.class));
+    }
+
+    @Test
+    void createReset_duplicateVnum_returns409ProblemDetail() throws Exception {
+        RoomDocument input = new RoomDocument();
+        input.setId("I1");
+        input.setAreaId("A1");
+        input.setName("name");
+        input.setVnum("3001");
+
+        when(roomService.createRoom(any(RoomDocument.class)))
+                .thenThrow(new DuplicateRoomException("Room with vnum '3001' already exists"));
+
+        mockMvc.perform(post("/api/v1/rooms")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isConflict())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.detail").value("Room with vnum '3001' already exists"));
+
+        verify(roomService).createRoom(any(RoomDocument.class));
+    }
+
+    @Test
     void createReset_returns201() throws Exception {
         RoomDocument input = new RoomDocument();
         input.setId("I1");
         input.setAreaId("A1");
         input.setName("name");
+        input.setVnum("3001");
 
         RoomDocument saved = new RoomDocument();
         saved.setId("I1");
         saved.setAreaId("A1");
         saved.setName("name");
-        
+        saved.setVnum("3001");
 
         when(roomService.createRoom(any(RoomDocument.class))).thenReturn(saved);
 

@@ -13,6 +13,7 @@ public class AreaDocument {
     private String author;
     @NotBlank(message = "name must not be blank")
     private String name;
+    private String vnum;
     private String suggestedLevelRange;
     private List<String> rooms;
     private List<String> mobiles;

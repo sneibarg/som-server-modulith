@@ -100,13 +100,63 @@ class AreaControllerTest {
     }
 
     @Test
+    void createArea_blankVnum_returns400ProblemDetail() throws Exception {
+        AreaDocument input = new AreaDocument();
+        input.setId("A1");
+        input.setName("Midgaard");
+        input.setVnum("");
+
+        when(areaService.createArea(any(AreaDocument.class)))
+                .thenThrow(new InvalidAreaException("Area vnum must not be blank"));
+
+        mockMvc.perform(post("/api/v1/areas")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.detail").value("Area vnum must not be blank"));
+
+        verify(areaService).createArea(any(AreaDocument.class));
+    }
+
+    @Test
+    void createArea_duplicateVnum_returns409ProblemDetail() throws Exception {
+        AreaDocument input = new AreaDocument();
+        input.setId("A1");
+        input.setName("Midgaard");
+        input.setVnum("1000");
+
+        when(areaService.createArea(any(AreaDocument.class)))
+                .thenThrow(new DuplicateAreaException("Area with vnum '1000' already exists"));
+
+        mockMvc.perform(post("/api/v1/areas")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isConflict())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.detail").value("Area with vnum '1000' already exists"));
+
+        verify(areaService).createArea(any(AreaDocument.class));
+    }
+
+    @Test
     void createArea_returns201() throws Exception {
         AreaDocument input = new AreaDocument();
         input.setName("Midgaard");
+        input.setVnum("1000");
 
         AreaDocument saved = new AreaDocument();
         saved.setId("A1");
         saved.setName("Midgaard");
+        saved.setVnum("1000");
 
         when(areaService.createArea(any(AreaDocument.class))).thenReturn(saved);
 

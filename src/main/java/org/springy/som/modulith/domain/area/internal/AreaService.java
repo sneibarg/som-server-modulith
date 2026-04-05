@@ -66,8 +66,19 @@ public class AreaService implements AreaApi {
     public AreaDocument createArea(AreaDocument areaDocument) {
         requireEntityWithId(areaDocument, AreaDocument::getId, DomainGuards.areaMissing(), DomainGuards.areaIdMissing());
 
+        // Validate vnum is not blank
+        String vnum = areaDocument.getVnum();
+        if (vnum == null || vnum.trim().isEmpty()) {
+            throw new InvalidAreaException("Area vnum must not be blank");
+        }
+
+        // Check for duplicate vnum
+        AreaDocument existing = areaRepository.findAreaByVnum(vnum);
+        if (existing != null) {
+            throw new DuplicateAreaException("Area with vnum '" + vnum + "' already exists");
+        }
+
         try {
-            // if (areaRepository.existsById(areaDocument.getAreaId())) throw new AreaConflictException(...)
             return areaRepository.save(areaDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createArea areaId={}", safeId(areaDocument, AreaDocument::getId), ex);
