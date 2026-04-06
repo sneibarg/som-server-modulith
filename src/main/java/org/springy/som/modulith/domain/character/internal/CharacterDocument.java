@@ -27,6 +27,7 @@ public class CharacterDocument {
     private String comm;
     private String affectedBy;
     private String armorClass;
+    private String temporalMechanics;
     private Boolean cloaked;
     private List<String> attributes;
     private List<String> inventory;
@@ -46,10 +47,6 @@ public class CharacterDocument {
     private int maxWeight;
     private int maxItems;
     private int alignment;
-    private int played;
-    private int logon;
-    private int pulseWait;
-    private int pulseDaze;
     private int trust;
 
     @Id

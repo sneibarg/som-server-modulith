@@ -20,6 +20,7 @@ public record CharacterView(
         String comm,
         String affectedBy,
         String armorClass,
+        String temporalMechanics,
         Boolean cloaked,
         List<String> attributes,
         List<String> inventory,
@@ -39,9 +40,5 @@ public record CharacterView(
         int maxWeight,
         int maxItems,
         int alignment,
-        int played,
-        int logon,
-        int pulseWait,
-        int pulseDaze,
         int trust
 ) {}
