@@ -26,6 +26,7 @@ public class CharacterDocument {
     private String act;
     private String comm;
     private String affectedBy;
+    private String armorClass;
     private Boolean cloaked;
     private List<String> attributes;
     private List<String> inventory;
@@ -45,10 +46,6 @@ public class CharacterDocument {
     private int maxWeight;
     private int maxItems;
     private int alignment;
-    private int piercing;
-    private int bashing;
-    private int slashing;
-    private int magic;
     private int played;
     private int logon;
     private int pulseWait;
