@@ -23,9 +23,7 @@ public class CharacterDocument {
     private String areaId;
     private String guild;
     private String role;
-    private String act;
-    private String comm;
-    private String affectedBy;
+    private String characterFlags;
     private String armorClass;
     private String characterAttributes;
     private String temporalMechanics;
