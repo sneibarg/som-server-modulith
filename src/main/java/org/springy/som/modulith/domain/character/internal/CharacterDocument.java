@@ -30,7 +30,6 @@ public class CharacterDocument {
     private String characterAttributes;
     private String temporalMechanics;
     private Boolean cloaked;
-    private List<String> attributes;
     private List<String> inventory;
     private Map<String, Boolean> promptFormat;
     private int health;

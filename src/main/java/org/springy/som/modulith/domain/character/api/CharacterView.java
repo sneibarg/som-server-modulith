@@ -23,7 +23,6 @@ public record CharacterView(
         String characterAttributes,
         String temporalMechanics,
         Boolean cloaked,
-        List<String> attributes,
         List<String> inventory,
         Map<String, Boolean> promptFormat,
         int health,

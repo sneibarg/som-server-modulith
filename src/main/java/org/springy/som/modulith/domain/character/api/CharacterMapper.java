@@ -27,7 +27,6 @@ public final class CharacterMapper {
                 doc.getCharacterAttributes(),
                 doc.getTemporalMechanics(),
                 doc.getCloaked(),
-                doc.getAttributes(),
                 doc.getInventory(),
                 doc.getPromptFormat(),
                 doc.getHealth(),
