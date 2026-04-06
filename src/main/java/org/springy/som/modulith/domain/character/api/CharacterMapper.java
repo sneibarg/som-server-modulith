@@ -24,6 +24,7 @@ public final class CharacterMapper {
                 doc.getComm(),
                 doc.getAffectedBy(),
                 doc.getArmorClass(),
+                doc.getCharacterAttributes(),
                 doc.getTemporalMechanics(),
                 doc.getCloaked(),
                 doc.getAttributes(),
@@ -35,15 +36,8 @@ public final class CharacterMapper {
                 doc.getLevel(),
                 doc.getExperience(),
                 doc.getAccumulatedExperience(),
-                doc.getTrains(),
-                doc.getPractices(),
                 doc.getGold(),
                 doc.getSilver(),
-                doc.getWimpy(),
-                doc.getPosition(),
-                doc.getMaxWeight(),
-                doc.getMaxItems(),
-                doc.getAlignment(),
                 doc.getTrust()
         );
     }

@@ -27,6 +27,7 @@ public class CharacterDocument {
     private String comm;
     private String affectedBy;
     private String armorClass;
+    private String characterAttributes;
     private String temporalMechanics;
     private Boolean cloaked;
     private List<String> attributes;
@@ -38,15 +39,8 @@ public class CharacterDocument {
     private int level;
     private int experience;
     private int accumulatedExperience;
-    private int trains;
-    private int practices;
     private int gold;
     private int silver;
-    private int wimpy;
-    private int position; // stand, rest, sleep
-    private int maxWeight;
-    private int maxItems;
-    private int alignment;
     private int trust;
 
     @Id
