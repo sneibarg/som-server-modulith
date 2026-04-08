@@ -44,6 +44,11 @@ public class RoomController {
         return ResponseEntity.ok(RoomMapper.toView(roomService.getRoomById(id)));
     }
 
+    @GetMapping(path = "/vnum/{vnum}")
+    public ResponseEntity<RoomView> getRoomByVnum(@Valid @PathVariable String vnum) {
+        return ResponseEntity.ok(RoomMapper.toView(roomService.getRoomByVnum(vnum)));
+    }
+
     @PostMapping
     public ResponseEntity<RoomView> createRoom(@Valid @RequestBody RoomDocument roomDocument) {
         RoomDocument saved = roomService.createRoom(roomDocument);

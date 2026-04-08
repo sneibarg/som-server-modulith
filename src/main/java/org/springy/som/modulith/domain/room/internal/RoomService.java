@@ -43,6 +43,12 @@ public class RoomService implements RoomApi {
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
+    public RoomDocument getRoomByVnum(@RequestParam String vnum) {
+        return roomRepository.findRoomByVnum(vnum);
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public RoomDocument getRoomById(@RequestParam String itemId) {
         return roomRepository.findRoomById(itemId);
     }
