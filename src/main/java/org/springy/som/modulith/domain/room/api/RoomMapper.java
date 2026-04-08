@@ -13,7 +13,7 @@ public final class RoomMapper {
                 doc.getVnum(),
                 doc.getName(),
                 doc.getDescription(),
-                doc.getExits(),
+                doc.getExtraDescription(),
                 doc.isPvp(),
                 doc.isSpawn(),
                 doc.getSpawnTimer(),
@@ -21,8 +21,8 @@ public final class RoomMapper {
                 doc.getTeleDelay(),
                 doc.getRoomFlags(),
                 doc.getSectorType(),
-                doc.getMobiles(),
-                doc.getExtraDescription()
+                doc.getExits(),
+                doc.getMobiles()
         );
     }
 }

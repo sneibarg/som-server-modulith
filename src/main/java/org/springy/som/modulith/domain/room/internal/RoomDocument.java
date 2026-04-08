@@ -17,7 +17,7 @@ public class RoomDocument {
     @NotBlank(message = "name must not be blank")
     private String name;
     private String description;
-    private String exits;
+    private String extraDescription;
     private boolean pvp;
     private boolean spawn;
     private int spawnTimer;
@@ -25,8 +25,8 @@ public class RoomDocument {
     private int teleDelay;
     private int roomFlags;
     private int sectorType;
+    private List<String> exits;
     private List<String> mobiles;
-    private List<String> extraDescription;
 
     @Id
     private String id;

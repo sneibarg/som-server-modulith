@@ -8,7 +8,7 @@ public record RoomView(
         String vnum,
         String name,
         String description,
-        String exits,
+        String extraDescription,
         boolean pvp,
         boolean spawn,
         int spawnTimer,
@@ -16,6 +16,6 @@ public record RoomView(
         int teleDelay,
         int roomFlags,
         int sectorType,
-        List<String> mobiles,
-        List<String> extraDescription
+        List<String> exits,
+        List<String> mobiles
 ) {}
