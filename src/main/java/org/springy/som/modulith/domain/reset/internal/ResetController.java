@@ -37,6 +37,15 @@ public class ResetController {
         return ResponseEntity.ok(resetViews);
     }
 
+    @GetMapping(path = "/area/{id}")
+    public ResponseEntity<List<ResetView>> getAllResetsByAreaId(@Valid @PathVariable String id) {
+        List<ResetView> resetViews = resetService.getAllResetsByAreaId(id)
+                .stream()
+                .map(ResetMapper::toView)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(resetViews);
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<ResetView> getResetById(@Valid @PathVariable String id) {
         return ResponseEntity.ok(ResetMapper.toView(resetService.getResetById(id)));

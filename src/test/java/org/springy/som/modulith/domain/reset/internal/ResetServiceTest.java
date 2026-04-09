@@ -41,6 +41,17 @@ class ResetServiceTest {
     }
 
     @Test
+    void getAllResetsByAreaId_ok() {
+        List<ResetDocument> resetDocuments = List.of(mock(ResetDocument.class), mock(ResetDocument.class));
+        when(repo.findAllByAreaId(anyString())).thenReturn(resetDocuments);
+
+        assertThat(service.getAllResetsByAreaId(anyString())).isSameAs(resetDocuments);
+
+        verify(repo).findAllByAreaId(anyString());
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
     void getResetByName_delegates() {
         ResetDocument resetDocument = mock(ResetDocument.class);
         when(repo.findResetById("foo")).thenReturn(resetDocument);

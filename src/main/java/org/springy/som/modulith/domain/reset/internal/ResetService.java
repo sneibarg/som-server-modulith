@@ -36,6 +36,13 @@ public class ResetService implements ResetApi {
         return resetRepository.findAll();
     }
 
+    @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllResetsByAreaIdFallback")
+    @Retry(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public List<ResetDocument> getAllResetsByAreaId(@RequestParam String areaId) {
+        return resetRepository.findAllByAreaId(areaId);
+    }
+
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public ResetDocument getResetByName(@RequestParam String name) {

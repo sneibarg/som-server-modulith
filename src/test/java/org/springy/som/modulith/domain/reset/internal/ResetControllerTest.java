@@ -54,6 +54,17 @@ public class ResetControllerTest {
     }
 
     @Test
+    void getAllResetsByAreaId_ok() throws Exception {
+        when(resetService.getAllResetsByAreaId(anyString())).thenReturn(java.util.List.of());
+
+        mockMvc.perform(get("/api/v1/resets/area/A1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        verify(resetService).getAllResetsByAreaId(anyString());
+    }
+
+    @Test
     void getResetById_notFound_becomes404ProblemDetail() throws Exception {
         when(resetService.getResetById("A1")).thenThrow(new RaceNotFoundException("A1"));
 
