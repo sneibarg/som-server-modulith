@@ -30,12 +30,12 @@ public class MobileDocument {
     private String startPos;
     private String defaultPos;
     private String sex;
-    private String form;
-    private String parts;
     private String size;
     private String material;
     private String flags;
     private String act;
+    private int form;
+    private int parts;
     private int level;
     private int hitroll;
     private int gold;

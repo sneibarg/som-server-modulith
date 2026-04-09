@@ -29,8 +29,8 @@ public record MobileView(
         int silver,
         int pulseWait,
         int pulseDaze,
-        String form,
-        String parts,
+        int form,
+        int parts,
         String size,
         String material,
         String flags
