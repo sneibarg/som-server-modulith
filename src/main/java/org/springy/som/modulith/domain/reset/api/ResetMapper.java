@@ -11,11 +11,11 @@ public final class ResetMapper {
                 doc.getId(),
                 doc.getAreaId(),
                 doc.getCommand(),
-                doc.getComment(),
                 doc.getArg1(),
                 doc.getArg2(),
                 doc.getArg3(),
-                doc.getArg4()
+                doc.getArg4(),
+                doc.getComment()
         );
     }
 }
