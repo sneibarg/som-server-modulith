@@ -16,5 +16,7 @@ public record CommandView(
         String level,
         List<String> lambdas,
         List<String> function,
-        boolean enabled
+        boolean enabled,
+        boolean pipeline,
+        int maxArguments
 ) {}

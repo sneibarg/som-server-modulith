@@ -24,6 +24,8 @@ public class CommandDocument {
     private List<String> lambdas;
     private List<String> function;
     private boolean enabled;
+    private boolean pipeline;
+    private int maxArguments;
 
     @Id
     private String id;
