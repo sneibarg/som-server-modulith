@@ -1,6 +1,7 @@
 package org.springy.som.modulith.domain.room.api;
 
 import java.util.List;
+import java.util.Map;
 
 public record RoomView(
         String id,
@@ -17,5 +18,5 @@ public record RoomView(
         int roomFlags,
         int sectorType,
         List<String> exits,
-        List<String> mobiles
+        Map<String, String> mobiles
 ) {}

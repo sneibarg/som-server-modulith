@@ -26,7 +26,7 @@ public class RoomDocument {
     private int roomFlags;
     private int sectorType;
     private List<String> exits;
-    private List<String> mobiles;
+    private Map<String, String> mobiles;
 
     @Id
     private String id;
