@@ -30,9 +30,12 @@ public class CharacterDocument {
     private Boolean cloaked;
     private List<String> inventory;
     private Map<String, Boolean> promptFormat;
-    private int health;
+    private int hit;
+    private int maxHit;
     private int mana;
+    private int maxMana;
     private int movement;
+    private int maxMovement;
     private int level;
     private int experience;
     private int accumulatedExperience;
