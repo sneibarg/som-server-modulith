@@ -12,7 +12,7 @@ public record GameDataView(
         ConstantsView constants,
         Map<String, Map<String, Integer>> enums,
         Map<String, Map<String, Integer>> flags,
-        Map<String, Map<String, Integer>> attributeBonuses,
+        Map<String, Map<String, Object>> attributeBonuses,
         Map<String, Map<String, Object>> classes,
         Map<String, Map<String, Object>> races,
         Map<String, Map<String, Object>> pcRaces,
