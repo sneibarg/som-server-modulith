@@ -20,11 +20,11 @@ import static org.springy.som.modulith.domain.ServiceGuards.safeId;
 @Slf4j
 @Service
 public class SkillService implements SkillApi {
-    private final SkillRepository SkillRepository;
+    private final SkillRepository skillRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public SkillService(SkillRepository SkillRepository, ApplicationEventPublisher eventPublisher) {
-        this.SkillRepository = SkillRepository;
+    public SkillService(SkillRepository skillRepository, ApplicationEventPublisher eventPublisher) {
+        this.skillRepository = skillRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -33,7 +33,7 @@ public class SkillService implements SkillApi {
     @Bulkhead(name = "somAPI")
     public List<SkillDocument> getAllSkills() {
         try {
-            return SkillRepository.findAll();
+            return skillRepository.findAll();
         } catch (DataAccessException ex) {
             log.warn("DB failure in getAllSkills", ex);
             throw new SkillPersistenceException("Failed to load Skills "+ex);
@@ -47,11 +47,11 @@ public class SkillService implements SkillApi {
         requireText(id, DomainGuards.skillIdMissing());
 
         try {
-            SkillDocument SkillDocument = SkillRepository.findSkillById(id);
-            if (SkillDocument == null) {
+            SkillDocument skillDocument = skillRepository.findSkillById(id);
+            if (skillDocument == null) {
                 throw new SkillNotFoundException(id);
             }
-            return SkillDocument;
+            return skillDocument;
         } catch (DataAccessException ex) {
             log.warn("DB failure in getSkillById id={}", id, ex);
             throw new SkillPersistenceException("Failed to load Skill: " + id + " "+ex);
@@ -65,11 +65,11 @@ public class SkillService implements SkillApi {
         requireText(name, DomainGuards.skillNameMissing());
 
         try {
-            SkillDocument SkillDocument = SkillRepository.findSkillByName(name);
-            if (SkillDocument == null) {
+            SkillDocument skillDocument = skillRepository.findSkillByName(name);
+            if (skillDocument == null) {
                 throw new SkillNotFoundException(name);
             }
-            return SkillDocument;
+            return skillDocument;
         } catch (DataAccessException ex) {
             log.warn("DB failure in getSkillById id={}", name, ex);
             throw new SkillPersistenceException("Failed to load Skill: " + name + " "+ex);
@@ -82,8 +82,8 @@ public class SkillService implements SkillApi {
         requireEntityWithId(skillDocument, SkillDocument::getId, DomainGuards.skillIdMissing(), DomainGuards.skillIdMissing());
 
         try {
-            // if (SkillRepository.existsById(SkillDocument.getSkillId())) throw new SkillConflictException(...)
-            return SkillRepository.save(skillDocument);
+            // if (skillRepository.existsById(SpellDocument.getSkillId())) throw new SkillConflictException(...)
+            return skillRepository.save(skillDocument);
         } catch (DataAccessException ex) {
             log.warn("DB failure in createSkill SkillId={}", safeId(skillDocument, SkillDocument::getId), ex);
             throw new SkillPersistenceException("Failed to create SkillDocument"+ex);
@@ -93,11 +93,11 @@ public class SkillService implements SkillApi {
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public SkillDocument saveSkillForId(String id, SkillDocument skillDocument) {
-        SkillDocument existing = SkillRepository.findSkillById(id);
+        SkillDocument existing = skillRepository.findSkillById(id);
         requireText(existing.getId(), DomainGuards.skillIdMissing());
         requireEntityWithId(existing, SkillDocument::getId, DomainGuards.skillMissing(), DomainGuards.skillIdMissing());
 
-        return SkillRepository.save(skillDocument);
+        return skillRepository.save(skillDocument);
     }
 
     @CircuitBreaker(name = "somAPI")
@@ -106,10 +106,10 @@ public class SkillService implements SkillApi {
         requireText(id, DomainGuards.skillIdMissing());
 
         try {
-            if (!SkillRepository.existsById(id)) {
+            if (!skillRepository.existsById(id)) {
                 throw new SkillNotFoundException(id);
             }
-            SkillRepository.deleteById(id);
+            skillRepository.deleteById(id);
             eventPublisher.publishEvent(new SkillDeletedEvent(id));
         } catch (DataAccessException ex) {
             log.warn("DB failure in deleteSkillById id={}", id, ex);
@@ -121,12 +121,12 @@ public class SkillService implements SkillApi {
     @Bulkhead(name = "somAPI")
     public long deleteAllSkills() {
         try {
-            List<String> SkillIds = SkillRepository.findAll()
+            List<String> SkillIds = skillRepository.findAll()
                     .stream()
                     .map(SkillDocument::getId)
                     .toList();
             long itemCount = SkillIds.size();
-            SkillRepository.deleteAll();
+            skillRepository.deleteAll();
             for (String SkillId : SkillIds) {
                 eventPublisher.publishEvent(new SkillDeletedEvent(SkillId));
             }
@@ -144,6 +144,6 @@ public class SkillService implements SkillApi {
 
     private SkillDocument getSkillByIdFallback(String id, Throwable t) {
         log.warn("Fallback getSkillById id={} due to {}", id, t.toString());
-        throw new SkillPersistenceException("SkillDocument lookup temporarily unavailable: " + id+" "+t);
+        throw new SkillPersistenceException("SpellDocument lookup temporarily unavailable: " + id+" "+t);
     }
 }

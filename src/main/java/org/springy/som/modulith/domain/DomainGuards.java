@@ -20,6 +20,7 @@ import org.springy.som.modulith.domain.room.internal.InvalidRoomException;
 import org.springy.som.modulith.domain.shop.internal.InvalidShopException;
 import org.springy.som.modulith.domain.skill.internal.InvalidSkillException;
 import org.springy.som.modulith.domain.special.internal.InvalidSpecialException;
+import org.springy.som.modulith.domain.spell.internal.InvalidSpellException;
 
 import java.util.function.Supplier;
 
@@ -156,5 +157,17 @@ public final class DomainGuards {
 
     public static Supplier<InvalidSkillException> skillMissing() {
         return () -> new InvalidSkillException("ROM skill must be provided");
+    }
+
+    public static Supplier<InvalidSpellException> spellNameMissing() {
+        return () -> new InvalidSpellException("ROM spell name must be provided");
+    }
+
+    public static Supplier<InvalidSpellException> spellIdMissing() {
+        return () -> new InvalidSpellException("ROM spell id must be provided");
+    }
+
+    public static Supplier<InvalidSpellException> spellMissing() {
+        return () -> new InvalidSpellException("ROM spell must be provided");
     }
 }
