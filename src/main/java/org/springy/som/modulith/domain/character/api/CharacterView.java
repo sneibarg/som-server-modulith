@@ -35,6 +35,7 @@ public record CharacterView(
         int level,
         int experience,
         int accumulatedExperience,
+        int experiencePerLevel,
         int gold,
         int silver,
         int trust,

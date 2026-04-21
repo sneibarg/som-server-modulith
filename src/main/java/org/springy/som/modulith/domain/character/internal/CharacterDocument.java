@@ -43,6 +43,7 @@ public class CharacterDocument {
     private int level;
     private int experience;
     private int accumulatedExperience;
+    private int experiencePerLevel;
     private int gold;
     private int silver;
     private int trust;

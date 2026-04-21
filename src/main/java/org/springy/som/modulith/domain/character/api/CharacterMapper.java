@@ -39,6 +39,7 @@ public final class CharacterMapper {
                 doc.getLevel(),
                 doc.getExperience(),
                 doc.getAccumulatedExperience(),
+                doc.getExperiencePerLevel(),
                 doc.getGold(),
                 doc.getSilver(),
                 doc.getTrust(),
