@@ -21,8 +21,9 @@ public record CharacterView(
         String characterAttributes,
         String temporalMechanics,
         Boolean cloaked,
-        List<String> inventory,
         Map<String, Boolean> promptFormat,
+        List<String> inventory,
+        List<String> effects,
         int hit,
         int maxHit,
         int mana,
@@ -34,5 +35,7 @@ public record CharacterView(
         int accumulatedExperience,
         int gold,
         int silver,
-        int trust
+        int trust,
+        int invisLevel,
+        int incogLevel
 ) {}

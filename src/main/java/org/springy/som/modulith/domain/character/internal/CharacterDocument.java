@@ -27,9 +27,11 @@ public class CharacterDocument {
     private String armorClass;
     private String characterAttributes;
     private String temporalMechanics;
+    private String equipped;
     private Boolean cloaked;
-    private List<String> inventory;
     private Map<String, Boolean> promptFormat;
+    private List<String> inventory;
+    private List<String> effects;
     private int hit;
     private int maxHit;
     private int mana;
@@ -42,6 +44,8 @@ public class CharacterDocument {
     private int gold;
     private int silver;
     private int trust;
+    private int invisLevel;
+    private int incogLevel;
 
     @Id
     private String id;
