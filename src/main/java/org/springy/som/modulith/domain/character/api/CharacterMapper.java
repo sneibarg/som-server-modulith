@@ -28,6 +28,8 @@ public final class CharacterMapper {
                 doc.getPromptFormat(),
                 doc.getInventory(),
                 doc.getEffects(),
+                doc.getSkills(),
+                doc.getSpells(),
                 doc.getHit(),
                 doc.getMaxHit(),
                 doc.getMana(),
@@ -41,7 +43,10 @@ public final class CharacterMapper {
                 doc.getSilver(),
                 doc.getTrust(),
                 doc.getInvisLevel(),
-                doc.getIncogLevel()
+                doc.getIncogLevel(),
+                doc.getTrain(),
+                doc.getPractice(),
+                doc.getPoints()
         );
     }
 }

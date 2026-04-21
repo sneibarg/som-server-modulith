@@ -24,6 +24,8 @@ public record CharacterView(
         Map<String, Boolean> promptFormat,
         List<String> inventory,
         List<String> effects,
+        List<String> skills,
+        List<String> spells,
         int hit,
         int maxHit,
         int mana,
@@ -37,5 +39,8 @@ public record CharacterView(
         int silver,
         int trust,
         int invisLevel,
-        int incogLevel
+        int incogLevel,
+        int train,
+        int practice,
+        int points
 ) {}

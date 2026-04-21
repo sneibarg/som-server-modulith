@@ -32,6 +32,8 @@ public class CharacterDocument {
     private Map<String, Boolean> promptFormat;
     private List<String> inventory;
     private List<String> effects;
+    private List<String> skills;
+    private List<String> spells;
     private int hit;
     private int maxHit;
     private int mana;
@@ -46,6 +48,9 @@ public class CharacterDocument {
     private int trust;
     private int invisLevel;
     private int incogLevel;
+    private int train;
+    private int practice;
+    private int points;
 
     @Id
     private String id;
