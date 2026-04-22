@@ -6,6 +6,7 @@ public record SpecialView(
         String id,
         String areaId,
         String mobVnum,
+        String name,
         String comment,
         List<String> specialFunction
 ) {}

@@ -11,6 +11,7 @@ public final class SpecialMapper {
                 doc.getId(),
                 doc.getAreaId(),
                 doc.getMobVnum(),
+                doc.getName(),
                 doc.getComment(),
                 doc.getSpecialFunction()
         );
