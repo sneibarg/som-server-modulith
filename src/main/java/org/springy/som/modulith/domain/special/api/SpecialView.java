@@ -1,9 +1,11 @@
 package org.springy.som.modulith.domain.special.api;
 
+import java.util.List;
+
 public record SpecialView(
         String id,
         String areaId,
         String mobVnum,
-        String specialFunction,
-        String comment
+        String comment,
+        List<String> specialFunction
 ) {}
