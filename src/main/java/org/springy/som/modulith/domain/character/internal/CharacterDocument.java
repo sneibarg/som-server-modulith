@@ -23,10 +23,10 @@ public class CharacterDocument {
     private String guild;
     private String role;
     private Map<String, Object> equipped;
-    private Map<String, Boolean> promptFormat;
+    private Map<String, Object> promptFormat;
     private Map<String, Object> characterClass;
-    private Map<String, Map<String, String>> characterFlags;
-    private Map<String, Integer> armorClass;
+    private Map<String, Object> characterFlags;
+    private Map<String, Object> armorClass;
     private Map<String, Object> characterAttributes;
     private Map<String, Object> temporalMechanics;
     private List<Map<String, Object>> inventory;
