@@ -6,8 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springy.som.modulith.domain.ServiceGuards;
+import org.springy.som.modulith.domain.character.api.CharacterDeletedEvent;
+import org.springy.som.modulith.domain.character.api.NewCharacterEvent;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -19,12 +22,14 @@ import static org.mockito.Mockito.*;
 class CharacterServiceTest {
 
     private CharacterRepository repo;
+    private ApplicationEventPublisher eventPublisher;
     private CharacterService service;
 
     @BeforeEach
     void setUp() {
         repo = mock(CharacterRepository.class);
-        service = new CharacterService(repo);
+        eventPublisher = mock(ApplicationEventPublisher.class);
+        service = new CharacterService(repo, eventPublisher);
     }
 
     @Test
@@ -36,7 +41,7 @@ class CharacterServiceTest {
 
         assertThat(actual).isSameAs(expected);
         verify(repo).findAll();
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -48,7 +53,7 @@ class CharacterServiceTest {
                 .hasMessageContaining("Failed to load player characters");
 
         verify(repo).findAll();
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -60,7 +65,7 @@ class CharacterServiceTest {
 
         assertThat(actual).isSameAs(expected);
         verify(repo).findAllByAccountId("acct1");
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -90,7 +95,7 @@ class CharacterServiceTest {
                 .hasMessageContaining("C1");
 
         verify(repo).findPlayerCharacterByCharacterId("C1");
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -102,7 +107,7 @@ class CharacterServiceTest {
 
         assertThat(actual).isSameAs(pc);
         verify(repo).findPlayerCharacterByCharacterId("C1");
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -115,7 +120,7 @@ class CharacterServiceTest {
                 .hasMessageContaining("Failed to load player character");
 
         verify(repo).findPlayerCharacterByCharacterId("C1");
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -147,6 +152,8 @@ class CharacterServiceTest {
         CharacterDocument pc = mock(CharacterDocument.class);
 //        when(pc.getId()).thenReturn("C1");
         when(pc.getName()).thenReturn("TestChar");
+        when(pc.getAccountId()).thenReturn("A1");
+        when(pc.getId()).thenReturn("C1");
         when(repo.findByName("TestChar")).thenReturn(null);
         when(repo.save(pc)).thenReturn(pc);
 
@@ -154,12 +161,13 @@ class CharacterServiceTest {
 
         assertThat(actual).isSameAs(pc);
 
-        InOrder inOrder = inOrder(pc, repo);
+        InOrder inOrder = inOrder(pc, repo, eventPublisher);
 //        inOrder.verify(pc).getId();
         inOrder.verify(pc).getName();
         inOrder.verify(repo).findByName("TestChar");
         inOrder.verify(repo).save(pc);
-        verifyNoMoreInteractions(repo);
+        inOrder.verify(eventPublisher).publishEvent(any(NewCharacterEvent.class));
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -175,7 +183,7 @@ class CharacterServiceTest {
 
         verify(pc).getName();
         verify(repo).findByName("DuplicateName");
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -187,7 +195,7 @@ class CharacterServiceTest {
                 .isInstanceOf(NullPointerException.class);
 
         verify(repo).findPlayerCharacterByCharacterId(" ");
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -198,7 +206,7 @@ class CharacterServiceTest {
                 .isInstanceOf(NullPointerException.class);
 
         verify(repo).findPlayerCharacterByCharacterId("C1");
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -219,7 +227,7 @@ class CharacterServiceTest {
         verify(existing, times(2)).getId();
         inOrder.verify(repo).save(input);
 
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -232,38 +240,42 @@ class CharacterServiceTest {
 
     @Test
     void deletePlayerCharacterById_notFound_throwsNotFound() {
-        when(repo.existsById("C1")).thenReturn(false);
+        when(repo.findPlayerCharacterByCharacterId("C1")).thenReturn(null);
 
         assertThatThrownBy(() -> service.deletePlayerCharacterById("C1"))
                 .isInstanceOf(PlayerCharacterNotFoundException.class)
                 .hasMessageContaining("C1");
 
-        verify(repo).existsById("C1");
-        verifyNoMoreInteractions(repo);
+        verify(repo).findPlayerCharacterByCharacterId("C1");
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
     void deletePlayerCharacterById_ok_deletes() {
-        when(repo.existsById("C1")).thenReturn(true);
+        CharacterDocument existing = mock(CharacterDocument.class);
+        when(existing.getAccountId()).thenReturn("A1");
+        when(repo.findPlayerCharacterByCharacterId("C1")).thenReturn(existing);
 
         service.deletePlayerCharacterById("C1");
 
-        InOrder inOrder = inOrder(repo);
-        inOrder.verify(repo).existsById("C1");
+        InOrder inOrder = inOrder(repo, eventPublisher);
+        inOrder.verify(repo).findPlayerCharacterByCharacterId("C1");
         inOrder.verify(repo).deleteById("C1");
-        verifyNoMoreInteractions(repo);
+        inOrder.verify(eventPublisher).publishEvent(any(CharacterDeletedEvent.class));
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
     void deletePlayerCharacterById_dataAccess_becomesPersistenceException() {
-        when(repo.existsById("C1")).thenThrow(new DataAccessResourceFailureException("db down"));
+        when(repo.findPlayerCharacterByCharacterId("C1"))
+                .thenThrow(new DataAccessResourceFailureException("db down"));
 
         assertThatThrownBy(() -> service.deletePlayerCharacterById("C1"))
                 .isInstanceOf(PlayerCharacterPersistenceException.class)
                 .hasMessageContaining("Failed to delete player character");
 
-        verify(repo).existsById("C1");
-        verifyNoMoreInteractions(repo);
+        verify(repo).findPlayerCharacterByCharacterId("C1");
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -277,7 +289,7 @@ class CharacterServiceTest {
         InOrder inOrder = inOrder(repo);
         inOrder.verify(repo).count();
         inOrder.verify(repo).deleteAll();
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test
@@ -289,7 +301,7 @@ class CharacterServiceTest {
                 .hasMessageContaining("Failed to delete all player characters");
 
         verify(repo).count();
-        verifyNoMoreInteractions(repo);
+        verifyNoMoreInteractions(repo, eventPublisher);
     }
 
     @Test

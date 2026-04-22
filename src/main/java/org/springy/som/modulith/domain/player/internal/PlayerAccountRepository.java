@@ -11,6 +11,14 @@ public interface PlayerAccountRepository extends MongoRepository<PlayerDocument,
     @Query("{id: '?0'}")
     PlayerDocument findPlayerAccountById(String id);
 
+    @Query("{id: '?0'}")
+    @Update("{ '$addToSet' : { 'playerCharacterList' : ?1 } }")
+    void findAndAddToPlayerCharacterListById(String playerId, String playerCharacterId);
+
+    @Query("{id: '?0'}")
+    @Update("{ '$pull' : { 'playerCharacterList' : ?1 } }")
+    void findAndPopPlayerCharacterListById(String playerId, String playerCharacterId);
+
     @Update("{ '$addToSet' : { 'playerCharacterList' : ?1 } }")
     void findAndAddToPlayerCharacterListByAccountName(String accountName, String playerCharacterList);
 

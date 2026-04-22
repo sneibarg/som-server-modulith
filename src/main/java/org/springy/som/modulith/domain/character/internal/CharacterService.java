@@ -4,10 +4,13 @@ import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springy.som.modulith.domain.character.api.CharacterApi;
+import org.springy.som.modulith.domain.character.api.CharacterDeletedEvent;
+import org.springy.som.modulith.domain.character.api.NewCharacterEvent;
 
 import java.util.List;
 
@@ -20,9 +23,11 @@ import static org.springy.som.modulith.domain.ServiceGuards.requireText;
 @Slf4j
 public class CharacterService implements CharacterApi {
     private final CharacterRepository characterRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public CharacterService(CharacterRepository characterRepository) {
+    public CharacterService(CharacterRepository characterRepository, ApplicationEventPublisher eventPublisher) {
         this.characterRepository = characterRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @CircuitBreaker(name = "somAPI", fallbackMethod = "getAllPlayerCharactersFallback")
@@ -83,7 +88,9 @@ public class CharacterService implements CharacterApi {
         if (characterName != null && characterRepository.findByName(characterName) != null) {
             throw new DuplicateCharacterNameException(characterName);
         }
-        return characterRepository.save(characterDocument);
+        CharacterDocument saved = characterRepository.save(characterDocument);
+        eventPublisher.publishEvent(new NewCharacterEvent(saved.getAccountId(), saved.getId()));
+        return saved;
     }
 
     @CircuitBreaker(name = "somAPI")
@@ -102,10 +109,12 @@ public class CharacterService implements CharacterApi {
         requireText(id, playerCharacterIdMissing());
 
         try {
-            if (!characterRepository.existsById(id)) {
+            CharacterDocument characterDocument = characterRepository.findPlayerCharacterByCharacterId(id);
+            if (characterDocument == null) {
                 throw new PlayerCharacterNotFoundException(id);
             }
             characterRepository.deleteById(id);
+            eventPublisher.publishEvent(new CharacterDeletedEvent(characterDocument.getAccountId(), id));
         } catch (DataAccessException ex) {
             log.warn("DB failure in deletePlayerCharacterById id={}", id, ex);
             throw new PlayerCharacterPersistenceException("Failed to delete player character: " + id + " " + ex);
