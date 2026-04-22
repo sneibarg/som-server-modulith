@@ -18,7 +18,7 @@ public record CharacterView(
         Map<String, Object> equipped,
         Map<String, Boolean> promptFormat,
         Map<String, Object> characterClass,
-        Map<String, String> characterFlags,
+        Map<String, Map<String, String>> characterFlags,
         Map<String, Integer> armorClass,
         Map<String, Object> characterAttributes,
         Map<String, Object> temporalMechanics,
