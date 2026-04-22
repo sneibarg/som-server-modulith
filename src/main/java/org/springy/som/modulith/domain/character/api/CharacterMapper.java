@@ -37,17 +37,11 @@ public final class CharacterMapper {
                 doc.getMovement(),
                 doc.getMaxMovement(),
                 doc.getLevel(),
-                doc.getExperience(),
-                doc.getAccumulatedExperience(),
-                doc.getExperiencePerLevel(),
                 doc.getGold(),
                 doc.getSilver(),
                 doc.getTrust(),
                 doc.getInvisLevel(),
-                doc.getIncogLevel(),
-                doc.getTrain(),
-                doc.getPractice(),
-                doc.getPoints()
+                doc.getIncogLevel()
         );
     }
 }

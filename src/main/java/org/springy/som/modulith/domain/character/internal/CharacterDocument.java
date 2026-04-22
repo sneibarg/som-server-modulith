@@ -41,17 +41,11 @@ public class CharacterDocument {
     private int movement;
     private int maxMovement;
     private int level;
-    private int experience;
-    private int accumulatedExperience;
-    private int experiencePerLevel;
     private int gold;
     private int silver;
     private int trust;
     private int invisLevel;
     private int incogLevel;
-    private int train;
-    private int practice;
-    private int points;
 
     @Id
     private String id;

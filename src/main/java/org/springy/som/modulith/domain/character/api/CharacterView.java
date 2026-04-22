@@ -33,15 +33,9 @@ public record CharacterView(
         int movement,
         int maxMovement,
         int level,
-        int experience,
-        int accumulatedExperience,
-        int experiencePerLevel,
         int gold,
         int silver,
         int trust,
         int invisLevel,
-        int incogLevel,
-        int train,
-        int practice,
-        int points
+        int incogLevel
 ) {}
