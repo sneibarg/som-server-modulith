@@ -48,6 +48,12 @@ public class ItemService implements ItemApi {
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
+    public ItemDocument getItemByVnum(@RequestParam String vnum) {
+        return itemRepository.findItemByVnum(vnum);
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public ItemDocument createItem(@Valid @RequestBody ItemDocument itemDocument) {
         requireEntityWithId(itemDocument, ItemDocument::getId, itemMissing(), itemIdMissing());
 

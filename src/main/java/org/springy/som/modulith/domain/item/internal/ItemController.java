@@ -16,7 +16,6 @@ import org.springy.som.modulith.domain.item.api.ItemMapper;
 import org.springy.som.modulith.domain.item.api.ItemView;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,8 +39,13 @@ public class ItemController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ItemView> getCommandById(@Valid @PathVariable String id) {
+    public ResponseEntity<ItemView> getItemById(@Valid @PathVariable String id) {
         return ResponseEntity.ok(ItemMapper.toView(itemService.getItemById(id)));
+    }
+
+    @GetMapping(path = "/vnum/{vnum}")
+    public ResponseEntity<ItemView> getItemByVnum(@PathVariable String vnum) {
+        return ResponseEntity.ok(ItemMapper.toView(itemService.getItemByVnum(vnum)));
     }
 
     @PostMapping
