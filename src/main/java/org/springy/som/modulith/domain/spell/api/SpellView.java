@@ -19,6 +19,7 @@ public record SpellView(
         int slot,
         int minMana,
         int beats,
-        List<String> affectData
+        List<Map<String, Object>> affectData,
+        List<String> lambdas
 
 ) {}

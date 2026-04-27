@@ -26,7 +26,8 @@ public class SpellDocument {
     private int slot;
     private int minMana;
     private int beats;
-    private List<String> affectData;
+    private List<Map<String, Object>> affectData;
+    private List<String> lambdas;
 
     @Id
     private String id;

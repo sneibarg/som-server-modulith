@@ -23,7 +23,8 @@ public final class SpellMapper {
             doc.getSlot(),
             doc.getMinMana(),
             doc.getBeats(),
-            doc.getAffectData()
+            doc.getAffectData(),
+            doc.getLambdas()
         );
     }
 }
