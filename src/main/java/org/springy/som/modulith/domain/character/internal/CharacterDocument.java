@@ -16,7 +16,6 @@ public class CharacterDocument {
     private String name;
     private String title;
     private String description;
-    private String race;
     private String sex;
     private String roomId;
     private String areaId;
@@ -24,6 +23,7 @@ public class CharacterDocument {
     private String role;
     private Map<String, Object> equipped;
     private Map<String, Object> promptFormat;
+    private Map<String, Object> characterRace;
     private Map<String, Object> characterClass;
     private Map<String, Object> characterFlags;
     private Map<String, Object> armorClass;
