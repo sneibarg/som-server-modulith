@@ -25,7 +25,7 @@ public class RoomDocument {
     private int teleDelay;
     private int roomFlags;
     private int sectorType;
-    private List<String> exits;
+    private Map<String, Object> exits;
     private Map<String, String> mobiles;
 
     @Id
