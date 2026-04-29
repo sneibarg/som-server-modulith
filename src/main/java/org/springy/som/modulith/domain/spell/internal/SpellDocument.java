@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@Document("Skills")
+@Document("Spells")
 public class SpellDocument {
     @NotBlank(message = "name must not be blank")
     private String name;
