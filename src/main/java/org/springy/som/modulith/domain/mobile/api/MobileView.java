@@ -13,7 +13,6 @@ public record MobileView(
         String affectFlags,
         String alignment,
         String group,
-        String act,
         int level,
         int hitroll,
         String damType,

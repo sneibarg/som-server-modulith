@@ -33,7 +33,6 @@ public class MobileDocument {
     private String size;
     private String material;
     private String flags;
-    private String act;
     private int form;
     private int parts;
     private int level;

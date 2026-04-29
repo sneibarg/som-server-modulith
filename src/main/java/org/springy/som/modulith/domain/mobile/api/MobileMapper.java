@@ -20,7 +20,6 @@ public final class MobileMapper {
                 doc.getAffectFlags(),
                 doc.getAlignment(),
                 doc.getGroup(),
-                doc.getAct(),
                 doc.getLevel(),
                 doc.getHitroll(),
                 doc.getDamType(),
