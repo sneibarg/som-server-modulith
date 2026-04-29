@@ -17,6 +17,6 @@ public record RoomView(
         int teleDelay,
         int roomFlags,
         int sectorType,
-        Map<String, Object> exits,
+        List<String> exits,
         Map<String, String> mobiles
 ) {}
