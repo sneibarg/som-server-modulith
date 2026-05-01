@@ -40,9 +40,7 @@ public final class CharacterMapper {
                 doc.getLevel(),
                 doc.getGold(),
                 doc.getSilver(),
-                doc.getTrust(),
-                doc.getInvisLevel(),
-                doc.getIncogLevel()
+                doc.getTrust()
         );
     }
 }

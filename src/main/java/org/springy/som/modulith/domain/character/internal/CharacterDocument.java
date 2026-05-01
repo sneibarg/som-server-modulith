@@ -44,8 +44,6 @@ public class CharacterDocument {
     private int gold;
     private int silver;
     private int trust;
-    private int invisLevel;
-    private int incogLevel;
 
     @Id
     private String id;

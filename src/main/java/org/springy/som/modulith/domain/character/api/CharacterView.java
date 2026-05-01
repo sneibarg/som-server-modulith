@@ -36,7 +36,5 @@ public record CharacterView(
         int level,
         int gold,
         int silver,
-        int trust,
-        int invisLevel,
-        int incogLevel
+        int trust
 ) {}
