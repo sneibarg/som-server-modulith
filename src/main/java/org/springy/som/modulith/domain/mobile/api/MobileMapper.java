@@ -16,14 +16,9 @@ public final class MobileMapper {
                 doc.getLongDescription(),
                 doc.getDescription(),
                 doc.getRace(),
-                doc.getActFlags(),
-                doc.getAffectFlags(),
                 doc.getAlignment(),
                 doc.getGroup(),
-                doc.getLevel(),
-                doc.getHitroll(),
                 doc.getDamType(),
-                doc.getCombatFlags(),
                 doc.getHitDice(),
                 doc.getManaDice(),
                 doc.getDamageDice(),
@@ -31,15 +26,14 @@ public final class MobileMapper {
                 doc.getStartPos(),
                 doc.getDefaultPos(),
                 doc.getSex(),
-                doc.getGold(),
-                doc.getSilver(),
-                doc.getPulseWait(),
-                doc.getPulseDaze(),
-                doc.getForm(),
-                doc.getParts(),
                 doc.getSize(),
                 doc.getMaterial(),
-                doc.getFlags()
+                doc.getFlags(),
+                doc.getStatusFlags(),
+                doc.getLevel(),
+                doc.getHitroll(),
+                doc.getGold(),
+                doc.getSilver()
         );
     }
 }

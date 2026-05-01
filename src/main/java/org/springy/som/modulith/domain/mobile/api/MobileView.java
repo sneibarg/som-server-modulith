@@ -1,5 +1,7 @@
 package org.springy.som.modulith.domain.mobile.api;
 
+import java.util.Map;
+
 public record MobileView(
         String id,
         String areaId,
@@ -9,14 +11,9 @@ public record MobileView(
         String longDescription,
         String description,
         String race,
-        String actFlags,
-        String affectFlags,
         String alignment,
         String group,
-        int level,
-        int hitroll,
         String damType,
-        String combatFlags,
         String hitDice,
         String manaDice,
         String damageDice,
@@ -24,13 +21,12 @@ public record MobileView(
         String startPos,
         String defaultPos,
         String sex,
-        int gold,
-        int silver,
-        int pulseWait,
-        int pulseDaze,
-        int form,
-        int parts,
         String size,
         String material,
-        String flags
+        String flags,
+        Map<String, Object> statusFlags,
+        int level,
+        int hitroll,
+        int gold,
+        int silver
 ) {}
