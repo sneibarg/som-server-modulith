@@ -13,7 +13,6 @@ public final class GameDataMapper {
                 doc.kind(),
                 doc.status(),
                 toView(doc.version()),
-                toView(doc.constants()),
                 doc.enums(),
                 doc.flags(),
                 doc.attributeBonuses(),
@@ -40,14 +39,6 @@ public final class GameDataMapper {
                 v.semver(),
                 v.createdAt(),
                 v.notes()
-        );
-    }
-
-    private static GameDataView.ConstantsView toView(GameDataDocument.Constants c) {
-        if (c == null) return null;
-        return new GameDataView.ConstantsView(
-                c.max(),
-                c.pulses()
         );
     }
 

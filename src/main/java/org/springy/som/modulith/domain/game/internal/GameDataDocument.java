@@ -13,7 +13,6 @@ public record GameDataDocument(
         String kind,
         String status,
         Version version,
-        Constants constants,
         Map<String, Map<String, Integer>> enums,
         Map<String, Map<String, Integer>> flags,
         Map<String, Map<String, Object>> attributeBonuses,
@@ -36,11 +35,6 @@ public record GameDataDocument(
             String semver,
             Instant createdAt,
             String notes
-    ) {}
-
-    public record Constants(
-            Map<String, Integer> max,
-            Map<String, Integer> pulses
     ) {}
 
     public record Integrity(

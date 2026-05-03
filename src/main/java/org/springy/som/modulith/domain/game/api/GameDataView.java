@@ -9,7 +9,6 @@ public record GameDataView(
         String kind,
         String status,
         VersionView version,
-        ConstantsView constants,
         Map<String, Map<String, Integer>> enums,
         Map<String, Map<String, Integer>> flags,
         Map<String, Map<String, Object>> attributeBonuses,
