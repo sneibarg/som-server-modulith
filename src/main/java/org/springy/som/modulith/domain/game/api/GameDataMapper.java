@@ -14,7 +14,6 @@ public final class GameDataMapper {
                 doc.status(),
                 toView(doc.version()),
                 doc.enums(),
-                doc.flags(),
                 doc.attributeBonuses(),
                 doc.classes(),
                 doc.races(),
@@ -26,7 +25,6 @@ public final class GameDataMapper {
                 doc.weapons(),
                 doc.attacks(),
                 doc.liquids(),
-                doc.wellKnownVnums(),
                 toView(doc.integrity())
         );
     }

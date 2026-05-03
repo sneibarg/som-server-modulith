@@ -14,7 +14,6 @@ public record GameDataDocument(
         String status,
         Version version,
         Map<String, Map<String, Integer>> enums,
-        Map<String, Map<String, Integer>> flags,
         Map<String, Map<String, Object>> attributeBonuses,
         Map<String, Map<String, Object>> classes,
         Map<String, Map<String, Object>> races,
@@ -26,7 +25,6 @@ public record GameDataDocument(
         Map<String, Map<String, Object>> weapons,
         Map<String, Map<String, Object>> attacks,
         Map<String, Map<String, Object>> liquids,
-        Map<String, Map<String, Integer>> wellKnownVnums,
         Integrity integrity) {
 
     public record Version(
