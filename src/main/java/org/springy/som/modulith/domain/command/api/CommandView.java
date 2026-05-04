@@ -1,6 +1,7 @@
 package org.springy.som.modulith.domain.command.api;
 
 import java.util.List;
+import java.util.Map;
 
 public record CommandView(
         String id,
@@ -14,6 +15,7 @@ public record CommandView(
         String log,
         String help,
         String level,
+        Map<String, Object> payload,
         List<String> lambdas,
         List<String> function,
         boolean enabled,

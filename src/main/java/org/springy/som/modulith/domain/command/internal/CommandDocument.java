@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Document("Commands")
@@ -21,6 +22,7 @@ public class CommandDocument {
     private String log;
     private String help;
     private String level;
+    private Map<String, Object> payload;
     private List<String> lambdas;
     private List<String> function;
     private boolean enabled;
