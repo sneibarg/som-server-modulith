@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -19,6 +20,9 @@ public class SkillDocument {
     private String nounDamage;
     private String msgOff;
     private String msgObj;
+    private String fightExecutor;
+    private List<Map<String, String>> checks;
+    private Map<String, Object> fightPlan;
     private Map<String, Integer> levelByClass;
     private Map<String, Integer> ratingByClass;
     private int slot;

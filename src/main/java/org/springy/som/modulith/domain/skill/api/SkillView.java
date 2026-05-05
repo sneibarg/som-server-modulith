@@ -1,5 +1,6 @@
 package org.springy.som.modulith.domain.skill.api;
 
+import java.util.List;
 import java.util.Map;
 
 public record SkillView(
@@ -12,6 +13,9 @@ public record SkillView(
         String nounDamage,
         String msgOff,
         String msgObj,
+        String  fightExecutor,
+        List<Map<String, String>> checks,
+        Map<String, Object> fightPlan,
         Map<String, Integer> levelByClass,
         Map<String, Integer> ratingByClass,
         int slot,
