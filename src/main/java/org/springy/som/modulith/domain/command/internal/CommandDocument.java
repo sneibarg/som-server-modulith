@@ -22,6 +22,7 @@ public class CommandDocument {
     private String log;
     private String help;
     private String level;
+    private Map<String, Object> checks;
     private Map<String, Object> payload;
     private List<String> lambdas;
     private List<String> function;

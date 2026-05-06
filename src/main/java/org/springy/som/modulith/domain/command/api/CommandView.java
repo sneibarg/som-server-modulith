@@ -15,6 +15,7 @@ public record CommandView(
         String log,
         String help,
         String level,
+        Map<String, Object> checks,
         Map<String, Object> payload,
         List<String> lambdas,
         List<String> function,

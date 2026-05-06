@@ -19,6 +19,7 @@ public final class CommandMapper {
                 doc.getLog(),
                 doc.getHelp(),
                 doc.getLevel(),
+                doc.getChecks(),
                 doc.getPayload(),
                 doc.getLambdas(),
                 doc.getFunction(),
