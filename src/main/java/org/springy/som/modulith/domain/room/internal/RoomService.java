@@ -49,6 +49,12 @@ public class RoomService implements RoomApi {
 
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
+    public List<RoomDocument> getRoomsByAreaId(@RequestParam String areaId) {
+        return roomRepository.findAllByAreaId(areaId);
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Bulkhead(name = "somAPI")
     public RoomDocument getRoomById(@RequestParam String itemId) {
         return roomRepository.findRoomById(itemId);
     }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springy.som.modulith.web.DeleteAllResponse;
 import org.springy.som.modulith.domain.room.api.RoomMapper;
@@ -37,6 +38,15 @@ public class RoomController {
                 .map(RoomMapper::toView)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(roomViews);
+    }
+
+    @GetMapping(path = "/area/{id}")
+    public ResponseEntity<List<RoomView>> getRooms(@Valid @PathVariable String id) {
+        List<RoomView> rooms = roomService.getRoomsByAreaId(id)
+                .stream()
+                .map(RoomMapper::toView)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(rooms);
     }
 
     @GetMapping(path = "/{id}")
