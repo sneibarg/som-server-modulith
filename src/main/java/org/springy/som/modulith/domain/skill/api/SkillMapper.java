@@ -18,7 +18,7 @@ public final class SkillMapper {
             doc.getMsgOff(),
             doc.getMsgObj(),
             doc.getFightExecutor(),
-            doc.getChecks(),
+            doc.getGuards(),
             doc.getFightPlan(),
             doc.getLevelByClass(),
             doc.getRatingByClass(),

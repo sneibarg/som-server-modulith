@@ -21,7 +21,7 @@ public class SkillDocument {
     private String msgOff;
     private String msgObj;
     private String fightExecutor;
-    private List<Map<String, String>> checks;
+    private List<Map<String, String>> guards;
     private Map<String, Object> fightPlan;
     private Map<String, Integer> levelByClass;
     private Map<String, Integer> ratingByClass;

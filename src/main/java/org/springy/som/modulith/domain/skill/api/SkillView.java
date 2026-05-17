@@ -14,7 +14,7 @@ public record SkillView(
         String msgOff,
         String msgObj,
         String  fightExecutor,
-        List<Map<String, String>> checks,
+        List<Map<String, String>> guards,
         Map<String, Object> fightPlan,
         Map<String, Integer> levelByClass,
         Map<String, Integer> ratingByClass,
