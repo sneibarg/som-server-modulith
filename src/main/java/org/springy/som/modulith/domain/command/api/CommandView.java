@@ -16,7 +16,7 @@ public record CommandView(
         String help,
         String level,
         Map<String, Object> payload,
-        List<Map<String, Object>> checks,
+        List<Map<String, Object>> guards,
         List<String> lambdas,
         List<String> function,
         boolean enabled,

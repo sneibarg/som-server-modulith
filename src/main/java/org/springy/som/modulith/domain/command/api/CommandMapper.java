@@ -20,7 +20,7 @@ public final class CommandMapper {
                 doc.getHelp(),
                 doc.getLevel(),
                 doc.getPayload(),
-                doc.getChecks(),
+                doc.getGuards(),
                 doc.getLambdas(),
                 doc.getFunction(),
                 doc.isEnabled(),
