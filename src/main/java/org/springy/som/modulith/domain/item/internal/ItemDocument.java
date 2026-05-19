@@ -32,7 +32,7 @@ public class ItemDocument {
     private String condition;
 
     private List<String> affectData;
-    private List<String> extraDescr;
+    private List<String> extraDescription;
 
     @Id
     private String id;

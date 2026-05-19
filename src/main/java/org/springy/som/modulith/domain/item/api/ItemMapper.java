@@ -28,7 +28,7 @@ public final class ItemMapper {
                 doc.getCost(),
                 doc.getCondition(),
                 doc.getAffectData(),
-                doc.getExtraDescr()
+                doc.getExtraDescription()
         );
     }
 }

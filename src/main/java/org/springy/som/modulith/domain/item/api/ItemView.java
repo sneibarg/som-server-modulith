@@ -23,5 +23,5 @@ public record ItemView(
         int cost,
         String condition,
         List<String> affectData,
-        List<String> extraDescr
+        List<String> extraDescription
 ) {}
