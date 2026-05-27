@@ -38,6 +38,26 @@ resilience4j:
         ignoreExceptions:
           - org.springy.som.modulith.domain.area.internal.InvalidAreaException
           - org.springy.som.modulith.domain.area.internal.AreaNotFoundException
+          - org.springy.som.modulith.domain.item.internal.InvalidItemException
+          - org.springy.som.modulith.domain.item.internal.ItemNotFoundException
+          - org.springy.som.modulith.domain.mobile.internal.InvalidMobileException
+          - org.springy.som.modulith.domain.mobile.internal.MobileNotFoundException
+          - org.springy.som.modulith.domain.race.internal.InvalidRomRaceException
+          - org.springy.som.modulith.domain.race.internal.RaceNotFoundException
+          - org.springy.som.modulith.domain.reset.internal.InvalidResetException
+          - org.springy.som.modulith.domain.reset.internal.ResetNotFoundException
+          - org.springy.som.modulith.domain.room.internal.InvalidRoomException
+          - org.springy.som.modulith.domain.room.internal.RoomNotFoundException
+          - org.springy.som.modulith.domain.shop.internal.InvalidShopException
+          - org.springy.som.modulith.domain.shop.internal.ShopNotFoundException
+          - org.springy.som.modulith.domain.skill.internal.InvalidSkillException
+          - org.springy.som.modulith.domain.skill.internal.SkillNotFoundException
+          - org.springy.som.modulith.domain.spell.internal.InvalidSpellException
+          - org.springy.som.modulith.domain.spell.internal.SpellNotFoundException
+          - org.springy.som.modulith.domain.special.internal.InvalidSpecialException
+          - org.springy.som.modulith.domain.special.internal.SpecialNotFoundException
+          - org.springy.som.modulith.domain.command.internal.InvalidCommandException
+          - org.springy.som.modulith.domain.command.internal.CommandNotFoundException
           - org.springy.som.modulith.domain.character.internal.InvalidPlayerCharacterException
           - org.springy.som.modulith.domain.character.internal.PlayerCharacterNotFoundException
           - org.springy.som.modulith.domain.clazz.internal.InvalidClassException
