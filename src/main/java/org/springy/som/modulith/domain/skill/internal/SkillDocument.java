@@ -18,9 +18,8 @@ public class SkillDocument {
     private String target;
     private String minPosition;
     private String nounDamage;
-    private String msgOff;
-    private String msgObj;
     private String fightExecutor;
+    private Map<String, Object> payload;
     private List<Map<String, String>> guards;
     private Map<String, Object> fightPlan;
     private Map<String, Integer> levelByClass;
