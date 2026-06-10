@@ -18,9 +18,8 @@ public class SpellDocument {
     private String target;
     private String minPosition;
     private String nounDamage;
-    private String msgOff;
-    private String msgObj;
     private String functionName;
+    private Map<String, Object> payload;
     private Map<String, Integer> levelByClass;
     private Map<String, Integer> ratingByClass;
     private int slot;
