@@ -19,6 +19,7 @@ public class SpellDocument {
     private String minPosition;
     private String nounDamage;
     private String functionName;
+    private List<Map<String, Object>> guards;
     private Map<String, Object> payload;
     private Map<String, Integer> levelByClass;
     private Map<String, Integer> ratingByClass;

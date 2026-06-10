@@ -12,6 +12,7 @@ public record SpellView(
         String minPosition,
         String nounDamage,
         String functionName,
+        List<Map<String, Object>> guards,
         Map<String, Object> payload,
         Map<String, Integer> levelByClass,
         Map<String, Integer> ratingByClass,

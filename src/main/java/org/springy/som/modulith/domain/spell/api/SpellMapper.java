@@ -16,6 +16,7 @@ public final class SpellMapper {
             doc.getMinPosition(),
             doc.getNounDamage(),
             doc.getFunctionName(),
+            doc.getGuards(),
             doc.getPayload(),
             doc.getLevelByClass(),
             doc.getRatingByClass(),
