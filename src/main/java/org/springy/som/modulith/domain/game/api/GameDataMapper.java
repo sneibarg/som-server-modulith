@@ -25,7 +25,8 @@ public final class GameDataMapper {
                 doc.weapons(),
                 doc.attacks(),
                 doc.liquids(),
-                toView(doc.integrity())
+                toView(doc.integrity()),
+                doc.denyList()
         );
     }
 

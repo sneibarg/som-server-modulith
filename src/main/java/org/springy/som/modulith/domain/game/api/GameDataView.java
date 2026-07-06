@@ -21,7 +21,8 @@ public record GameDataView(
         Map<String, Map<String, Object>> weapons,
         Map<String, Map<String, Object>> attacks,
         Map<String, Map<String, Object>> liquids,
-        IntegrityView integrity
+        IntegrityView integrity,
+        List<String> denyList
 ) {
     public record VersionView(
             String family,

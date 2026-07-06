@@ -25,7 +25,8 @@ public record GameDataDocument(
         Map<String, Map<String, Object>> weapons,
         Map<String, Map<String, Object>> attacks,
         Map<String, Map<String, Object>> liquids,
-        Integrity integrity) {
+        Integrity integrity,
+        List<String> denyList) {
 
     public record Version(
             String family,
