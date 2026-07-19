@@ -36,6 +36,13 @@ public class ShopService implements ShopApi {
     }
 
     @CircuitBreaker(name = "somAPI")
+    @Retry(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public List<ShopDocument> getShopsByAreaId(@RequestParam String areaId) {
+        return shopRepository.findAllByAreaId(areaId);
+    }
+
+    @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public ShopDocument getShopByName(@RequestParam String name) {
         return shopRepository.findShopById(name);

@@ -51,6 +51,17 @@ public class ShopControllerTest {
     }
 
     @Test
+    void getAllShops_ok_withAreaId() throws Exception {
+        when(shopService.getShopsByAreaId("areaId")).thenReturn(java.util.List.of());
+
+        mockMvc.perform(get("/api/v1/shops/area/areaId"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        verify(shopService).getShopsByAreaId("areaId");
+    }
+
+    @Test
     void getShopById_notFound_becomes404ProblemDetail() throws Exception {
         when(shopService.getShopById("A1")).thenThrow(new ShopNotFoundException("A1"));
 

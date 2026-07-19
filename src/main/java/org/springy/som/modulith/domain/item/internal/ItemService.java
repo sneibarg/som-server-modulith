@@ -34,6 +34,14 @@ public class ItemService implements ItemApi {
     public List<ItemDocument> getAllItems() {
         return itemRepository.findAll();
     }
+
+    @CircuitBreaker(name = "somAPI")
+    @Retry(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public List<ItemDocument> getAllItemsByAreaId(String areaId) {
+        return itemRepository.findAllByAreaId(areaId);
+    }
+
     @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public ItemDocument getItemByName(@RequestParam String commandName) {

@@ -40,6 +40,17 @@ class ShopServiceTest {
     }
 
     @Test
+    void getShopsByAreaId_ok() {
+        List<ShopDocument> shopDocuments = List.of(mock(ShopDocument.class), mock(ShopDocument.class));
+        when(repo.findAllByAreaId("areaId")).thenReturn(shopDocuments);
+
+        assertThat(service.getShopsByAreaId("areaId")).isSameAs(shopDocuments);
+
+        verify(repo).findAllByAreaId("areaId");
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
     void getShopByName_delegates() {
         ShopDocument shopDocument = mock(ShopDocument.class);
         when(repo.findShopById("General Store")).thenReturn(shopDocument);

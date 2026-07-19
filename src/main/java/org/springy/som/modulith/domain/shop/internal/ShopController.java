@@ -29,7 +29,7 @@ public class ShopController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ShopView>> getResets() {
+    public ResponseEntity<List<ShopView>> getShops() {
         List<ShopView> shopViews = shopService.getAllShops()
                 .stream()
                 .map(ShopMapper::toView)
@@ -37,29 +37,38 @@ public class ShopController {
         return ResponseEntity.ok(shopViews);
     }
 
+    @GetMapping(path = "/area/{id}")
+    public ResponseEntity<List<ShopView>> getShopsByAreaId(@Valid @PathVariable String id) {
+        List<ShopView> shopViews = shopService.getShopsByAreaId(id)
+                .stream()
+                .map(ShopMapper::toView)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(shopViews);
+    }
+
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ShopView> getResetById(@Valid @PathVariable String id) {
+    public ResponseEntity<ShopView> getShopById(@Valid @PathVariable String id) {
         return ResponseEntity.ok(ShopMapper.toView(shopService.getShopById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<ShopView> createReset(@Valid @RequestBody ShopDocument shopDocument) {
+    public ResponseEntity<ShopView> createShop(@Valid @RequestBody ShopDocument shopDocument) {
         ShopDocument saved = shopService.createShop(shopDocument);
         ShopView shopView = ShopMapper.toView(saved);
         return ResponseEntity
-                .created(URI.create("/api/v1/resets/" + saved.getId()))
+                .created(URI.create("/api/v1/Shops/" + saved.getId()))
                 .body(shopView);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ShopView> updateReset(@PathVariable String id, @Valid @RequestBody ShopDocument shopDocument) {
+    public ResponseEntity<ShopView> updateShop(@PathVariable String id, @Valid @RequestBody ShopDocument shopDocument) {
         ShopDocument updated = shopService.saveShopForId(id, shopDocument);
         ShopView shopView = ShopMapper.toView(updated);
         return ResponseEntity.ok(shopView);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteResetsById(@PathVariable String id) {
+    public ResponseEntity<Void> deleteShopsById(@PathVariable String id) {
         shopService.deleteShopById(id);
         return ResponseEntity.noContent().build();
     }

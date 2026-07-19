@@ -15,6 +15,9 @@ public interface ItemRepository extends MongoRepository<ItemDocument, String> {
     @Query("{vnum: '?0'}")
     ItemDocument findItemByVnum(String vnum);
 
+    @Query("{areaId: '?0'}")
+    List<ItemDocument> findAllByAreaId(String areaId);
+
     @Query("{category: '?0'}")
     List<ItemDocument> findItemsByCategory(String category);
 

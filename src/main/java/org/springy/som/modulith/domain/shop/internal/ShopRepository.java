@@ -9,6 +9,9 @@ public interface ShopRepository extends MongoRepository<ShopDocument, String> {
     @Query("{id: '?0'}")
     ShopDocument findShopById(String ShopId);
 
+    @Query("{areaId: '?0'}")
+    List<ShopDocument> findAllByAreaId(String areaId);
+
     @Query("{name: '?0'}")
     List<ShopDocument> findShopsByName(String name);
 

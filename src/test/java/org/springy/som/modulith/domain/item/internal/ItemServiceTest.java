@@ -40,6 +40,13 @@ class ItemServiceTest {
     }
 
     @Test
+    void getAllItemsByAreaId_ok() {
+        List<ItemDocument> itemDocuments = List.of(mock(ItemDocument.class), mock(ItemDocument.class));
+        when(repo.findAllByAreaId("A1")).thenReturn(itemDocuments);
+        assertThat(service.getAllItemsByAreaId("A1")).isSameAs(itemDocuments);
+    }
+
+    @Test
     void getItemByName_delegatesToFindItemById() {
         ItemDocument itemDocument = mock(ItemDocument.class);
         when(repo.findItemById("sword")).thenReturn(itemDocument);

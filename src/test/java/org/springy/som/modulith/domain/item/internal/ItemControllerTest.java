@@ -40,7 +40,7 @@ public class ItemControllerTest {
     ItemService itemService;
 
     @Test
-    void getAllCommands_ok() throws Exception {
+    void getAllItems_ok() throws Exception {
         when(itemService.getAllItems()).thenReturn(java.util.List.of());
 
         mockMvc.perform(get("/api/v1/items"))
@@ -49,9 +49,20 @@ public class ItemControllerTest {
 
         verify(itemService).getAllItems();
     }
+    
+    @Test
+    void getAllItemsByAreaId_ok() throws Exception {
+        when(itemService.getAllItemsByAreaId("A1")).thenReturn(java.util.List.of());
+
+        mockMvc.perform(get("/api/v1/items/area/A1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        verify(itemService).getAllItemsByAreaId("A1");
+    }
 
     @Test
-    void getCommandById_notFound_becomes404ProblemDetail() throws Exception {
+    void getItemById_notFound_becomes404ProblemDetail() throws Exception {
         when(itemService.getItemById("A1")).thenThrow(new ItemNotFoundException("A1"));
 
         mockMvc.perform(get("/api/v1/items/A1"))
@@ -65,7 +76,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    void getCommandById_blankId_becomes400ProblemDetail() throws Exception {
+    void getItemById_blankId_becomes400ProblemDetail() throws Exception {
         when(itemService.getItemById(anyString())).thenThrow(new InvalidItemException("ItemDocument id must be provided"));
 
         mockMvc.perform(get("/api/v1/items/{id}", "  ")
@@ -81,7 +92,7 @@ public class ItemControllerTest {
 
 
     @Test
-    void getAllCommandes_persistenceDown_becomes503ProblemDetail() throws Exception {
+    void getAllItemes_persistenceDown_becomes503ProblemDetail() throws Exception {
         when(itemService.getAllItems()).thenThrow(new ItemPersistenceException("Failed to load items"));
 
         mockMvc.perform(get("/api/v1/items"))

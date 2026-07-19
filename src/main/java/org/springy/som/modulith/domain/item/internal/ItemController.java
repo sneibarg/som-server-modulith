@@ -38,6 +38,15 @@ public class ItemController {
         return ResponseEntity.ok(itemViews);
     }
 
+    @GetMapping(path = "/area/{id}")
+    @ResponseBody
+    public ResponseEntity<List<ItemView>> getAllItemsByAreaId(@Valid @PathVariable String id) {
+        return ResponseEntity.ok(itemService.getAllItemsByAreaId(id)
+                .stream()
+                .map(ItemMapper::toView)
+                .collect(Collectors.toList()));
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<ItemView> getItemById(@Valid @PathVariable String id) {
         return ResponseEntity.ok(ItemMapper.toView(itemService.getItemById(id)));
