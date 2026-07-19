@@ -36,6 +36,17 @@ public class SpecialService implements SpecialApi {
     }
 
     @CircuitBreaker(name = "somAPI")
+    @Retry(name = "somAPI")
+    public List<SpecialDocument> getSpecialsByAreaId(@RequestParam String areaId) {
+        return specialRepository.findSpecialsByAreaId(areaId);
+    }
+
+    @CircuitBreaker(name = "somAPI")
+    @Retry(name = "somAPI")
+    public List<SpecialDocument> getSpecialsByMobVnum(@RequestParam String vnum) {
+        return specialRepository.findSpecialsByMobVnum(vnum);
+    }
+
     @Bulkhead(name = "somAPI")
     public SpecialDocument getSpecialByName(@RequestParam String name) {
         return specialRepository.findSpecialById(name);

@@ -40,6 +40,28 @@ class SpecialServiceTest {
     }
 
     @Test
+    void getAllSpecialsByAreaId_ok() {
+        List<SpecialDocument> specialDocuments = List.of(mock(SpecialDocument.class), mock(SpecialDocument.class));
+        when(repo.findSpecialsByAreaId("area")).thenReturn(specialDocuments);
+
+        assertThat(service.getSpecialsByAreaId("area")).isSameAs(specialDocuments);
+
+        verify(repo).findSpecialsByAreaId("area");
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
+    void getAllSpecialsByMobVnum_ok() {
+        List<SpecialDocument> specialDocuments = List.of(mock(SpecialDocument.class), mock(SpecialDocument.class));
+        when(repo.findSpecialsByMobVnum("vnum")).thenReturn(specialDocuments);
+
+        assertThat(service.getSpecialsByMobVnum("vnum")).isSameAs(specialDocuments);
+
+        verify(repo).findSpecialsByMobVnum("vnum");
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
     void getSpecialByName_delegates() {
         SpecialDocument specialDocument = mock(SpecialDocument.class);
         when(repo.findSpecialById("spec")).thenReturn(specialDocument);

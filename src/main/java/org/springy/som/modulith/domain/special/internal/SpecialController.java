@@ -29,7 +29,7 @@ public class SpecialController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SpecialView>> getResets() {
+    public ResponseEntity<List<SpecialView>> getSpecials() {
         List<SpecialView> specialViews = specialService.getAllSpecials()
                 .stream()
                 .map(SpecialMapper::toView)
@@ -37,29 +37,46 @@ public class SpecialController {
         return ResponseEntity.ok(specialViews);
     }
 
+    @GetMapping(path = "/area/{id}")
+    public ResponseEntity<List<SpecialView>> getSpecialsByAreaId(@Valid @PathVariable String id) {
+        List<SpecialView> specialViews = specialService.getSpecialsByAreaId(id)
+                .stream()
+                .map(SpecialMapper::toView)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(specialViews);
+    }
+
+    @GetMapping(path = "/mob/{vnum}")
+    public ResponseEntity<List<SpecialView>> getSpecialsByMobVnum(@Valid @PathVariable String vnum) {
+        List<SpecialView> specialViews = specialService.getSpecialsByMobVnum(vnum)
+                .stream()
+                .map(SpecialMapper::toView)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(specialViews);    }
+
     @GetMapping(path = "/{id}")
-    public ResponseEntity<SpecialView> getResetById(@Valid @PathVariable String id) {
+    public ResponseEntity<SpecialView> getSpecialById(@Valid @PathVariable String id) {
         return ResponseEntity.ok(SpecialMapper.toView(specialService.getSpecialById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<SpecialView> createReset(@Valid @RequestBody SpecialDocument specialDocument) {
+    public ResponseEntity<SpecialView> createSpecial(@Valid @RequestBody SpecialDocument specialDocument) {
         SpecialDocument saved = specialService.createSpecial(specialDocument);
         SpecialView updated = SpecialMapper.toView(saved);
         return ResponseEntity
-                .created(URI.create("/api/v1/resets/" + saved.getId()))
+                .created(URI.create("/api/v1/Specials/" + saved.getId()))
                 .body(updated);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SpecialView> updateReset(@PathVariable String id, @Valid @RequestBody SpecialDocument specialDocument) {
+    public ResponseEntity<SpecialView> updateSpecial(@PathVariable String id, @Valid @RequestBody SpecialDocument specialDocument) {
         SpecialDocument updated = specialService.saveSpecialForId(id, specialDocument);
         SpecialView updatedView = SpecialMapper.toView(updated);
         return ResponseEntity.ok(updatedView);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteResetsById(@PathVariable String id) {
+    public ResponseEntity<Void> deleteSpecialsById(@PathVariable String id) {
         specialService.deleteSpecialById(id);
         return ResponseEntity.noContent().build();
     }
