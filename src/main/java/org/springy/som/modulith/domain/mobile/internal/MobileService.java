@@ -37,6 +37,13 @@ public class MobileService implements MobileApi {
     }
 
     @CircuitBreaker(name = "somAPI")
+    @Retry(name = "somAPI")
+    @Bulkhead(name = "somAPI")
+    public List<MobileDocument> getMobilesByAreaId(@Valid @RequestParam String id) {
+        return mobileRepository.findAllByAreaId(id);
+    }
+
+    @CircuitBreaker(name = "somAPI")
     @Bulkhead(name = "somAPI")
     public MobileDocument getMobileByName(@RequestParam String mobileName) {
         return mobileRepository.findMobileByName(mobileName);

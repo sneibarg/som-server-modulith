@@ -37,6 +37,14 @@ public class MobileController {
         return ResponseEntity.ok(mobileViews);
     }
 
+    @GetMapping(path = "/area/{id}")
+    public ResponseEntity<List<MobileView>> getMobilesByAreaId(@Valid @PathVariable String id) {
+        return ResponseEntity.ok(mobileService.getMobilesByAreaId(id)
+                .stream()
+                .map(MobileMapper::toView)
+                .collect(Collectors.toList()));
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<MobileView> getMobileById(@Valid @PathVariable String id) {
         return ResponseEntity.ok(MobileMapper.toView(mobileService.getMobileById(id)));

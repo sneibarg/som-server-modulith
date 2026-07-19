@@ -41,6 +41,17 @@ class MobileServiceTest {
     }
 
     @Test
+    void getAllMobilesByAreaId_ok() {
+        List<MobileDocument> mobileDocuments = List.of(mock(MobileDocument.class), mock(MobileDocument.class));
+        when(repo.findAllByAreaId("A1")).thenReturn(mobileDocuments);
+
+        assertThat(service.getMobilesByAreaId("A1")).isSameAs(mobileDocuments);
+
+        verify(repo).findAllByAreaId("A1");
+        verifyNoMoreInteractions(repo);
+    }
+
+    @Test
     void getMobileByName_delegates() {
         MobileDocument mobileDocument = mock(MobileDocument.class);
         when(repo.findMobileByName("orc")).thenReturn(mobileDocument);

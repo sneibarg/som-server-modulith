@@ -51,6 +51,13 @@ public class MobileControllerTest {
     }
 
     @Test
+    void getAllMobilesByAreaId_ok() throws Exception {
+        mockMvc.perform(get("/api/v1/mobiles/area/A1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
     void getMobileById_notFound_becomes404ProblemDetail() throws Exception {
         when(mobileService.getMobileById("A1")).thenThrow(new MobileNotFoundException("A1"));
 
