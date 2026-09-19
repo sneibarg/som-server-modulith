@@ -26,6 +26,7 @@ public final class CharacterMapper {
                 doc.getArmorClass(),
                 doc.getCharacterAttributes(),
                 doc.getStatusFlags(),
+                doc.getAliases(),
                 doc.getInventory(),
                 doc.getEffects(),
                 doc.getSkills(),

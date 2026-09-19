@@ -29,6 +29,7 @@ public class CharacterDocument {
     private Map<String, Object> armorClass;
     private Map<String, Object> characterAttributes;
     private Map<String, Object> statusFlags;
+    private Map<String, Object> aliases;
     private List<Map<String, Object>> inventory;
     private List<Map<String, Object>> effects;
     private List<Map<String, Object>> skills;

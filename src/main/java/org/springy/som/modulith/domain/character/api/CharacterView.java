@@ -22,6 +22,7 @@ public record CharacterView(
         Map<String, Object> armorClass,
         Map<String, Object> characterAttributes,
         Map<String, Object> statusFlags,
+        Map<String, Object> aliases,
         List<Map<String, Object>> inventory,
         List<Map<String, Object>> effects,
         List<Map<String, Object>> skills,
