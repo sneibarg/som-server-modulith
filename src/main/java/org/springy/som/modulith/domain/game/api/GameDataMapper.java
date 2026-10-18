@@ -22,7 +22,7 @@ public final class GameDataMapper {
                 doc.groups(),
                 doc.titles(),
                 doc.itemTable(),
-                doc.weaponHitEffects(),
+                doc.combat(),
                 doc.weapons(),
                 doc.attacks(),
                 doc.liquids(),
