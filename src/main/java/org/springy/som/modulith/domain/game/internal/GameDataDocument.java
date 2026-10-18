@@ -22,6 +22,7 @@ public record GameDataDocument(
         Map<String, Map<String, Object>> groups,
         Map<String, Map<String, Object>> titles,
         Map<String, Map<String, Object>> itemTable,
+        Map<String, Map<String, Object>> weaponHitEffects,
         Map<String, Map<String, Object>> weapons,
         Map<String, Map<String, Object>> attacks,
         Map<String, Map<String, Object>> liquids,
