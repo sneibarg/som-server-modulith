@@ -22,6 +22,7 @@ public record GameDataView(
         Map<String, Map<String, Object>> weapons,
         Map<String, Map<String, Object>> attacks,
         Map<String, Map<String, Object>> liquids,
+        Map<String, Map<String, Object>> groupRewards,
         IntegrityView integrity,
         List<String> denyList
 ) {
