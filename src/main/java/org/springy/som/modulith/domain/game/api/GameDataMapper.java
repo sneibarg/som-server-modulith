@@ -27,6 +27,7 @@ public final class GameDataMapper {
                 doc.attacks(),
                 doc.liquids(),
                 doc.groupRewards(),
+                doc.clans(),
                 toView(doc.integrity()),
                 doc.denyList()
         );
