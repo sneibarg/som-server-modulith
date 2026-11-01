@@ -4,7 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springy.som.modulith.domain.player.internal.PlayerAccountRepository;
@@ -12,15 +15,28 @@ import org.springy.som.modulith.domain.player.internal.PlayerCharacterListSyncLi
 import org.springy.som.modulith.domain.player.internal.PlayerDocument;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
 @Import({
         CharacterService.class,
-        PlayerCharacterListSyncListener.class
+        PlayerCharacterListSyncListener.class,
+        CharacterPlayerListIntegrationTest.SyncAsyncConfig.class
 })
 class CharacterPlayerListIntegrationTest {
+
+    // This slice loads SomServerApplication, so @EnableAsync runs the listener on
+    // another thread. Its write is then outside this test transaction. Keep the
+    // listener on the test thread.
+    @TestConfiguration
+    static class SyncAsyncConfig {
+        @Bean(name = "taskExecutor")
+        Executor taskExecutor() {
+            return new SyncTaskExecutor();
+        }
+    }
 
     @DynamicPropertySource
     static void mongoProperties(DynamicPropertyRegistry registry) {

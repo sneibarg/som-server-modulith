@@ -87,6 +87,8 @@ som:
       password: ${KEYSTORE_PASSWORD}
   web-security:
     enabled: false
+  memory:
+    retention: P1D
   infra-api:
     username: som-infra
     password: ENC(RRqsiJFwkUa5BJgB3+dEv1bArwaYWRICOdBcfwPC2T61EaU7qWKS0nljvFIvUha7ORuxmh7IwA/SYXRNuRk14olvaI046bOjBjXproOnUEUId6nLyylk0rGlGcm7DYurai9+1cFhEOra3b/m9fSoLCr8BuLMSfpKtuUtb/s9UKMo1IxeMl/QTT2LhxJrjXyqgGaWaWN97DsSxOgmrT2mLN6vo9UeCJVzM4LiZSvTReEmZiLac5BRZ9ByGYlm1ISBpqujRi9jFE9X25rxKpuIsy6EA07rNVRJiJgJFKpTWEqOgm/nOnYuUtVXR9tQnWXwmycfF59RRNNIo9V+nm9s2Q==)

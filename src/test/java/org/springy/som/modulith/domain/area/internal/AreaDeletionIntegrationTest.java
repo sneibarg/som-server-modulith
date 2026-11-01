@@ -4,7 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -27,6 +30,8 @@ import org.springy.som.modulith.domain.shop.internal.ShopAreaCleanupListener;
 import org.springy.som.modulith.domain.shop.internal.ShopDocument;
 import org.springy.som.modulith.domain.shop.internal.ShopRepository;
 
+import java.util.concurrent.Executor;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
@@ -36,9 +41,21 @@ import static org.assertj.core.api.Assertions.assertThat;
         MobileAreaCleanupListener.class,
         ItemAreaCleanupListener.class,
         ShopAreaCleanupListener.class,
-        ResetAreaCleanupListener.class
+        ResetAreaCleanupListener.class,
+        AreaDeletionIntegrationTest.SyncAsyncConfig.class
 })
 class AreaDeletionIntegrationTest {
+
+    // This slice loads SomServerApplication, so @EnableAsync runs the cleanup
+    // listeners on other threads. Their deletes are then outside this test
+    // transaction. Keep the listeners on the test thread.
+    @TestConfiguration
+    static class SyncAsyncConfig {
+        @Bean(name = "taskExecutor")
+        Executor taskExecutor() {
+            return new SyncTaskExecutor();
+        }
+    }
 
     @DynamicPropertySource
     static void mongoProperties(DynamicPropertyRegistry registry) {
