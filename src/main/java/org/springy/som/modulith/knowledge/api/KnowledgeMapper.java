@@ -16,6 +16,7 @@ public final class KnowledgeMapper {
                 document.getAgentName(),
                 document.getLoginLines(),
                 mapList(document.getHelpTopics(), KnowledgeMapper::toHelpTopic),
+                mapList(document.getCommands(), KnowledgeMapper::toCommand),
                 mapList(document.getAreas(), KnowledgeMapper::toArea),
                 mapList(document.getMobiles(), KnowledgeMapper::toBeing),
                 mapList(document.getNpcs(), KnowledgeMapper::toBeing),
@@ -31,6 +32,10 @@ public final class KnowledgeMapper {
                 topic.getRaw(),
                 topic.isMissing(),
                 mapList(topic.getTopics(), KnowledgeMapper::toArticle));
+    }
+
+    private static KnowledgeView.Command toCommand(KnowledgeDocument.Command command) {
+        return new KnowledgeView.Command(command.getName(), command.getCategory(), command.getHelpText());
     }
 
     private static KnowledgeView.HelpArticle toArticle(KnowledgeDocument.HelpArticle article) {

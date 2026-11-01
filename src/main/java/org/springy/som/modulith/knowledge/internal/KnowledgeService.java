@@ -53,6 +53,7 @@ public class KnowledgeService implements KnowledgeApi {
     private static void normalize(KnowledgeDocument document) {
         document.setLoginLines(emptyIfNull(document.getLoginLines()));
         document.setHelpTopics(emptyIfNull(document.getHelpTopics()));
+        document.setCommands(emptyIfNull(document.getCommands()));
         document.setAreas(emptyIfNull(document.getAreas()));
         document.setMobiles(emptyIfNull(document.getMobiles()));
         document.setNpcs(emptyIfNull(document.getNpcs()));

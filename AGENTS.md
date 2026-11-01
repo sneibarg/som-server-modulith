@@ -1,46 +1,23 @@
-# som-server-modulith
+# Repository Guidelines
 
-Spring Boot Modulith REST API for Springs of MUD. Base package `org.springy.som.modulith`. Java 17, Spring Boot 3.5.9-SNAPSHOT, Spring Modulith 1.4.14. The app listens on port 9080. The MongoDB database is `SOMDB`.
+## Project Direction
 
-## Skills
+This repository is the Spring Boot Modulith REST API for Springs of MUD. The base package is `org.springy.som.modulith`. Java 17, Spring Boot 3.5.9-SNAPSHOT, Spring Modulith 1.4.14. The app listens on port 9080. The MongoDB database is `SOMDB`.
 
-Follow the skill. Do not copy its steps into this file. Repository skills live under `.grok/skills`. A tool without skill discovery should read the `SKILL.md` at the path below.
+World content and the agent documents live here. `springs-of-mud-server` loads content from this API. `springs-of-mud-designer` authors content through it. `springs-of-mud-agentic-player` reads agents, prompts, memory, and knowledge from it. `springs-of-mud-ui` does not author world content.
 
-- **spring-modulith** ([`.grok/skills/spring-modulith/SKILL.md`](.grok/skills/spring-modulith/SKILL.md), `/spring-modulith`). Use it when structuring modules, fixing a boundary violation, choosing a Modulith feature, or writing a Modulith test. It owns feature choice, allowed dependencies, events, Moments, and the verification checklist. This repository imports `spring-modulith-bom` at 1.4.14 and leaves versions off the artifacts. The artifacts in use are `spring-modulith-starter-core`, `spring-modulith-starter-mongodb`, `spring-modulith-moments`, `spring-modulith-events-kafka`, runtime `spring-modulith-actuator`, and test-scoped `spring-modulith-starter-test`. The structural test class is `ModulithVerificationTest`. When the skill shows a sample class, keep this class. `starter-core` does not publish Moments. `spring-modulith-moments` is already on the classpath for memory expiration. Leave insight, Documenter, jMolecules, nested modules, `Type.OPEN`, and `@Externalized` out until that skill selects the row and the user asks.
-- **java-code-reviewer** ([`.grok/skills/java-code-reviewer/SKILL.md`](.grok/skills/java-code-reviewer/SKILL.md), `/java-code-reviewer`). Use it when reviewing Java. It writes a findings report and leaves the code unchanged. Change the code only when the user asks. Judge the code against the Coding Standards in this file and against the Java release in `pom.xml`.
-- **align-repository** ([`.grok/skills/align-repository/SKILL.md`](.grok/skills/align-repository/SKILL.md), `/align-repository`). Use it when aligning `springs-of-mud-server`, `springs-of-mud-designer`, `springs-of-mud-ui`, or `springs-of-mud-agentic-player` with this API. The report is the whole task. File it at `docs/alignment/<repository>_<YYYY-MM-DDTHHMMSS>.md`. The skill reads this file. Do not copy these standards back into the skill.
+Do not update any other repository to meet the requirements of the current iteration. That includes springs-of-mud-agentic-player, springs-of-mud-server, springs-of-mud-ui, springs-of-mud-designer, and every other checkout. Implement the iteration in this modulith. Read those repositories when you need a contract. Leave their source, tests, config, and builds unchanged unless the user explicitly asks for a change in that repository. A missing client, or a client that drops a field, is a gap to report. It is not permission to edit that client in this iteration.
 
-## Architecture
+## Reference
 
-Direct subpackages of `org.springy.som.modulith` are the modules. `SomServerApplication` is the only type in the base package. It carries `@EnableAsync`, `@EnableScheduling`, `@Modulithic`, and `@SpringBootApplication`.
+Open a reference when the work touches that area.
 
-| Module | Boundary | Responsibility |
-| --- | --- | --- |
-| `domain` | `@ApplicationModule(type = CLOSED)` | World content. Capabilities stay nested subpackages. |
-| `config` | default closed; types sit in the base package | Security and property beans. |
-| `exception` | default closed; types sit in the base package | Shared API exceptions and `BaseApiExceptionHandler`. |
-| `web` | default closed; types sit in the base package | Shared HTTP types, including `DeleteAllResponse`. |
-| `knowledge` | `allowedDependencies = "exception"` | Agent world knowledge. |
-| `memory` | `allowedDependencies = "exception"` | Agent working memory and retention. |
-| `prompt` | `allowedDependencies = "exception"` | Agent prompts. |
-| `agents` | `allowedDependencies = "exception"` | Agent registry documents. |
+- Module map, named interfaces, and the agent resource routes ([Architecture](docs/references/Architecture.md)).
+- Which skill to follow, and what this repository already selected ([Skills](docs/references/Skills.md)).
+- Maven wrapper commands and `ModulithVerificationTest` ([Build and Test](docs/references/BuildAndTest.md)).
+- Port, database, security, memory retention, and document templates ([Configuration](docs/references/Configuration.md)).
 
-`domain` capabilities are `area`, `character`, `clazz`, `command`, `game`, `item`, `mobile`, `note`, `player`, `race`, `reset`, `room`, `shop`, `skill`, `special`, and `spell`. Each capability has an `api` package and an `internal` package. `DomainGuards` and `ServiceGuards` stay in the `domain` package. Do not promote a capability to its own module.
-
-`knowledge`, `memory`, `prompt`, and `agents` use that same `api` / `internal` split. Each `api` package is `@NamedInterface("api")`. Those modules do not depend on `domain`, `config`, `web`, or each other.
-
-Controllers are `@RestController` mappings under `/api/v1` that produce JSON. Domain controllers follow `AreaController`. The agent resources are:
-
-| Resource | Methods | Collection |
-| --- | --- | --- |
-| knowledge | `GET`, `PUT /api/v1/agent-knowledge/{characterId}` | `AgentKnowledge` |
-| memory | `GET`, `PUT /api/v1/agent-memory/{agentName}` | `Memories` |
-| prompt | `GET /api/v1/agent-prompts`, `GET` and `PUT /api/v1/agent-prompts/{name}` | `AgentPrompts` |
-| agents | `GET /api/v1/agents`, `GET` and `PUT /api/v1/agents/{name}` | `Agents` |
-
-Memory retention is `som.memory.retention` (`P1D`). `MemoryExpirationListener` handles `HourHasPassed`. Knowledge, prompts, and agents have no expiration and no delete route. Application events published here stay in this process. Document templates are `src/main/resources/templates`.
-
-## Coding Standards
+## Coding Conventions
 
 Module structure and the Modulith feature table belong to the spring-modulith skill. Java review findings belong to the java-code-reviewer skill. The conventions below are specific to this repository.
 
@@ -60,22 +37,11 @@ Module structure and the Modulith feature table belong to the spring-modulith sk
 - Comment a constraint the next reader cannot see from the code.
 - Do not copy passwords, client secrets, keystore material, JWTs, or `ENC(...)` values into source, tests, reports, or this file.
 
-## Build and test
+## Change Discipline
 
-From the repository root:
-
-```powershell
-.\mvnw.cmd test
-.\mvnw.cmd "-Dtest=ModulithVerificationTest" test
-```
-
-`target/` is build output. Chain PowerShell commands with `;`.
-
-## Configuration
-
-`src/main/resources/application.yml` is the runtime config.
-
-- The server port is 9080. The MongoDB database is `SOMDB`.
-- `som.web-security.enabled` selects `WebSecurityConfig` when true and `DevSecurityConfig` when false. The checked-in value is false. When security is on, `/api/v1/**` requires `ROLE_somplayer`, `ROLE_game-master`, or `ROLE_somadmin`. Leave that filter chain as it is.
-- `som.memory.retention` is `P1D`.
-- Leave the files in `src/main/resources/templates` unchanged unless the user asks.
+- Do not update another repository to meet the requirements of the current iteration. Implement the change in this modulith. Leave springs-of-mud-agentic-player, springs-of-mud-server, springs-of-mud-ui, springs-of-mud-designer, and every other checkout unchanged unless the user explicitly asks for that repository to change.
+- Keep published `/api/v1` paths, status codes, and JSON field names compatible with the clients that already call them.
+- Keep world content in the closed `domain` module and agent documents in `knowledge`, `memory`, `prompt`, and `agents`. The MongoDB database name stays `SOMDB`.
+- Leave security, `src/main/resources/templates`, and Moments granularity unchanged unless the user asks for that change.
+- Do not commit passwords, client secrets, keystore material, JWTs, or `ENC(...)` values.
+- Avoid a broad refactor of an existing domain capability unless a test covers the change.

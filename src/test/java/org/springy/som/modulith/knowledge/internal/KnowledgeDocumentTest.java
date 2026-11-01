@@ -56,7 +56,12 @@ class KnowledgeDocumentTest {
         document.setCharacterName("Ada");
         document.setAgentName("guide");
         document.setLoginLines(List.of("Welcome"));
+        KnowledgeDocument.Command command = new KnowledgeDocument.Command();
+        command.setName("look");
+        command.setCategory("information");
+        command.setHelpText("Look around.");
         document.setHelpTopics(List.of(topic));
+        document.setCommands(List.of(command));
         document.setAreas(List.of(area));
         document.setMobiles(List.of(mobile));
         document.setNpcs(List.of());
@@ -70,6 +75,9 @@ class KnowledgeDocumentTest {
         assertThat(json.get("characterId").asText()).isEqualTo("hero");
         assertThat(json.has("id")).isFalse();
         assertThat(json.get("helpTopics").get(0).get("topics").get(0).get("keyword").asText()).isEqualTo("look");
+        assertThat(json.get("commands").get(0).get("name").asText()).isEqualTo("look");
+        assertThat(json.get("commands").get(0).get("category").asText()).isEqualTo("information");
+        assertThat(json.get("commands").get(0).get("helpText").asText()).isEqualTo("Look around.");
         assertThat(json.get("areas").get(0).get("levelRange").asText()).isEqualTo("1-10");
         assertThat(json.get("mobiles").get(0).get("auras").get(0).asText()).isEqualTo("glowing");
         assertThat(json.get("players").get(0).get("characterClass").asText()).isEqualTo("mage");

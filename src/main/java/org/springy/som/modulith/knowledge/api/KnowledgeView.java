@@ -8,6 +8,7 @@ public record KnowledgeView(
         String agentName,
         List<String> loginLines,
         List<HelpTopic> helpTopics,
+        List<Command> commands,
         List<KnownArea> areas,
         List<Being> mobiles,
         List<Being> npcs,
@@ -24,6 +25,8 @@ public record KnowledgeView(
     ) {}
 
     public record HelpArticle(String keyword, String text) {}
+
+    public record Command(String name, String category, String helpText) {}
 
     public record KnownArea(String name, String author, String levelRange) {}
 

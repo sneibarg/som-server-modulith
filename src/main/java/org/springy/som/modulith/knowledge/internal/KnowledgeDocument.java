@@ -16,6 +16,7 @@ public class KnowledgeDocument {
     private String agentName;
     private List<String> loginLines = new ArrayList<>();
     private List<HelpTopic> helpTopics = new ArrayList<>();
+    private List<Command> commands = new ArrayList<>();
     private List<KnownArea> areas = new ArrayList<>();
     private List<Being> mobiles = new ArrayList<>();
     private List<Being> npcs = new ArrayList<>();
@@ -36,6 +37,13 @@ public class KnowledgeDocument {
     public static class HelpArticle {
         private String keyword;
         private String text;
+    }
+
+    @Data
+    public static class Command {
+        private String name;
+        private String category;
+        private String helpText;
     }
 
     @Data

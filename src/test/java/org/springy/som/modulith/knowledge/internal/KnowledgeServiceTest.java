@@ -87,6 +87,7 @@ class KnowledgeServiceTest {
         document.setCharacterId("  ");
         document.setLoginLines(null);
         document.setHelpTopics(new ArrayList<>(List.of(help)));
+        document.setCommands(null);
         document.setAreas(null);
         document.setMobiles(new ArrayList<>(List.of(goblin, wolf)));
         document.setNpcs(null);
@@ -99,6 +100,7 @@ class KnowledgeServiceTest {
         assertThat(saved.getCharacterId()).isEqualTo("hero");
         assertThat(saved.getLoginLines()).isEmpty();
         assertThat(saved.getHelpTopics()).containsExactly(help);
+        assertThat(saved.getCommands()).isEmpty();
         assertThat(help.getTopics()).isEmpty();
         assertThat(saved.getMobiles()).containsExactly(goblin, wolf);
         assertThat(goblin.getAuras()).isEmpty();
