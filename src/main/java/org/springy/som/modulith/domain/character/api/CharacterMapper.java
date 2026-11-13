@@ -19,6 +19,7 @@ public final class CharacterMapper {
                 doc.getGuild(),
                 doc.getRole(),
                 doc.getEquipped(),
+                doc.getPet(),
                 doc.getPromptFormat(),
                 doc.getCharacterRace(),
                 doc.getCharacterClass(),

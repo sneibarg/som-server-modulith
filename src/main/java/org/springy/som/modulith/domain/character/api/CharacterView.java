@@ -15,6 +15,7 @@ public record CharacterView(
         String guild,
         String role,
         Map<String, Object> equipped,
+        Map<String, Object> pet,
         Map<String, Object> promptFormat,
         Map<String, Object> characterRace,
         Map<String, Object> characterClass,

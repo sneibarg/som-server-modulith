@@ -22,6 +22,7 @@ public class CharacterDocument {
     private String guild;
     private String role;
     private Map<String, Object> equipped;
+    private Map<String, Object> pet;
     private Map<String, Object> promptFormat;
     private Map<String, Object> characterRace;
     private Map<String, Object> characterClass;
