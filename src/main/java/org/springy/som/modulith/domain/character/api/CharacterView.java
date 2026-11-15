@@ -1,5 +1,7 @@
 package org.springy.som.modulith.domain.character.api;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,9 @@ public record CharacterView(
         List<Map<String, Object>> effects,
         List<Map<String, Object>> skills,
         List<Map<String, Object>> spells,
+        @JsonInclude(JsonInclude.Include.NON_NULL) List<String> groups,
+        @JsonInclude(JsonInclude.Include.NON_NULL) Map<String, Long> noteReadStamps,
+        @JsonInclude(JsonInclude.Include.NON_NULL) Map<String, List<String>> noteReadIds,
         Boolean cloaked,
         int hit,
         int maxHit,
@@ -38,5 +43,9 @@ public record CharacterView(
         int level,
         int gold,
         int silver,
-        int trust
+        int trust,
+        // The Python client reconstructs omitted legacy counters from saved effects.
+        @JsonInclude(JsonInclude.Include.NON_NULL) Integer hitRoll,
+        @JsonInclude(JsonInclude.Include.NON_NULL) Integer damRoll,
+        @JsonInclude(JsonInclude.Include.NON_NULL) Integer savingThrow
 ) {}

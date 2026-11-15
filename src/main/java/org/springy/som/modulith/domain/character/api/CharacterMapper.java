@@ -32,6 +32,9 @@ public final class CharacterMapper {
                 doc.getEffects(),
                 doc.getSkills(),
                 doc.getSpells(),
+                doc.getGroups(),
+                doc.getNoteReadStamps(),
+                doc.getNoteReadIds(),
                 doc.getCloaked(),
                 doc.getHit(),
                 doc.getMaxHit(),
@@ -42,7 +45,10 @@ public final class CharacterMapper {
                 doc.getLevel(),
                 doc.getGold(),
                 doc.getSilver(),
-                doc.getTrust()
+                doc.getTrust(),
+                doc.getHitRoll(),
+                doc.getDamRoll(),
+                doc.getSavingThrow()
         );
     }
 }

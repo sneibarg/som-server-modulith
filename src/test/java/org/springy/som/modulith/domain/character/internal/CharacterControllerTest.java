@@ -110,7 +110,10 @@ class CharacterControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value("A1"))
-                .andExpect(jsonPath("$.name").value("Midgaard"));
+                .andExpect(jsonPath("$.name").value("Midgaard"))
+                .andExpect(jsonPath("$.hitRoll").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.damRoll").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.savingThrow").doesNotHaveJsonPath());
 
         verify(characterService).createPlayerCharacter(any(CharacterDocument.class));
     }
@@ -139,6 +142,36 @@ class CharacterControllerTest {
 
         verify(characterService).savePlayerCharacterForId(eq("A1"), eq(input));
         verifyNoMoreInteractions(characterService);
+    }
+
+    @Test
+    void updatePlayerCharacter_preservesPythonSaveFields() throws Exception {
+        when(characterService.savePlayerCharacterForId(eq("A1"), any(CharacterDocument.class)))
+                .thenAnswer(invocation -> invocation.getArgument(1));
+
+        mockMvc.perform(put("/api/v1/characters/{id}", "A1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "id": "A1",
+                                    "name": "Midgaard",
+                                    "groups": ["combat"],
+                                    "noteReadStamps": {"0": 3000000000},
+                                    "noteReadIds": {"0": ["N1", "N2"]},
+                                    "hitRoll": 0,
+                                    "damRoll": 6,
+                                    "savingThrow": -3
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.groups[0]").value("combat"))
+                .andExpect(jsonPath("$.noteReadStamps['0']").value(3_000_000_000L))
+                .andExpect(jsonPath("$.noteReadIds['0'][0]").value("N1"))
+                .andExpect(jsonPath("$.noteReadIds['0'][1]").value("N2"))
+                .andExpect(jsonPath("$.hitRoll").value(0))
+                .andExpect(jsonPath("$.damRoll").value(6))
+                .andExpect(jsonPath("$.savingThrow").value(-3));
     }
 
     @Test

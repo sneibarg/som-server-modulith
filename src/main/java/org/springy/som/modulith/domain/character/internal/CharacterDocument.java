@@ -35,6 +35,9 @@ public class CharacterDocument {
     private List<Map<String, Object>> effects;
     private List<Map<String, Object>> skills;
     private List<Map<String, Object>> spells;
+    private List<String> groups;
+    private Map<String, Long> noteReadStamps;
+    private Map<String, List<String>> noteReadIds;
     private Boolean cloaked;
     private int hit;
     private int maxHit;
@@ -46,6 +49,9 @@ public class CharacterDocument {
     private int gold;
     private int silver;
     private int trust;
+    private Integer hitRoll;
+    private Integer damRoll;
+    private Integer savingThrow;
 
     @Id
     private String id;
