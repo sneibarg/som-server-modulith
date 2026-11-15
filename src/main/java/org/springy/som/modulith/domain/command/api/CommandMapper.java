@@ -22,7 +22,6 @@ public final class CommandMapper {
                 doc.getPayload(),
                 doc.getGuards(),
                 doc.getLambdas(),
-                doc.getFunction(),
                 doc.isEnabled(),
                 doc.isPipeline(),
                 doc.getMaxArguments()

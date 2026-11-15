@@ -18,7 +18,6 @@ public record CommandView(
         Map<String, Object> payload,
         List<Map<String, Object>> guards,
         List<String> lambdas,
-        List<String> function,
         boolean enabled,
         boolean pipeline,
         int maxArguments
